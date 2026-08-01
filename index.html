@@ -8,10 +8,25 @@
   <meta name="color-scheme" content="light" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <title>Rutas de Inspección</title>
+  <meta name="app-version" content="2026.08.01.4" />
   <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
   <link rel="preconnect" href="https://tile.openstreetmap.org" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3MZIGfN5la2YbP3RzvEGF2iX+5VwM=" crossorigin="" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css?v=1.9.4" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
+/* Respaldo esencial de Leaflet: evita mosaicos separados si el CDN de estilos tarda o falla. */
+.leaflet-container{overflow:hidden;outline:0;background:#ddd;position:relative;-webkit-tap-highlight-color:transparent}
+.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer{position:absolute;left:0;top:0}
+.leaflet-container img.leaflet-image-layer,.leaflet-container .leaflet-tile{max-width:none!important;max-height:none!important;width:256px;height:256px;padding:0;border:0}
+.leaflet-tile-container{pointer-events:none}
+.leaflet-marker-icon,.leaflet-marker-shadow{display:block}
+.leaflet-container .leaflet-overlay-pane svg{max-width:none!important;max-height:none!important}
+.leaflet-map-pane canvas{z-index:100}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}
+.leaflet-control{position:relative;z-index:800;pointer-events:auto;float:left;clear:both}.leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-top .leaflet-control{margin-top:10px}.leaflet-bottom .leaflet-control{margin-bottom:10px}.leaflet-left .leaflet-control{margin-left:10px}.leaflet-right .leaflet-control{margin-right:10px;float:right}
+.leaflet-control-zoom a{display:block;width:30px;height:30px;line-height:30px;text-align:center;text-decoration:none;background:#fff;color:#222;border-bottom:1px solid #ccc}.leaflet-control-zoom a:first-child{border-radius:4px 4px 0 0}.leaflet-control-zoom a:last-child{border-radius:0 0 4px 4px;border-bottom:0}.leaflet-control-attribution{background:rgba(255,255,255,.8);margin:0;padding:0 5px;font-size:11px}.leaflet-control-attribution a{text-decoration:none}
+.leaflet-fade-anim .leaflet-popup{opacity:0;transition:opacity .2s linear}.leaflet-fade-anim .leaflet-map-pane .leaflet-popup{opacity:1}.leaflet-zoom-animated{transform-origin:0 0}
+.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px}.leaflet-popup-content-wrapper{background:#fff;border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,.25);padding:1px;text-align:left}.leaflet-popup-content{margin:13px 19px;line-height:1.4}.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-left:-20px;overflow:hidden;pointer-events:none}.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;transform:rotate(45deg);background:#fff;box-shadow:3px 3px 15px rgba(0,0,0,.15)}
 :root {
   --bg:#f5f7fb;
   --panel:#ffffff;
@@ -73,8 +88,6 @@ body{overflow-x:hidden}
 
 /* Mapa completo y controles de navegación */
 #map{overflow:hidden!important;min-width:0}
-.leaflet-map-pane,.leaflet-tile-pane,.leaflet-overlay-pane{position:absolute!important}
-.leaflet-tile{width:256px!important;height:256px!important;max-width:none!important;max-height:none!important}
 .leaflet-container .leaflet-pane img{max-width:none!important;max-height:none!important}
 .map-popup{min-width:180px}.popup-actions{display:flex;gap:8px;margin-top:10px}.popup-actions a{background:var(--primary);color:#fff;text-decoration:none;border-radius:8px;padding:7px 9px;font-weight:700;font-size:12px}.popup-actions a:first-child{background:#fff;color:var(--primary);border:1px solid #9db8e8}
 .map-focus-btn{border:0;background:transparent;padding:0;font-family:inherit}
@@ -272,7 +285,8 @@ body{overflow-x:hidden}
 
   <noscript><div style="margin:16px;padding:14px;border:1px solid #f0b4b4;border-radius:12px;background:#fff3f3;color:#9b1c1c">Activa JavaScript para utilizar el mapa y calcular rutas.</div></noscript>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js?v=1.9.4" crossorigin="anonymous"></script>
+  <script>if(typeof L==='undefined'){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>');}</script>
   <script>
 (() => {
   'use strict';
