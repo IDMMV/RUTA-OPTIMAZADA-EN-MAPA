@@ -62,6 +62,15 @@ body{overflow-x:hidden}
 @media (max-width:850px){.topbar{padding-top:0}.planner-grid{gap:12px}.map-column{order:0}.control-column{order:1}#map{height:42vh;min-height:330px}.map-column{position:relative}.sidebar{box-shadow:18px 0 40px rgba(15,25,45,.18)}}
 @media (max-width:520px){.main{padding:10px}.topbar{gap:9px}.topbar h1{font-size:19px}.primary-btn,.secondary-btn,.ghost-btn,.danger-btn{width:100%}.map-actions .ghost-btn{width:auto}.row.gap>*{width:100%}.card{border-radius:14px}.route-item{grid-template-columns:32px 1fr}.route-time{grid-column:2;text-align:left}.metrics{grid-template-columns:repeat(3,1fr)}.metric{padding:9px}.metric strong{font-size:14px}.metric span{font-size:10px}}
 
+/* Correcciones de estabilidad del mapa */
+.leaflet-container{width:100%;isolation:isolate;font-family:inherit}
+.leaflet-container img,.leaflet-tile{max-width:none!important;max-height:none!important}
+.leaflet-tile-pane{will-change:transform}
+#map.map-ready::before{display:none}
+.busy-btn{opacity:.72;pointer-events:none}
+.location-notice{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--primary-soft);color:#29496f;font-size:13px}
+@media (max-width:850px){#map{height:52vh;min-height:380px}}
+
   </style>
 </head>
 <body>
@@ -282,11 +291,13 @@ body{overflow-x:hidden}
 
   function init() {
     loadState();
+    cleanupOldCaches();
     initMap();
     bindEvents();
     applySettingsToUI();
     renderAll();
-    // Service worker desactivado en esta versión de archivo único para GitHub Pages.
+    setupMapResizeFix();
+    if (!state.start) setTimeout(requestLocationOnStart, 700);
   }
 
   function initMap() {
@@ -295,13 +306,20 @@ body{overflow-x:hidden}
       el('map').innerHTML = '<div style="height:100%;display:grid;place-items:center;padding:24px;text-align:center;color:#6b7485"><div><strong>Mapa no disponible</strong><br><span>La interfaz sigue funcionando, pero OpenStreetMap necesita conexión a internet.</span></div></div>';
       return;
     }
-    map = L.map('map', { zoomControl: true }).setView(DEFAULT_CENTER, 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    map = L.map('map', { zoomControl: true, preferCanvas: true }).setView(DEFAULT_CENTER, 10);
+    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
+      crossOrigin: true,
+      updateWhenIdle: false,
+      keepBuffer: 4,
       attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
+    });
+    tiles.on('load', () => el('map').classList.add('map-ready'));
+    tiles.on('tileerror', () => { el('mapStatus').textContent = 'Algunas partes del mapa no cargaron. Reintentando…'; });
+    tiles.addTo(map);
     markersLayer = L.layerGroup().addTo(map);
     routeLayer = L.layerGroup().addTo(map);
+    requestAnimationFrame(() => { map.invalidateSize(true); setTimeout(() => map.invalidateSize(true), 300); });
   }
 
   function bindEvents() {
@@ -346,7 +364,7 @@ body{overflow-x:hidden}
     const matching = qsAll(`.nav-item[data-view="${view}"]`)[0];
     if (matching) matching.classList.add('active');
     el('sidebar').classList.remove('open');
-    if (view === 'planner') setTimeout(() => map.invalidateSize(), 50);
+    if (view === 'planner' && map) { setTimeout(() => map.invalidateSize(true), 80); setTimeout(() => map.invalidateSize(true), 350); }
   }
 
   function loadState() {
@@ -450,15 +468,28 @@ body{overflow-x:hidden}
 
   function useCurrentLocation() {
     if (!navigator.geolocation) return setFeedback('Este navegador no permite obtener la ubicación.', 'error');
-    setFeedback('Obteniendo tu ubicación…');
+    const button = el('locateBtn');
+    button.classList.add('busy-btn'); button.textContent = 'Ubicando…';
+    setFeedback('Autoriza el acceso a tu ubicación cuando el navegador lo solicite.');
     navigator.geolocation.getCurrentPosition(
       pos => {
         state.start = { label: 'Mi ubicación actual', lat: pos.coords.latitude, lon: pos.coords.longitude };
         persist(); renderAll(); fitMap(); setFeedback('Ubicación actual definida.', 'ok');
+        button.classList.remove('busy-btn'); button.textContent = 'Mi ubicación';
       },
-      () => setFeedback('No fue posible obtener tu ubicación. Revisa los permisos del navegador.', 'error'),
-      { enableHighAccuracy: true, timeout: 12000 }
+      err => {
+        const messages = {1:'Permiso de ubicación rechazado. Actívalo desde el candado de la barra de direcciones.',2:'No se pudo determinar tu ubicación.',3:'La ubicación tardó demasiado. Intenta nuevamente.'};
+        setFeedback(messages[err.code] || 'No fue posible obtener tu ubicación.', 'error');
+        button.classList.remove('busy-btn'); button.textContent = 'Mi ubicación';
+      },
+      { enableHighAccuracy: true, timeout: 18000, maximumAge: 30000 }
     );
+  }
+
+  function requestLocationOnStart() {
+    if (state.start || !navigator.geolocation) return;
+    setFeedback('Para comenzar, permite que la web use tu ubicación actual.');
+    useCurrentLocation();
   }
 
   async function addBulkLocations() {
@@ -484,7 +515,7 @@ body{overflow-x:hidden}
     const coords = extractCoordinates(text);
     if (coords) return { label: text.length > 70 ? `Ubicación ${coords.lat.toFixed(5)}, ${coords.lon.toFixed(5)}` : text, ...coords };
     const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=pe&q=${encodeURIComponent(text)}`;
-    const response = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+    const response = await fetchWithTimeout(url, { headers: { 'Accept-Language': 'es' } }, 15000);
     if (!response.ok) throw new Error('No se pudo buscar la dirección.');
     const data = await response.json();
     if (!data.length) throw new Error(`No se encontró: ${text}`);
@@ -508,9 +539,12 @@ body{overflow-x:hidden}
   }
 
   async function calculateRoute(optimize) {
+    const button = optimize ? el('optimizeBtn') : el('manualOrderBtn');
+    const originalText = button.textContent;
+    button.classList.add('busy-btn'); button.textContent = optimize ? 'Optimizando…' : 'Calculando…';
     if (!state.start) await resolveStartInput();
-    if (!state.start) return setFeedback('Define primero el punto de partida.', 'error');
-    if (!state.stops.length) return setFeedback('Agrega al menos una parada.', 'error');
+    if (!state.start) { button.classList.remove('busy-btn'); button.textContent=originalText; return setFeedback('Define primero el punto de partida.', 'error'); }
+    if (!state.stops.length) { button.classList.remove('busy-btn'); button.textContent=originalText; return setFeedback('Agrega al menos una parada.', 'error'); }
     setFeedback(optimize ? 'Calculando el mejor orden…' : 'Calculando la ruta…');
     try {
       const orderedStops = optimize ? await optimizeStops(state.start, state.stops) : [...state.stops];
@@ -537,6 +571,9 @@ body{overflow-x:hidden}
       state.stops = orderedStops;
       state.route = { createdAt:new Date().toISOString(), orderedStops, returnToStart:el('returnToStart').checked, ...fallback };
       persist(); renderAll(); fitMap();
+    } finally {
+      button.classList.remove('busy-btn'); button.textContent = originalText;
+      if (map) { setTimeout(() => map.invalidateSize(true), 80); setTimeout(fitMap, 160); }
     }
   }
 
@@ -546,7 +583,7 @@ body{overflow-x:hidden}
       const points = [start, ...stops];
       const coords = points.map(p => `${p.lon},${p.lat}`).join(';');
       const url = `https://router.project-osrm.org/table/v1/driving/${coords}?sources=all&destinations=all&annotations=duration`;
-      const response = await fetch(url);
+      const response = await fetchWithTimeout(url, {}, 18000);
       if (!response.ok) throw new Error('Table OSRM error');
       const data = await response.json();
       if (!data.durations) throw new Error('Sin matriz');
@@ -577,7 +614,7 @@ body{overflow-x:hidden}
   async function requestOsrmRoute(points) {
     const coords = points.map(p => `${p.lon},${p.lat}`).join(';');
     const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson&steps=false`;
-    const response = await fetch(url);
+    const response = await fetchWithTimeout(url, {}, 22000);
     if (!response.ok) throw new Error('No route');
     const data = await response.json();
     if (!data.routes?.length) throw new Error('Sin ruta');
@@ -712,6 +749,37 @@ body{overflow-x:hidden}
   function escapeHtml(v=''){return String(v).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));}
   function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
   function distanceKm(a,b){const R=6371;const dLat=(b.lat-a.lat)*Math.PI/180;const dLon=(b.lon-a.lon)*Math.PI/180;const x=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLon/2)**2;return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
+
+  async function fetchWithTimeout(url, options = {}, timeout = 15000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try { return await fetch(url, { ...options, signal: controller.signal }); }
+    finally { clearTimeout(timer); }
+  }
+
+  function setupMapResizeFix() {
+    if (!map) return;
+    const container = el('map');
+    const refresh = () => { requestAnimationFrame(() => map.invalidateSize(true)); };
+    if ('ResizeObserver' in window) new ResizeObserver(refresh).observe(container);
+    window.addEventListener('resize', refresh);
+    window.addEventListener('orientationchange', () => setTimeout(refresh, 250));
+    setTimeout(refresh, 150); setTimeout(refresh, 700);
+  }
+
+  async function cleanupOldCaches() {
+    try {
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r => r.unregister()));
+      }
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+    } catch (e) { console.warn('No se pudo limpiar la caché anterior', e); }
+  }
+
   function registerServiceWorker(){if('serviceWorker'in navigator){navigator.serviceWorker.register('./service-worker.js').catch(()=>{});}}
 })();
 
