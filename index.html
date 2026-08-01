@@ -57,6 +57,13 @@ button,a{cursor:pointer}
 .map-column{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);position:sticky;top:16px}.map-toolbar{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.map-toolbar strong,.map-toolbar span{display:block}.map-toolbar span{font-size:12px;color:var(--muted);margin-top:2px}.map-actions{display:flex;gap:8px}#map{height:calc(100vh - 165px);min-height:610px;background:#e9eef5}.map-footnote{padding:8px 12px;font-size:11px;color:var(--muted);border-top:1px solid var(--line)}
 .saved-item{padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px}.saved-meta{color:var(--muted);font-size:13px;margin-top:5px}.saved-actions{display:flex;gap:8px;align-items:center}.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field-label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}.dialog{border:0;border-radius:16px;padding:20px;width:min(420px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.2)}.dialog::backdrop{background:rgba(10,20,35,.45)}.mobile-only{display:none}
 .custom-marker{background:transparent;border:0}.marker-bubble{width:31px;height:31px;border-radius:999px;display:grid;place-items:center;color:#fff;font-weight:800;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.25)}.marker-start{background:#198754}.marker-stop{background:#1267ef}.marker-end{background:#d94343}
+
+/* Panel visible sobre el mapa durante la navegación */
+.map-nav-hud{position:absolute;left:16px;right:16px;top:72px;z-index:750;display:none;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;background:rgba(255,255,255,.96);border:1px solid #cbdaf4;border-radius:14px;padding:12px 14px;box-shadow:0 8px 28px rgba(31,55,90,.16);backdrop-filter:blur(8px)}
+.map-nav-hud.show{display:grid}.map-nav-hud-main{min-width:0}.map-nav-hud-title{font-weight:800;color:#172033;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.map-nav-hud-instruction{font-size:13px;color:#465166;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.map-nav-hud-metrics{display:flex;gap:8px}.map-nav-chip{min-width:94px;background:#f5f8fd;border:1px solid #dce5f1;border-radius:10px;padding:7px 10px;text-align:center}.map-nav-chip span{display:block;font-size:11px;color:#697386}.map-nav-chip strong{font-size:15px;color:#172033}.map-legend{position:absolute;right:14px;bottom:36px;z-index:700;background:rgba(255,255,255,.94);border:1px solid #d9e1ec;border-radius:10px;padding:8px 10px;font-size:12px;box-shadow:0 4px 14px rgba(31,55,90,.12)}.map-legend-row{display:flex;align-items:center;gap:7px;margin:3px 0}.legend-line{width:26px;height:5px;border-radius:999px}.legend-line.blue{background:#216ee8}.legend-line.green{background:#16a05d}
+.map-column{position:relative}
+@media(max-width:700px){.map-nav-hud{left:8px;right:8px;top:64px;grid-template-columns:1fr}.map-nav-hud-metrics{width:100%}.map-nav-chip{flex:1;min-width:0}.map-nav-hud-instruction{white-space:normal}.map-legend{right:8px;bottom:30px}}
+
 @media (max-width:1100px){.app-shell{grid-template-columns:76px 1fr}.sidebar{padding:18px 8px}.brand div:last-child,.nav-item span,.side-note{display:none}.brand{justify-content:center;padding:0 0 18px}.nav-item{justify-content:center;font-size:20px}.planner-grid{grid-template-columns:420px minmax(0,1fr)}}
 @media (max-width:850px){.app-shell{display:block}.sidebar{position:fixed;left:-255px;top:0;width:235px;transition:left .2s}.sidebar.open{left:0}.main{padding:12px}.mobile-only{display:inline-flex}.topbar h1{font-size:20px}.topbar p{font-size:12px}.planner-grid{display:flex;flex-direction:column}.control-column,.map-column{width:100%}.map-column{position:relative;top:auto;order:-1}#map{height:48vh;min-height:360px}.settings-grid{grid-template-columns:1fr}.top-actions .ghost-btn{display:none}}
 @media (max-width:520px){.topbar{align-items:flex-start}.top-actions{flex-direction:column}.topbar p{display:none}.card{padding:14px}.row.gap,.stack-mobile{flex-direction:column}.metrics{grid-template-columns:1fr}.button-row{flex-wrap:wrap}.button-row>*{flex:1}.map-toolbar{align-items:flex-start}.map-actions{flex-direction:column}.saved-item{grid-template-columns:1fr}.saved-actions{justify-content:flex-start}}
@@ -115,7 +122,11 @@ body{overflow-x:hidden}
 .route-done{opacity:.5}
 @media(max-width:520px){.nav-controls,.nav-controls.secondary-row{grid-template-columns:1fr 1fr}.nav-controls .primary-btn{grid-column:1/-1}.nav-metrics{grid-template-columns:repeat(3,1fr)}.nav-metric strong{font-size:14px}}
 
-  </style>
+  
+.current-location-marker{width:24px;height:24px;border-radius:50%;background:#1677ff;border:4px solid #fff;box-shadow:0 0 0 3px rgba(22,119,255,.28),0 3px 10px rgba(0,0,0,.25);position:relative;cursor:pointer;animation:locationPulse 1.4s ease-out infinite}.current-location-marker::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:50%;background:#fff;transform:translate(-50%,-50%)}@keyframes locationPulse{0%{box-shadow:0 0 0 0 rgba(22,119,255,.45),0 3px 10px rgba(0,0,0,.25)}70%{box-shadow:0 0 0 14px rgba(22,119,255,0),0 3px 10px rgba(0,0,0,.25)}100%{box-shadow:0 0 0 0 rgba(22,119,255,0),0 3px 10px rgba(0,0,0,.25)}}
+.map-location-control{position:absolute;right:14px;top:74px;z-index:760;display:flex;flex-direction:column;gap:8px}.map-round-btn{width:48px;height:48px;border-radius:50%;border:1px solid #cfd9e8;background:rgba(255,255,255,.97);box-shadow:0 5px 18px rgba(31,55,90,.18);display:grid;place-items:center;font-weight:800;color:#172033;cursor:pointer}.map-round-btn:hover{background:#f4f8ff}.map-round-btn.location{font-size:22px;color:#1267ef}.compass-control{position:absolute;left:14px;top:74px;z-index:760;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.97);border:1px solid #cfd9e8;box-shadow:0 5px 18px rgba(31,55,90,.18);display:grid;place-items:center;cursor:pointer;user-select:none}.compass-arrow{position:relative;width:30px;height:36px;transition:transform .25s ease}.compass-arrow::before{content:"";position:absolute;left:8px;top:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:18px solid #e33b3b}.compass-arrow::after{content:"";position:absolute;left:8px;bottom:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:18px solid #4b5563}.compass-n{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:900;color:#b91c1c}.gps-meta{position:absolute;left:14px;bottom:38px;z-index:760;background:rgba(255,255,255,.94);border:1px solid #d9e1ec;border-radius:10px;padding:7px 10px;font-size:12px;color:#465166;box-shadow:0 4px 14px rgba(31,55,90,.12)}
+@media(max-width:700px){.map-location-control{right:8px;top:66px}.compass-control{left:8px;top:66px}.gps-meta{left:8px;bottom:32px}.map-round-btn{width:44px;height:44px}}
+</style>
 </head>
 <body>
   <div class="app-shell">
@@ -220,10 +231,11 @@ body{overflow-x:hidden}
               <div id="navInstruction" class="nav-instruction">Esperando iniciar el recorrido.</div>
               <div class="nav-progress" aria-label="Progreso del recorrido"><div id="navProgressBar"></div></div>
               <div id="arrivalBanner" class="arrival-banner">Llegaste a la parada actual. Abre el formulario o continúa a la siguiente.</div>
-              <div class="nav-controls">
+              <div class="nav-controls" style="grid-template-columns:2fr 1fr 1fr 1fr">
                 <button id="startNavigationBtn" class="primary-btn">▶ Iniciar recorrido</button>
+                <button id="previousStopBtn" class="secondary-btn">← Anterior</button>
                 <button id="centerMeBtn" class="secondary-btn">Centrar</button>
-                <button id="nextStopBtn" class="secondary-btn">Siguiente</button>
+                <button id="nextStopBtn" class="secondary-btn">Siguiente →</button>
               </div>
               <div class="nav-controls secondary-row">
                 <button id="pauseNavigationBtn" class="ghost-btn">Pausar</button>
@@ -277,6 +289,26 @@ body{overflow-x:hidden}
                 <button id="fitMapBtn" class="ghost-btn compact">Ver todo</button>
                 <button id="clearRouteBtn" class="ghost-btn compact">Limpiar trazo</button>
               </div>
+            </div>
+            <div id="mapNavigationHud" class="map-nav-hud" aria-live="polite">
+              <div class="map-nav-hud-main">
+                <div id="hudTitle" class="map-nav-hud-title">Recorrido no iniciado</div>
+                <div id="hudInstruction" class="map-nav-hud-instruction">Optimiza la ruta e inicia el recorrido.</div>
+              </div>
+              <div class="map-nav-hud-metrics">
+                <div class="map-nav-chip"><span>Distancia</span><strong id="hudDistance">—</strong></div>
+                <div class="map-nav-chip"><span>Tiempo</span><strong id="hudTime">—</strong></div>
+                <div class="map-nav-chip"><span>Parada</span><strong id="hudStop">—</strong></div>
+              </div>
+            </div>
+            <button id="compassControl" class="compass-control" type="button" title="Orientar mapa al norte" aria-label="Orientar mapa al norte"><span class="compass-n">N</span><span id="compassArrow" class="compass-arrow"></span></button>
+            <div class="map-location-control">
+              <button id="mapMyLocationBtn" class="map-round-btn location" type="button" title="Ver mi ubicación" aria-label="Ver mi ubicación">◎</button>
+            </div>
+            <div id="gpsMeta" class="gps-meta">GPS esperando señal</div>
+            <div class="map-legend">
+              <div class="map-legend-row"><span class="legend-line blue"></span><span>Ruta completa</span></div>
+              <div class="map-legend-row"><span class="legend-line green"></span><span>Tramo actual desde tu ubicación</span></div>
             </div>
             <div id="map" aria-label="Mapa de rutas"></div>
             <div class="map-footnote">Mapa: OpenStreetMap. Rutas: servicio público OSRM. Los tiempos son aproximados y pueden no considerar tráfico en tiempo real.</div>
@@ -381,6 +413,8 @@ body{overflow-x:hidden}
   let lastLiveRouteAt = 0;
   let lastRoutedPosition = null;
   let isLiveRouteRequestPending = false;
+  let deviceHeading = 0;
+  let lastGpsUiAt = 0;
 
   document.addEventListener('DOMContentLoaded', init);
 
@@ -392,6 +426,7 @@ body{overflow-x:hidden}
     applySettingsToUI();
     renderAll();
     setupMapResizeFix();
+    setupOrientation();
     if (!state.start) setTimeout(requestLocationOnStart, 700);
   }
 
@@ -469,7 +504,10 @@ body{overflow-x:hidden}
     el('startNavigationBtn').addEventListener('click', startNavigation);
     el('pauseNavigationBtn').addEventListener('click', togglePauseNavigation);
     el('nextStopBtn').addEventListener('click', () => advanceToNextStop(false));
+    el('previousStopBtn').addEventListener('click', goToPreviousStop);
     el('centerMeBtn').addEventListener('click', centerOnLivePosition);
+    el('mapMyLocationBtn')?.addEventListener('click', () => { centerOnLivePosition(); livePositionMarker?.openPopup(); });
+    el('compassControl')?.addEventListener('click', resetMapNorth);
     el('simulateBtn').addEventListener('click', toggleSimulation);
     el('finishNavigationBtn').addEventListener('click', () => finishNavigation(true));
     el('returnToStart').addEventListener('change', () => state.route && calculateRoute(false));
@@ -904,6 +942,7 @@ body{overflow-x:hidden}
       el('navInstruction').textContent = 'Esperando iniciar el recorrido.';
       el('navProgressBar').style.width = '0%';
       el('externalNavigationBtn').href = '#';
+      el('mapNavigationHud')?.classList.remove('show');
       return;
     }
     const idx = Math.min(nav.activeIndex || 0, stops.length - 1);
@@ -920,6 +959,15 @@ body{overflow-x:hidden}
     el('arrivalBanner').classList.toggle('show', !!nav.arrived);
     el('externalNavigationBtn').href = `https://www.google.com/maps/dir/?api=1&destination=${target.lat},${target.lon}`;
     el('activeFormBtn').href = FORM_URL;
+    const hud = el('mapNavigationHud');
+    hud?.classList.toggle('show', !!nav.active);
+    if (hud) {
+      el('hudTitle').textContent = `Destino: parada ${idx+1} · ${shortLabel(target.label)}`;
+      el('hudInstruction').textContent = el('navInstruction').textContent;
+      el('hudDistance').textContent = el('navDistance').textContent;
+      el('hudTime').textContent = el('navTime').textContent;
+      el('hudStop').textContent = `${idx+1}/${stops.length}`;
+    }
   }
 
   async function startNavigation() {
@@ -934,16 +982,23 @@ body{overflow-x:hidden}
     state.navigation.simulated = false;
     state.navigation.activeIndex = Math.min(state.navigation.activeIndex || 0, state.route.orderedStops.length - 1);
     persist(); renderNavigation();
-    setNavigationFeedback('Solicitando ubicación precisa…');
+    setNavigationFeedback('Solicitando ubicación precisa… La línea verde mostrará el tramo actual y la azul la ruta completa.');
     if (geoWatchId !== null) navigator.geolocation.clearWatch(geoWatchId);
     geoWatchId = navigator.geolocation.watchPosition(handleLivePosition, handleLocationError, {
-      enableHighAccuracy: true, maximumAge: 3000, timeout: 15000
+      enableHighAccuracy: true, maximumAge: 0, timeout: 8000
     });
   }
 
   function handleLivePosition(position) {
     if (!state.navigation.active || state.navigation.paused || state.navigation.simulated) return;
-    const p = { lat: position.coords.latitude, lon: position.coords.longitude, accuracy: position.coords.accuracy, heading: position.coords.heading, speed: position.coords.speed, timestamp: position.timestamp };
+    const p = { lat: position.coords.latitude, lon: position.coords.longitude, accuracy: position.coords.accuracy, heading: Number.isFinite(position.coords.heading) ? position.coords.heading : deviceHeading, speed: position.coords.speed, timestamp: position.timestamp };
+    const now = Date.now();
+    if (now - lastGpsUiAt > 500) {
+      lastGpsUiAt = now;
+      const acc = Math.round(p.accuracy || 0);
+      const speed = Number.isFinite(p.speed) ? ` · ${(p.speed*3.6).toFixed(1)} km/h` : '';
+      const meta = el('gpsMeta'); if (meta) meta.textContent = `GPS ±${acc} m${speed}`;
+    }
     processLivePosition(p, true);
   }
 
@@ -968,7 +1023,7 @@ body{overflow-x:hidden}
     }
     const now = Date.now();
     const moved = lastRoutedPosition ? distanceKm(lastRoutedPosition,p)*1000 : Infinity;
-    if (!isLiveRouteRequestPending && (now-lastLiveRouteAt>12000 || moved>60)) updateActiveLegRoute(p,target);
+    if (!isLiveRouteRequestPending && (now-lastLiveRouteAt>4000 || moved>20)) updateActiveLegRoute(p,target);
     persist(); renderNavigation();
   }
 
@@ -1004,9 +1059,12 @@ body{overflow-x:hidden}
     const latlng=[p.lat,p.lon];
     if (!livePositionMarker) {
       const icon=L.divIcon({className:'',html:'<div class="current-location-marker" title="Tu ubicación"></div>',iconSize:[22,22],iconAnchor:[11,11]});
-      livePositionMarker=L.marker(latlng,{icon,zIndexOffset:1500}).addTo(markersLayer).bindPopup('<strong>Tu ubicación actual</strong>');
+      livePositionMarker=L.marker(latlng,{icon,zIndexOffset:1500,keyboard:true,title:'Tu ubicación actual'}).addTo(markersLayer).bindPopup('<strong>Tu ubicación actual</strong><br><span id="livePopupCoords"></span><br><button type="button" id="popupCenterMe" style="margin-top:7px;padding:6px 9px;border:1px solid #cfd9e8;border-radius:8px;background:#fff;cursor:pointer">Centrar aquí</button>');
+      livePositionMarker.on('popupopen',()=>{const c=document.getElementById('livePopupCoords');if(c)c.textContent=`${p.lat.toFixed(6)}, ${p.lon.toFixed(6)} · precisión ±${Math.round(p.accuracy||0)} m`;document.getElementById('popupCenterMe')?.addEventListener('click',centerOnLivePosition,{once:true});});
       liveAccuracyCircle=L.circle(latlng,{radius:Math.min(p.accuracy||20,250),color:'#1677ff',weight:1,fillColor:'#1677ff',fillOpacity:.08,interactive:false}).addTo(markersLayer);
     } else { livePositionMarker.setLatLng(latlng); liveAccuracyCircle?.setLatLng(latlng).setRadius(Math.min(p.accuracy||20,250)); }
+    const markerEl = livePositionMarker?.getElement()?.querySelector('.current-location-marker');
+    if (markerEl && Number.isFinite(p.heading)) markerEl.style.transform = `rotate(${p.heading}deg)`;
     if(follow && state.navigation.active && !state.navigation.paused){ map.setView(latlng,Math.max(map.getZoom(),16),{animate:true}); el('map').classList.add('map-following'); }
   }
 
@@ -1021,6 +1079,36 @@ body{overflow-x:hidden}
     const p=state.navigation.currentPosition;
     if(!p || !map) return setNavigationFeedback('Todavía no existe una ubicación actual.', 'error');
     map.setView([p.lat,p.lon],17,{animate:true});
+  }
+
+  function setupOrientation() {
+    const updateHeading = (event) => {
+      let heading = null;
+      if (typeof event.webkitCompassHeading === 'number') heading = event.webkitCompassHeading;
+      else if (typeof event.alpha === 'number') heading = (360 - event.alpha) % 360;
+      if (!Number.isFinite(heading)) return;
+      deviceHeading = heading;
+      const arrow = el('compassArrow'); if (arrow) arrow.style.transform = `rotate(${-heading}deg)`;
+    };
+    window.addEventListener('deviceorientationabsolute', updateHeading, true);
+    window.addEventListener('deviceorientation', updateHeading, true);
+  }
+
+  async function requestOrientationPermission() {
+    try {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        const result = await DeviceOrientationEvent.requestPermission();
+        if (result !== 'granted') setNavigationFeedback('No se autorizó la brújula del dispositivo.', 'error');
+      }
+    } catch {}
+  }
+
+  function resetMapNorth() {
+    deviceHeading = 0;
+    const arrow = el('compassArrow'); if (arrow) arrow.style.transform = 'rotate(0deg)';
+    if (map) map.setBearing?.(0);
+    requestOrientationPermission();
+    setNavigationFeedback('Brújula orientada al norte. La N roja indica el norte.', 'ok');
   }
 
   function togglePauseNavigation() {
@@ -1041,6 +1129,24 @@ body{overflow-x:hidden}
     persist(); renderAll();
     const p=state.navigation.currentPosition||state.start; if(p) updateActiveLegRoute(p,stops[state.navigation.activeIndex]);
     setNavigationFeedback(`Ahora dirígete a la parada ${state.navigation.activeIndex+1}.`,'ok');
+  }
+
+  function goToPreviousStop() {
+    const stops = state.route?.orderedStops || [];
+    if (!stops.length) return setNavigationFeedback('No hay una ruta preparada.', 'error');
+    if ((state.navigation.activeIndex || 0) <= 0) return setNavigationFeedback('Ya estás en la primera parada.', 'error');
+    state.navigation.activeIndex -= 1;
+    const target = stops[state.navigation.activeIndex];
+    if (target) target.status = 'Pendiente';
+    state.navigation.arrived = false;
+    state.navigation.remainingDistance = 0;
+    state.navigation.remainingDuration = 0;
+    state.navigation.instruction = 'Recalculando el tramo anterior…';
+    if (liveRouteLine) { routeLayer.removeLayer(liveRouteLine); liveRouteLine = null; }
+    persist(); renderAll();
+    const p = state.navigation.currentPosition || state.start;
+    if (p && target) updateActiveLegRoute(p, target);
+    setNavigationFeedback(`Volviste a la parada ${state.navigation.activeIndex + 1}.`, 'ok');
   }
 
   function finishNavigation(confirmFirst=true) {
