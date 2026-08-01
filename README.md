@@ -1,17 +1,9 @@
-# Rutas de Inspección
+# Rutas de Inspección – navegación en tiempo real
 
-Versión final para GitHub Pages.
+Versión para GitHub Pages. Incluye optimización, botón Iniciar recorrido, seguimiento GPS con `watchPosition`, tramo activo, avance de parada 1 a la última, recálculo y simulación.
 
 ## Publicación
+Sube todos los archivos a la raíz del repositorio y configura GitHub Pages desde `main / (root)`.
 
-Sube todos estos archivos directamente a la raíz del repositorio:
-
-- `index.html`
-- `404.html`
-- `manifest.webmanifest`
-- `service-worker.js`
-- `README.md`
-
-Luego configura **Settings → Pages → Deploy from a branch → main → /(root)**.
-
-La aplicación usa OpenStreetMap, Nominatim y OSRM. Los datos se guardan en el navegador del dispositivo y pueden exportarse como respaldo JSON.
+## Permisos
+La ubicación requiere HTTPS y permiso del navegador. GitHub Pages ya usa HTTPS. Los mapas y rutas necesitan conexión.

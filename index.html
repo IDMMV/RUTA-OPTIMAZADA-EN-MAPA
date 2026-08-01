@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <title>Rutas de Inspección</title>
-  <meta name="app-version" content="2026.08.01.4" />
+  <meta name="app-version" content="2026.08.01.5" />
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
   <link rel="preconnect" href="https://tile.openstreetmap.org" />
@@ -93,6 +93,27 @@ body{overflow-x:hidden}
 .map-focus-btn{border:0;background:transparent;padding:0;font-family:inherit}
 .route-line-animated{stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:850px){.map-column{order:-1}#map{height:55vh;min-height:420px}}
+
+
+/* Modo de recorrido y seguimiento en tiempo real */
+.navigation-card{border:2px solid #b9d2ff;background:linear-gradient(180deg,#fff,#f7faff)}
+.navigation-card.running{border-color:#63c18b;background:linear-gradient(180deg,#fff,#f2fff7)}
+.nav-status-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
+.live-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;background:#eef2f7;color:#526071;font-size:12px;font-weight:800}
+.live-badge.active{background:#e5f8ed;color:#137a43}.live-dot{width:8px;height:8px;border-radius:50%;background:#98a2b3}.live-badge.active .live-dot{background:#19a55b;box-shadow:0 0 0 5px rgba(25,165,91,.13);animation:pulseLive 1.4s infinite}
+@keyframes pulseLive{50%{box-shadow:0 0 0 9px rgba(25,165,91,0)}}
+.nav-destination{font-size:18px;font-weight:800;margin:3px 0}.nav-subtext{color:var(--muted);font-size:13px}
+.nav-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.nav-metric{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px}.nav-metric span{font-size:11px;color:var(--muted);display:block}.nav-metric strong{font-size:17px;display:block;margin-top:3px}
+.nav-instruction{border-left:4px solid var(--primary);background:var(--primary-soft);border-radius:10px;padding:11px 12px;font-weight:700;margin:10px 0}
+.nav-progress{height:9px;background:#e6ebf2;border-radius:999px;overflow:hidden;margin:10px 0}.nav-progress>div{height:100%;background:var(--primary);width:0%;transition:width .35s ease}
+.nav-controls{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}.nav-controls.secondary-row{grid-template-columns:repeat(3,1fr);margin-top:8px}
+.marker-active{background:#ff9f1c!important;color:#fff!important;box-shadow:0 0 0 8px rgba(255,159,28,.18);animation:activeStopPulse 1.2s infinite}.current-location-marker{width:22px;height:22px;border-radius:50%;background:#1677ff;border:4px solid #fff;box-shadow:0 0 0 10px rgba(22,119,255,.18),0 3px 12px rgba(0,0,0,.25)}
+.active-stop-marker{animation:activeStopPulse 1.2s infinite}
+@keyframes activeStopPulse{50%{transform:scale(1.12)}}
+.arrival-banner{padding:11px 12px;border-radius:11px;background:#e7f8ee;color:#126d3d;font-weight:800;margin-top:10px;display:none}.arrival-banner.show{display:block}
+.map-following{box-shadow:inset 0 0 0 3px rgba(18,103,239,.18)}
+.route-done{opacity:.5}
+@media(max-width:520px){.nav-controls,.nav-controls.secondary-row{grid-template-columns:1fr 1fr}.nav-controls .primary-btn{grid-column:1/-1}.nav-metrics{grid-template-columns:repeat(3,1fr)}.nav-metric strong{font-size:14px}}
 
   </style>
 </head>
@@ -180,6 +201,40 @@ body{overflow-x:hidden}
                 <button id="optimizeBtn" class="primary-btn grow">Optimizar ruta</button>
                 <button id="manualOrderBtn" class="secondary-btn">Usar orden actual</button>
               </div>
+            </div>
+
+            <div class="card navigation-card" id="navigationCard">
+              <div class="nav-status-head">
+                <div>
+                  <h2>4. Recorrido en tiempo real</h2>
+                  <div id="navDestination" class="nav-destination">Ruta no iniciada</div>
+                  <div id="navSubtext" class="nav-subtext">Optimiza la ruta y presiona Iniciar recorrido.</div>
+                </div>
+                <div id="liveBadge" class="live-badge"><span class="live-dot"></span><span id="liveBadgeText">Detenido</span></div>
+              </div>
+              <div class="nav-metrics">
+                <div class="nav-metric"><span>Distancia restante</span><strong id="navDistance">—</strong></div>
+                <div class="nav-metric"><span>Tiempo estimado</span><strong id="navTime">—</strong></div>
+                <div class="nav-metric"><span>Parada activa</span><strong id="navStopNumber">—</strong></div>
+              </div>
+              <div id="navInstruction" class="nav-instruction">Esperando iniciar el recorrido.</div>
+              <div class="nav-progress" aria-label="Progreso del recorrido"><div id="navProgressBar"></div></div>
+              <div id="arrivalBanner" class="arrival-banner">Llegaste a la parada actual. Abre el formulario o continúa a la siguiente.</div>
+              <div class="nav-controls">
+                <button id="startNavigationBtn" class="primary-btn">▶ Iniciar recorrido</button>
+                <button id="centerMeBtn" class="secondary-btn">Centrar</button>
+                <button id="nextStopBtn" class="secondary-btn">Siguiente</button>
+              </div>
+              <div class="nav-controls secondary-row">
+                <button id="pauseNavigationBtn" class="ghost-btn">Pausar</button>
+                <button id="simulateBtn" class="ghost-btn">Simular avance</button>
+                <button id="finishNavigationBtn" class="danger-btn">Finalizar</button>
+              </div>
+              <div class="button-row wrap">
+                <a id="activeFormBtn" class="secondary-btn" href="${FORM_URL}" target="_blank" rel="noopener">Abrir formulario</a>
+                <a id="externalNavigationBtn" class="secondary-btn" href="#" target="_blank" rel="noopener">Abrir tramo en Maps</a>
+              </div>
+              <div id="navigationFeedback" class="feedback" aria-live="polite"></div>
             </div>
 
             <div class="card" id="summaryCard">
@@ -302,6 +357,7 @@ body{overflow-x:hidden}
     savedRoutes: [],
     history: [],
     settings: { defaultStart: 'Vitarte, Lima', routeNamePrefix: 'Inspecciones' },
+    navigation: { active:false, paused:false, activeIndex:0, currentPosition:null, simulated:false },
   };
 
   const el = (id) => document.getElementById(id);
@@ -314,6 +370,17 @@ body{overflow-x:hidden}
   let tileProviderIndex = 0;
   let tileErrorCount = 0;
   const markerRefs = new Map();
+  let livePositionMarker = null;
+  let liveAccuracyCircle = null;
+  let liveRouteLine = null;
+  let completedRouteLine = null;
+  let geoWatchId = null;
+  let simulationTimer = null;
+  let simulationPath = [];
+  let simulationIndex = 0;
+  let lastLiveRouteAt = 0;
+  let lastRoutedPosition = null;
+  let isLiveRouteRequestPending = false;
 
   document.addEventListener('DOMContentLoaded', init);
 
@@ -399,6 +466,12 @@ body{overflow-x:hidden}
     el('clearStopsBtn').addEventListener('click', clearStops);
     el('optimizeBtn').addEventListener('click', () => calculateRoute(true));
     el('manualOrderBtn').addEventListener('click', () => calculateRoute(false));
+    el('startNavigationBtn').addEventListener('click', startNavigation);
+    el('pauseNavigationBtn').addEventListener('click', togglePauseNavigation);
+    el('nextStopBtn').addEventListener('click', () => advanceToNextStop(false));
+    el('centerMeBtn').addEventListener('click', centerOnLivePosition);
+    el('simulateBtn').addEventListener('click', toggleSimulation);
+    el('finishNavigationBtn').addEventListener('click', () => finishNavigation(true));
     el('returnToStart').addEventListener('change', () => state.route && calculateRoute(false));
     el('fitMapBtn').addEventListener('click', fitMap);
     el('clearRouteBtn').addEventListener('click', clearRouteOnly);
@@ -441,6 +514,8 @@ body{overflow-x:hidden}
       const saved = JSON.parse(raw);
       Object.assign(state, saved);
       state.settings = { defaultStart: 'Vitarte, Lima', routeNamePrefix: 'Inspecciones', ...(saved.settings || {}) };
+      state.navigation = { active:false, paused:false, activeIndex:0, currentPosition:null, simulated:false, ...(saved.navigation || {}) };
+      state.navigation.active = false; state.navigation.paused = false; state.navigation.simulated = false;
     } catch (error) {
       console.warn('No se pudo cargar el almacenamiento local', error);
     }
@@ -457,7 +532,7 @@ body{overflow-x:hidden}
   }
 
   function renderAll() {
-    renderStart(); renderStops(); renderRoute(); renderSavedRoutes(); renderHistory(); refreshMap();
+    renderStart(); renderStops(); renderRoute(); renderNavigation(); renderSavedRoutes(); renderHistory(); refreshMap();
   }
 
   function renderStart() {
@@ -636,6 +711,7 @@ body{overflow-x:hidden}
         duration: routeData.duration,
         geometry: routeData.geometry,
         legs: routeData.legs,
+        steps: routeData.steps || [],
       };
       persist(); renderAll(); setFeedback('Ruta calculada correctamente.', 'ok'); fitMap();
     } catch (error) {
@@ -722,13 +798,13 @@ body{overflow-x:hidden}
 
   async function requestOsrmRoute(points) {
     const coords = points.map(p => `${p.lon},${p.lat}`).join(';');
-    const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson&steps=false`;
+    const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson&steps=true`;
     const response = await fetchWithTimeout(url, {}, 22000);
     if (!response.ok) throw new Error('No route');
     const data = await response.json();
     if (!data.routes?.length) throw new Error('Sin ruta');
     const route = data.routes[0];
-    return { distance: route.distance, duration: route.duration, geometry: route.geometry.coordinates.map(([lon,lat]) => [lat,lon]), legs: route.legs };
+    return { distance: route.distance, duration: route.duration, geometry: route.geometry.coordinates.map(([lon,lat]) => [lat,lon]), legs: route.legs, steps: route.legs?.flatMap(l => l.steps || []) || [] };
   }
 
   function buildFallbackRoute(points) {
@@ -780,10 +856,15 @@ body{overflow-x:hidden}
     if (!map) return;
     markersLayer.clearLayers(); routeLayer.clearLayers(); markerRefs.clear();
     if (state.start) addMarker(state.start, 'Inicio', 'start');
-    state.stops.forEach((s,i)=>addMarker(s, String(i+1), 'stop'));
+    const routeStops = state.route?.orderedStops || state.stops;
+    routeStops.forEach((stop,i)=>addMarker(stop, String(i+1), state.navigation.active && i===state.navigation.activeIndex ? 'active' : 'stop'));
     if (state.route?.returnToStart && state.start) addMarker({ ...state.start, lat: state.start.lat+0.00001 }, '⌂', 'end');
-    if (state.route?.geometry?.length) L.polyline(state.route.geometry,{color:'#ffffff',weight:10,opacity:.9,interactive:false}).addTo(routeLayer); L.polyline(state.route.geometry,{color:'#1267ef',weight:6,opacity:1,className:'route-line-animated'}).bindPopup('<strong>Ruta optimizada</strong><br>Haz clic en cada marcador para abrir el mapa o navegar.').addTo(routeLayer);
-    el('mapStatus').textContent = state.route ? `${formatDistance(state.route.distance)} · ${formatDuration(state.route.duration)}` : `${state.stops.length} parada(s)`;
+    if (state.route?.geometry?.length) {
+      L.polyline(state.route.geometry,{color:'#ffffff',weight:10,opacity:.9,interactive:false}).addTo(routeLayer);
+      L.polyline(state.route.geometry,{color:'#1267ef',weight:6,opacity:.75,className:'route-line-animated'}).bindPopup('<strong>Ruta optimizada</strong><br>Recorrido completo de la parada 1 a la última.').addTo(routeLayer);
+    }
+    if (state.navigation.currentPosition) drawLivePosition(state.navigation.currentPosition, false);
+    el('mapStatus').textContent = state.navigation.active ? `En recorrido · parada ${Math.min(state.navigation.activeIndex+1, routeStops.length)} de ${routeStops.length}` : (state.route ? `${formatDistance(state.route.distance)} · ${formatDuration(state.route.duration)}` : `${state.stops.length} parada(s)`);
   }
 
   function addMarker(point,label,type) {
@@ -805,6 +886,206 @@ body{overflow-x:hidden}
     document.querySelector('.map-column')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  function renderNavigation() {
+    const nav = state.navigation || {};
+    const stops = state.route?.orderedStops || [];
+    const card = el('navigationCard');
+    const badge = el('liveBadge');
+    card?.classList.toggle('running', !!nav.active && !nav.paused);
+    badge?.classList.toggle('active', !!nav.active && !nav.paused);
+    el('liveBadgeText').textContent = nav.active ? (nav.paused ? 'Pausado' : (nav.simulated ? 'Simulación' : 'GPS activo')) : 'Detenido';
+    el('startNavigationBtn').textContent = nav.active ? '▶ Continuar recorrido' : '▶ Iniciar recorrido';
+    el('pauseNavigationBtn').textContent = nav.paused ? 'Reanudar' : 'Pausar';
+    el('simulateBtn').textContent = nav.simulated ? 'Detener simulación' : 'Simular avance';
+    if (!stops.length) {
+      el('navDestination').textContent = 'Ruta no iniciada';
+      el('navSubtext').textContent = 'Optimiza la ruta y presiona Iniciar recorrido.';
+      el('navDistance').textContent = '—'; el('navTime').textContent = '—'; el('navStopNumber').textContent = '—';
+      el('navInstruction').textContent = 'Esperando iniciar el recorrido.';
+      el('navProgressBar').style.width = '0%';
+      el('externalNavigationBtn').href = '#';
+      return;
+    }
+    const idx = Math.min(nav.activeIndex || 0, stops.length - 1);
+    const target = stops[idx];
+    el('navDestination').textContent = `Parada ${idx+1}: ${shortLabel(target.label)}`;
+    el('navSubtext').textContent = nav.active ? `Siguiendo el orden 1 → ${stops.length}` : `Ruta lista con ${stops.length} paradas ordenadas.`;
+    el('navStopNumber').textContent = `${idx+1}/${stops.length}`;
+    const current = nav.currentPosition || state.start;
+    const km = current ? distanceKm(current, target) : 0;
+    el('navDistance').textContent = nav.remainingDistance ? formatDistance(nav.remainingDistance) : `${km.toFixed(1)} km`;
+    el('navTime').textContent = nav.remainingDuration ? formatDuration(nav.remainingDuration) : `${Math.max(1,Math.round(km/30*60))} min`;
+    el('navInstruction').textContent = nav.instruction || (nav.active ? 'Continúa hacia la parada activa.' : 'Presiona Iniciar recorrido para activar el GPS.');
+    el('navProgressBar').style.width = `${Math.round((idx / Math.max(1, stops.length)) * 100)}%`;
+    el('arrivalBanner').classList.toggle('show', !!nav.arrived);
+    el('externalNavigationBtn').href = `https://www.google.com/maps/dir/?api=1&destination=${target.lat},${target.lon}`;
+    el('activeFormBtn').href = FORM_URL;
+  }
+
+  async function startNavigation() {
+    if (!state.route?.orderedStops?.length) {
+      await calculateRoute(true);
+      if (!state.route?.orderedStops?.length) return setNavigationFeedback('No fue posible preparar la ruta.', 'error');
+    }
+    if (!navigator.geolocation) return setNavigationFeedback('Este dispositivo no admite ubicación GPS.', 'error');
+    stopSimulation(false);
+    state.navigation.active = true;
+    state.navigation.paused = false;
+    state.navigation.simulated = false;
+    state.navigation.activeIndex = Math.min(state.navigation.activeIndex || 0, state.route.orderedStops.length - 1);
+    persist(); renderNavigation();
+    setNavigationFeedback('Solicitando ubicación precisa…');
+    if (geoWatchId !== null) navigator.geolocation.clearWatch(geoWatchId);
+    geoWatchId = navigator.geolocation.watchPosition(handleLivePosition, handleLocationError, {
+      enableHighAccuracy: true, maximumAge: 3000, timeout: 15000
+    });
+  }
+
+  function handleLivePosition(position) {
+    if (!state.navigation.active || state.navigation.paused || state.navigation.simulated) return;
+    const p = { lat: position.coords.latitude, lon: position.coords.longitude, accuracy: position.coords.accuracy, heading: position.coords.heading, speed: position.coords.speed, timestamp: position.timestamp };
+    processLivePosition(p, true);
+  }
+
+  function handleLocationError(error) {
+    const messages = {1:'Permiso de ubicación denegado. Habilítalo en el candado del navegador.',2:'No se pudo determinar tu ubicación.',3:'La ubicación tardó demasiado en responder.'};
+    setNavigationFeedback(messages[error.code] || 'No se pudo iniciar el GPS.', 'error');
+    state.navigation.active = false; persist(); renderNavigation();
+  }
+
+  function processLivePosition(p, fromGps=false) {
+    state.navigation.currentPosition = p;
+    state.navigation.arrived = false;
+    drawLivePosition(p, true);
+    const stops = state.route?.orderedStops || [];
+    const target = stops[state.navigation.activeIndex];
+    if (!target) return finishNavigation(false);
+    const meters = distanceKm(p, target) * 1000;
+    if (meters <= 70) {
+      state.navigation.arrived = true;
+      state.navigation.instruction = `Llegaste a la parada ${state.navigation.activeIndex+1}.`;
+      setNavigationFeedback('Llegaste al destino actual.', 'ok');
+    }
+    const now = Date.now();
+    const moved = lastRoutedPosition ? distanceKm(lastRoutedPosition,p)*1000 : Infinity;
+    if (!isLiveRouteRequestPending && (now-lastLiveRouteAt>12000 || moved>60)) updateActiveLegRoute(p,target);
+    persist(); renderNavigation();
+  }
+
+  async function updateActiveLegRoute(current,target) {
+    isLiveRouteRequestPending = true; lastLiveRouteAt = Date.now(); lastRoutedPosition = {...current};
+    try {
+      const route = await requestOsrmRoute([current,target]);
+      state.navigation.remainingDistance = route.distance;
+      state.navigation.remainingDuration = route.duration;
+      state.navigation.instruction = formatNextInstruction(route.steps?.[0]);
+      drawLiveRoute(route.geometry);
+    } catch {
+      const km=distanceKm(current,target); state.navigation.remainingDistance=km*1000; state.navigation.remainingDuration=km/30*3600;
+      state.navigation.instruction='Continúa hacia la parada activa. Ruta aproximada.';
+      drawLiveRoute([[current.lat,current.lon],[target.lat,target.lon]]);
+    } finally { isLiveRouteRequestPending=false; persist(); renderNavigation(); }
+  }
+
+  function formatNextInstruction(step) {
+    if (!step) return 'Continúa hacia la parada activa.';
+    const type=step.maneuver?.type || '';
+    const modifier=step.maneuver?.modifier || '';
+    const road=step.name ? ` en ${step.name}` : '';
+    const turns={left:'Gira a la izquierda',right:'Gira a la derecha','slight left':'Mantente ligeramente a la izquierda','slight right':'Mantente ligeramente a la derecha',straight:'Continúa recto','sharp left':'Gira pronunciadamente a la izquierda','sharp right':'Gira pronunciadamente a la derecha','uturn':'Da la vuelta'};
+    if(type==='depart') return `Inicia el recorrido${road}`;
+    if(type==='arrive') return 'El destino está adelante';
+    if(type==='roundabout'||type==='rotary') return `Ingresa a la rotonda${road}`;
+    return `${turns[modifier] || 'Continúa'}${road}`;
+  }
+
+  function drawLivePosition(p, follow=true) {
+    if (!map || !markersLayer) return;
+    const latlng=[p.lat,p.lon];
+    if (!livePositionMarker) {
+      const icon=L.divIcon({className:'',html:'<div class="current-location-marker" title="Tu ubicación"></div>',iconSize:[22,22],iconAnchor:[11,11]});
+      livePositionMarker=L.marker(latlng,{icon,zIndexOffset:1500}).addTo(markersLayer).bindPopup('<strong>Tu ubicación actual</strong>');
+      liveAccuracyCircle=L.circle(latlng,{radius:Math.min(p.accuracy||20,250),color:'#1677ff',weight:1,fillColor:'#1677ff',fillOpacity:.08,interactive:false}).addTo(markersLayer);
+    } else { livePositionMarker.setLatLng(latlng); liveAccuracyCircle?.setLatLng(latlng).setRadius(Math.min(p.accuracy||20,250)); }
+    if(follow && state.navigation.active && !state.navigation.paused){ map.setView(latlng,Math.max(map.getZoom(),16),{animate:true}); el('map').classList.add('map-following'); }
+  }
+
+  function drawLiveRoute(geometry) {
+    if (!map || !geometry?.length) return;
+    if (liveRouteLine) routeLayer.removeLayer(liveRouteLine);
+    liveRouteLine=L.polyline(geometry,{color:'#16a05d',weight:7,opacity:1}).addTo(routeLayer);
+    liveRouteLine.bringToFront();
+  }
+
+  function centerOnLivePosition() {
+    const p=state.navigation.currentPosition;
+    if(!p || !map) return setNavigationFeedback('Todavía no existe una ubicación actual.', 'error');
+    map.setView([p.lat,p.lon],17,{animate:true});
+  }
+
+  function togglePauseNavigation() {
+    if(!state.navigation.active) return setNavigationFeedback('Primero inicia el recorrido.', 'error');
+    state.navigation.paused=!state.navigation.paused;
+    if(state.navigation.paused) el('map').classList.remove('map-following');
+    persist(); renderNavigation();
+  }
+
+  function advanceToNextStop(auto=false) {
+    const stops=state.route?.orderedStops||[];
+    if(!stops.length) return;
+    const current=stops[state.navigation.activeIndex];
+    if(current){ current.status='Visitada'; addHistory(`Inspección visitada: ${shortLabel(current.label)}`); }
+    if(state.navigation.activeIndex>=stops.length-1) return finishNavigation(false);
+    state.navigation.activeIndex+=1; state.navigation.arrived=false; state.navigation.remainingDistance=0; state.navigation.remainingDuration=0; state.navigation.instruction='Calculando el siguiente tramo…';
+    if(liveRouteLine){routeLayer.removeLayer(liveRouteLine);liveRouteLine=null;}
+    persist(); renderAll();
+    const p=state.navigation.currentPosition||state.start; if(p) updateActiveLegRoute(p,stops[state.navigation.activeIndex]);
+    setNavigationFeedback(`Ahora dirígete a la parada ${state.navigation.activeIndex+1}.`,'ok');
+  }
+
+  function finishNavigation(confirmFirst=true) {
+    if(confirmFirst && state.navigation.active && !confirm('¿Finalizar el recorrido actual?')) return;
+    if(geoWatchId!==null){navigator.geolocation.clearWatch(geoWatchId);geoWatchId=null;}
+    stopSimulation(false);
+    state.navigation.active=false; state.navigation.paused=false; state.navigation.simulated=false; state.navigation.arrived=false;
+    state.navigation.instruction='Recorrido finalizado.';
+    if(liveRouteLine){routeLayer.removeLayer(liveRouteLine);liveRouteLine=null;}
+    el('map')?.classList.remove('map-following'); persist(); renderNavigation();
+    setNavigationFeedback('Recorrido finalizado.','ok');
+  }
+
+  function toggleSimulation() {
+    if(state.navigation.simulated){stopSimulation(true);return;}
+    if(!state.route?.geometry?.length) return setNavigationFeedback('Primero optimiza la ruta.','error');
+    if(geoWatchId!==null){navigator.geolocation.clearWatch(geoWatchId);geoWatchId=null;}
+    state.navigation.active=true;state.navigation.paused=false;state.navigation.simulated=true;state.navigation.activeIndex=0;
+    simulationPath=sampleGeometry(state.route.geometry,180);simulationIndex=0;
+    simulationTimer=setInterval(()=>{
+      if(state.navigation.paused)return;
+      if(simulationIndex>=simulationPath.length){stopSimulation(true);return;}
+      const [lat,lon]=simulationPath[simulationIndex++]; processLivePosition({lat,lon,accuracy:8,timestamp:Date.now()},false);
+      const stops=state.route.orderedStops||[]; const target=stops[state.navigation.activeIndex];
+      if(target && distanceKm({lat,lon},target)*1000<90 && state.navigation.activeIndex<stops.length-1) advanceToNextStop(true);
+    },900);
+    persist();renderNavigation();setNavigationFeedback('Simulación iniciada. El punto azul avanzará por la ruta.','ok');
+  }
+
+  function stopSimulation(update=true){
+    if(simulationTimer){clearInterval(simulationTimer);simulationTimer=null;}
+    state.navigation.simulated=false;
+    if(update){state.navigation.active=false;persist();renderNavigation();setNavigationFeedback('Simulación detenida.');}
+  }
+
+  function sampleGeometry(points,maxPoints=180){
+    if(points.length<=maxPoints)return points;
+    const step=(points.length-1)/(maxPoints-1);const out=[];
+    for(let i=0;i<maxPoints;i++)out.push(points[Math.round(i*step)]);return out;
+  }
+
+  function setNavigationFeedback(message,type=''){
+    const node=el('navigationFeedback');node.textContent=message;node.className=`feedback ${type}`;
+  }
+
   function fitMap() {
     if (!map) return;
     const points = [];
@@ -816,8 +1097,8 @@ body{overflow-x:hidden}
   }
 
   function clearRouteOnly() { state.route = null; persist(); renderRoute(); refreshMap(); }
-  function clearStops() { if(confirm('¿Eliminar todas las paradas?')) { state.stops=[]; state.route=null; persist(); renderAll(); } }
-  function newRoute() { if((state.stops.length||state.route) && !confirm('¿Crear una ruta nueva y limpiar la actual?')) return; state.start=null; state.stops=[]; state.route=null; applySettingsToUI(); persist(); renderAll(); switchView('planner'); }
+  function clearStops() { finishNavigation(false); if(confirm('¿Eliminar todas las paradas?')) { state.stops=[]; state.route=null; persist(); renderAll(); } }
+  function newRoute() { finishNavigation(false); if((state.stops.length||state.route) && !confirm('¿Crear una ruta nueva y limpiar la actual?')) return; state.start=null; state.stops=[]; state.route=null; applySettingsToUI(); persist(); renderAll(); switchView('planner'); }
 
   function openSaveDialog() {
     if (!state.route) return setFeedback('Primero calcula una ruta.', 'error');
