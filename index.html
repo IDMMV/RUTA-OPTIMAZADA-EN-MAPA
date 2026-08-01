@@ -198,7 +198,7 @@ body{overflow-x:hidden}
   .map-nav-hud{top:108px}
 }
 
-/* V6: modo navegación a pantalla completa y panel compacto */
+/* V7: optimización exacta por tiempo real de carretera */
 .map-column.navigation-active .map-nav-hud{
   top:auto!important;bottom:42px;left:50%;right:auto;transform:translateX(-50%);
   width:min(680px,calc(100% - 24px));padding:8px 10px;border-radius:13px;
@@ -902,32 +902,134 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
       const points = [start, stops[0], ...(returnToStart ? [start] : [])];
       return { orderedStops: [...stops], routeData: await requestOsrmRoute(points) };
     }
-    const all = [start, ...stops];
-    const coords = all.map(p => `${p.lon},${p.lat}`).join(';');
-    const params = new URLSearchParams({
-      source: 'first',
-      roundtrip: returnToStart ? 'true' : 'false',
-      overview: 'full',
-      geometries: 'geojson',
-      steps: 'false'
-    });
-    if (!returnToStart) params.set('destination', 'any');
-    const url = `https://router.project-osrm.org/trip/v1/driving/${coords}?${params}`;
-    const response = await fetchWithTimeout(url, {}, 25000);
-    if (!response.ok) throw new Error('No se pudo optimizar la ruta');
-    const data = await response.json();
-    if (data.code !== 'Ok' || !data.trips?.length || !data.waypoints?.length) throw new Error('Ruta optimizada no disponible');
-    const trip = data.trips[0];
-    const indexed = data.waypoints.map((w, originalIndex) => ({ originalIndex, order: w.waypoint_index }));
-    const orderedStops = indexed
-      .filter(x => x.originalIndex !== 0)
-      .sort((a,b) => a.order - b.order)
-      .map(x => stops[x.originalIndex - 1]);
-    const geometry = trip.geometry.coordinates.map(([lon, lat]) => [lat, lon]);
-    return {
-      orderedStops,
-      routeData: { distance: trip.distance, duration: trip.duration, geometry, legs: trip.legs || [] }
-    };
+
+    // Primero obtenemos los tiempos reales por carretera entre todos los puntos.
+    // Después resolvemos el orden con inicio fijo. Para hasta 14 paradas usamos
+    // programación dinámica exacta; con más paradas usamos una heurística 2-opt.
+    const points = [start, ...stops];
+    const coords = points.map(p => `${p.lon},${p.lat}`).join(';');
+    const tableUrl = `https://router.project-osrm.org/table/v1/driving/${coords}?sources=all&destinations=all&annotations=duration,distance`;
+    const tableResponse = await fetchWithTimeout(tableUrl, {}, 25000);
+    if (!tableResponse.ok) throw new Error('No se pudo obtener la matriz de rutas');
+    const table = await tableResponse.json();
+    if (table.code !== 'Ok' || !table.durations) throw new Error('Matriz de rutas no disponible');
+
+    const matrix = table.durations;
+    const stopOrder = stops.length <= 14
+      ? solveExactRouteOrder(matrix, stops.length, returnToStart)
+      : solveHeuristicRouteOrder(matrix, stops.length, returnToStart);
+
+    if (!stopOrder.length || stopOrder.length !== stops.length) {
+      throw new Error('No se pudo determinar un orden válido');
+    }
+
+    const orderedStops = stopOrder.map(i => stops[i]);
+    const routePoints = [start, ...orderedStops, ...(returnToStart ? [start] : [])];
+    const routeData = await requestOsrmRoute(routePoints);
+    return { orderedStops, routeData };
+  }
+
+  function safeMatrixValue(matrix, from, to) {
+    const value = matrix?.[from]?.[to];
+    return Number.isFinite(value) ? value : 1e15;
+  }
+
+  function solveExactRouteOrder(matrix, stopCount, returnToStart) {
+    const size = 1 << stopCount;
+    const inf = Number.POSITIVE_INFINITY;
+    const dp = Array.from({ length: size }, () => new Float64Array(stopCount).fill(inf));
+    const parent = Array.from({ length: size }, () => new Int16Array(stopCount).fill(-1));
+
+    for (let j = 0; j < stopCount; j++) {
+      dp[1 << j][j] = safeMatrixValue(matrix, 0, j + 1);
+    }
+
+    for (let mask = 1; mask < size; mask++) {
+      for (let last = 0; last < stopCount; last++) {
+        if (!(mask & (1 << last))) continue;
+        const current = dp[mask][last];
+        if (!Number.isFinite(current)) continue;
+        for (let next = 0; next < stopCount; next++) {
+          if (mask & (1 << next)) continue;
+          const nextMask = mask | (1 << next);
+          const candidate = current + safeMatrixValue(matrix, last + 1, next + 1);
+          if (candidate < dp[nextMask][next]) {
+            dp[nextMask][next] = candidate;
+            parent[nextMask][next] = last;
+          }
+        }
+      }
+    }
+
+    const fullMask = size - 1;
+    let bestLast = -1;
+    let bestCost = inf;
+    for (let last = 0; last < stopCount; last++) {
+      let cost = dp[fullMask][last];
+      if (returnToStart) cost += safeMatrixValue(matrix, last + 1, 0);
+      if (cost < bestCost) { bestCost = cost; bestLast = last; }
+    }
+    if (bestLast < 0 || !Number.isFinite(bestCost)) return [];
+
+    const reverseOrder = [];
+    let mask = fullMask;
+    let last = bestLast;
+    while (last >= 0) {
+      reverseOrder.push(last);
+      const prev = parent[mask][last];
+      mask ^= 1 << last;
+      last = prev;
+    }
+    return reverseOrder.reverse();
+  }
+
+  function routeOrderCost(order, matrix, returnToStart) {
+    if (!order.length) return 0;
+    let cost = safeMatrixValue(matrix, 0, order[0] + 1);
+    for (let i = 0; i < order.length - 1; i++) {
+      cost += safeMatrixValue(matrix, order[i] + 1, order[i + 1] + 1);
+    }
+    if (returnToStart) cost += safeMatrixValue(matrix, order[order.length - 1] + 1, 0);
+    return cost;
+  }
+
+  function solveHeuristicRouteOrder(matrix, stopCount, returnToStart) {
+    const remaining = Array.from({ length: stopCount }, (_, i) => i);
+    const order = [];
+    let current = 0;
+    while (remaining.length) {
+      let bestPos = 0;
+      let bestCost = Number.POSITIVE_INFINITY;
+      remaining.forEach((stopIndex, pos) => {
+        const cost = safeMatrixValue(matrix, current, stopIndex + 1);
+        if (cost < bestCost) { bestCost = cost; bestPos = pos; }
+      });
+      const chosen = remaining.splice(bestPos, 1)[0];
+      order.push(chosen);
+      current = chosen + 1;
+    }
+
+    let improved = true;
+    let passes = 0;
+    while (improved && passes < 12) {
+      improved = false;
+      passes++;
+      const baseCost = routeOrderCost(order, matrix, returnToStart);
+      for (let i = 0; i < order.length - 1; i++) {
+        for (let k = i + 1; k < order.length; k++) {
+          const candidate = order.slice(0, i)
+            .concat(order.slice(i, k + 1).reverse(), order.slice(k + 1));
+          const candidateCost = routeOrderCost(candidate, matrix, returnToStart);
+          if (candidateCost + 0.5 < baseCost) {
+            order.splice(0, order.length, ...candidate);
+            improved = true;
+            break;
+          }
+        }
+        if (improved) break;
+      }
+    }
+    return order;
   }
 
   async function optimizeStops(start, stops) {

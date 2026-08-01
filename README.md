@@ -33,3 +33,6 @@ La ubicación requiere HTTPS y permiso del navegador. GitHub Pages ya usa HTTPS.
 - Inicia el recorrido en pantalla completa.
 - Botón superior para entrar/salir de pantalla completa.
 - Panel de distancia, tiempo y parada compactado en la parte inferior del mapa.
+
+## V7
+La optimización usa una matriz de tiempos reales por carretera. Hasta 14 paradas calcula el orden óptimo exacto con inicio fijo y regreso opcional; para más paradas utiliza una mejora 2-opt.
