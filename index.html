@@ -71,6 +71,16 @@ body{overflow-x:hidden}
 .location-notice{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--primary-soft);color:#29496f;font-size:13px}
 @media (max-width:850px){#map{height:52vh;min-height:380px}}
 
+/* Mapa completo y controles de navegación */
+#map{overflow:hidden!important;min-width:0}
+.leaflet-map-pane,.leaflet-tile-pane,.leaflet-overlay-pane{position:absolute!important}
+.leaflet-tile{width:256px!important;height:256px!important;max-width:none!important;max-height:none!important}
+.leaflet-container .leaflet-pane img{max-width:none!important;max-height:none!important}
+.map-popup{min-width:180px}.popup-actions{display:flex;gap:8px;margin-top:10px}.popup-actions a{background:var(--primary);color:#fff;text-decoration:none;border-radius:8px;padding:7px 9px;font-weight:700;font-size:12px}.popup-actions a:first-child{background:#fff;color:var(--primary);border:1px solid #9db8e8}
+.map-focus-btn{border:0;background:transparent;padding:0;font-family:inherit}
+.route-line-animated{stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:850px){.map-column{order:-1}#map{height:55vh;min-height:420px}}
+
   </style>
 </head>
 <body>
@@ -286,6 +296,10 @@ body{overflow-x:hidden}
   let markersLayer;
   let routeLayer;
   let deferredPrompt;
+  let activeTileLayer;
+  let tileProviderIndex = 0;
+  let tileErrorCount = 0;
+  const markerRefs = new Map();
 
   document.addEventListener('DOMContentLoaded', init);
 
@@ -306,20 +320,59 @@ body{overflow-x:hidden}
       el('map').innerHTML = '<div style="height:100%;display:grid;place-items:center;padding:24px;text-align:center;color:#6b7485"><div><strong>Mapa no disponible</strong><br><span>La interfaz sigue funcionando, pero OpenStreetMap necesita conexión a internet.</span></div></div>';
       return;
     }
-    map = L.map('map', { zoomControl: true, preferCanvas: true }).setView(DEFAULT_CENTER, 10);
-    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      crossOrigin: true,
-      updateWhenIdle: false,
-      keepBuffer: 4,
-      attribution: '&copy; OpenStreetMap contributors',
-    });
-    tiles.on('load', () => el('map').classList.add('map-ready'));
-    tiles.on('tileerror', () => { el('mapStatus').textContent = 'Algunas partes del mapa no cargaron. Reintentando…'; });
-    tiles.addTo(map);
+    map = L.map('map', {
+      zoomControl: true,
+      preferCanvas: true,
+      zoomSnap: 0.5,
+      wheelPxPerZoomLevel: 90,
+      fadeAnimation: false,
+      markerZoomAnimation: false
+    }).setView(DEFAULT_CENTER, 10);
+    loadTileProvider(0);
     markersLayer = L.layerGroup().addTo(map);
     routeLayer = L.layerGroup().addTo(map);
     requestAnimationFrame(() => { map.invalidateSize(true); setTimeout(() => map.invalidateSize(true), 300); });
+  }
+
+  function loadTileProvider(index = 0) {
+    const providers = [
+      {
+        url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+        options: { subdomains: 'abcd', maxZoom: 20, attribution: '&copy; OpenStreetMap &copy; CARTO' }
+      },
+      {
+        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        options: { subdomains: 'abc', maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }
+      }
+    ];
+    tileProviderIndex = Math.min(index, providers.length - 1);
+    tileErrorCount = 0;
+    if (activeTileLayer) map.removeLayer(activeTileLayer);
+    const provider = providers[tileProviderIndex];
+    activeTileLayer = L.tileLayer(provider.url, {
+      ...provider.options,
+      tileSize: 256,
+      zoomOffset: 0,
+      detectRetina: false,
+      updateWhenIdle: true,
+      updateWhenZooming: false,
+      keepBuffer: 2,
+      noWrap: false
+    });
+    activeTileLayer.on('tileload', () => {
+      el('map').classList.add('map-ready');
+      if (!state.route) el('mapStatus').textContent = `${state.stops.length} parada(s)`;
+    });
+    activeTileLayer.on('tileerror', () => {
+      tileErrorCount += 1;
+      if (tileErrorCount === 1) el('mapStatus').textContent = 'Completando el mapa…';
+      if (tileErrorCount >= 4 && tileProviderIndex === 0) {
+        el('mapStatus').textContent = 'Cambiando servidor de mapa…';
+        loadTileProvider(1);
+      }
+    });
+    activeTileLayer.addTo(map);
+    setTimeout(() => map.invalidateSize({ pan: false }), 100);
   }
 
   function bindEvents() {
@@ -547,15 +600,24 @@ body{overflow-x:hidden}
     if (!state.stops.length) { button.classList.remove('busy-btn'); button.textContent=originalText; return setFeedback('Agrega al menos una parada.', 'error'); }
     setFeedback(optimize ? 'Calculando el mejor orden…' : 'Calculando la ruta…');
     try {
-      const orderedStops = optimize ? await optimizeStops(state.start, state.stops) : [...state.stops];
-      const points = [state.start, ...orderedStops];
-      if (el('returnToStart').checked) points.push(state.start);
-      const routeData = await requestOsrmRoute(points);
+      const returnToStart = el('returnToStart').checked;
+      let orderedStops;
+      let routeData;
+      if (optimize) {
+        const optimized = await requestOptimizedTrip(state.start, state.stops, returnToStart);
+        orderedStops = optimized.orderedStops;
+        routeData = optimized.routeData;
+      } else {
+        orderedStops = [...state.stops];
+        const points = [state.start, ...orderedStops];
+        if (returnToStart) points.push(state.start);
+        routeData = await requestOsrmRoute(points);
+      }
       state.stops = orderedStops;
       state.route = {
         createdAt: new Date().toISOString(),
         orderedStops,
-        returnToStart: el('returnToStart').checked,
+        returnToStart,
         distance: routeData.distance,
         duration: routeData.duration,
         geometry: routeData.geometry,
@@ -575,6 +637,39 @@ body{overflow-x:hidden}
       button.classList.remove('busy-btn'); button.textContent = originalText;
       if (map) { setTimeout(() => map.invalidateSize(true), 80); setTimeout(fitMap, 160); }
     }
+  }
+
+  async function requestOptimizedTrip(start, stops, returnToStart) {
+    if (stops.length === 1) {
+      const points = [start, stops[0], ...(returnToStart ? [start] : [])];
+      return { orderedStops: [...stops], routeData: await requestOsrmRoute(points) };
+    }
+    const all = [start, ...stops];
+    const coords = all.map(p => `${p.lon},${p.lat}`).join(';');
+    const params = new URLSearchParams({
+      source: 'first',
+      roundtrip: returnToStart ? 'true' : 'false',
+      overview: 'full',
+      geometries: 'geojson',
+      steps: 'false'
+    });
+    if (!returnToStart) params.set('destination', 'any');
+    const url = `https://router.project-osrm.org/trip/v1/driving/${coords}?${params}`;
+    const response = await fetchWithTimeout(url, {}, 25000);
+    if (!response.ok) throw new Error('No se pudo optimizar la ruta');
+    const data = await response.json();
+    if (data.code !== 'Ok' || !data.trips?.length || !data.waypoints?.length) throw new Error('Ruta optimizada no disponible');
+    const trip = data.trips[0];
+    const indexed = data.waypoints.map((w, originalIndex) => ({ originalIndex, order: w.waypoint_index }));
+    const orderedStops = indexed
+      .filter(x => x.originalIndex !== 0)
+      .sort((a,b) => a.order - b.order)
+      .map(x => stops[x.originalIndex - 1]);
+    const geometry = trip.geometry.coordinates.map(([lon, lat]) => [lat, lon]);
+    return {
+      orderedStops,
+      routeData: { distance: trip.distance, duration: trip.duration, geometry, legs: trip.legs || [] }
+    };
   }
 
   async function optimizeStops(start, stops) {
@@ -648,7 +743,7 @@ body{overflow-x:hidden}
         <div class="route-number">${index+1}</div>
         <div class="route-main"><strong>${escapeHtml(shortLabel(stop.label))}</strong><span>${formatDistance(leg.distance || 0)} desde la parada anterior</span>
           <div class="route-actions">
-            <a class="nav-link" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${stop.lat},${stop.lon}">Navegar</a>
+            <button class="nav-link map-focus-btn" type="button" data-marker="${index+1}">Ver en mapa</button><a class="nav-link" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${stop.lat},${stop.lon}">Navegar</a>
             <a class="nav-link" target="_blank" rel="noopener" href="${FORM_URL}">Formulario</a>
             <select class="status-select" data-index="${index}"><option>Pendiente</option><option>Visitada</option><option>Reprogramada</option><option>No encontrada</option></select>
           </div>
@@ -656,6 +751,7 @@ body{overflow-x:hidden}
         <div class="route-time"><strong>${formatDuration(leg.duration || 0)}</strong><span>aprox.</span></div>`;
       const select = item.querySelector('select'); select.value = stop.status || 'Pendiente';
       select.addEventListener('change', () => { stop.status = select.value; persist(); if(select.value==='Visitada') addHistory(`Inspección visitada: ${shortLabel(stop.label)}`); });
+      item.querySelector('.map-focus-btn')?.addEventListener('click', () => focusMarker(String(index+1)));
       list.appendChild(item);
     });
     if (state.route.returnToStart) {
@@ -668,17 +764,31 @@ body{overflow-x:hidden}
 
   function refreshMap() {
     if (!map) return;
-    markersLayer.clearLayers(); routeLayer.clearLayers();
+    markersLayer.clearLayers(); routeLayer.clearLayers(); markerRefs.clear();
     if (state.start) addMarker(state.start, 'Inicio', 'start');
     state.stops.forEach((s,i)=>addMarker(s, String(i+1), 'stop'));
     if (state.route?.returnToStart && state.start) addMarker({ ...state.start, lat: state.start.lat+0.00001 }, '⌂', 'end');
-    if (state.route?.geometry?.length) L.polyline(state.route.geometry,{color:'#1267ef',weight:5,opacity:.9}).addTo(routeLayer);
+    if (state.route?.geometry?.length) L.polyline(state.route.geometry,{color:'#ffffff',weight:10,opacity:.9,interactive:false}).addTo(routeLayer); L.polyline(state.route.geometry,{color:'#1267ef',weight:6,opacity:1,className:'route-line-animated'}).bindPopup('<strong>Ruta optimizada</strong><br>Haz clic en cada marcador para abrir el mapa o navegar.').addTo(routeLayer);
     el('mapStatus').textContent = state.route ? `${formatDistance(state.route.distance)} · ${formatDuration(state.route.duration)}` : `${state.stops.length} parada(s)`;
   }
 
   function addMarker(point,label,type) {
-    const icon = L.divIcon({ className:'custom-marker', html:`<div class="marker-bubble marker-${type}">${label}</div>`, iconSize:[31,31], iconAnchor:[15,15] });
-    L.marker([point.lat,point.lon],{icon}).bindPopup(`<strong>${escapeHtml(shortLabel(point.label))}</strong>`).addTo(markersLayer);
+    const icon = L.divIcon({ className:'custom-marker', html:`<div class="marker-bubble marker-${type}">${label}</div>`, iconSize:[34,34], iconAnchor:[17,17] });
+    const openMap = `https://www.openstreetmap.org/?mlat=${point.lat}&mlon=${point.lon}#map=18/${point.lat}/${point.lon}`;
+    const navigate = `https://www.google.com/maps/dir/?api=1&destination=${point.lat},${point.lon}`;
+    const popup = `<div class="map-popup"><strong>${escapeHtml(shortLabel(point.label))}</strong><div class="popup-actions"><a href="${openMap}" target="_blank" rel="noopener">Ver mapa</a><a href="${navigate}" target="_blank" rel="noopener">Navegar</a></div></div>`;
+    const marker = L.marker([point.lat,point.lon],{icon, riseOnHover:true}).bindPopup(popup).addTo(markersLayer);
+    markerRefs.set(type === 'start' ? 'start' : String(label), marker);
+  }
+
+  function focusMarker(key) {
+    const marker = markerRefs.get(String(key));
+    if (!marker || !map) return;
+    const latlng = marker.getLatLng();
+    map.invalidateSize({ pan: false });
+    map.setView(latlng, Math.max(map.getZoom(), 16), { animate: true });
+    marker.openPopup();
+    document.querySelector('.map-column')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function fitMap() {
