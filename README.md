@@ -21,3 +21,9 @@ La ubicación requiere HTTPS y permiso del navegador. GitHub Pages ya usa HTTPS.
 - Botón flotante para centrar la ubicación.
 - Brújula norte/sur basada en orientación del dispositivo.
 - Actualización de tramo cada 4 segundos o 20 metros.
+
+## Versión V5
+- Panel izquierdo con desplazamiento vertical independiente en computadora.
+- Mapa fijo y siempre visible durante la edición de la ruta.
+- Brújula ubicada en el centro superior del mapa.
+- Botón de ubicación ubicado en la esquina superior derecha.

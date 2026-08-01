@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <title>Rutas de Inspección</title>
-  <meta name="app-version" content="2026.08.01.5" />
+  <meta name="app-version" content="2026.08.01.6" />
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
   <link rel="preconnect" href="https://tile.openstreetmap.org" />
@@ -143,6 +143,59 @@ body{overflow-x:hidden}
   .main{padding:8px}.topbar{padding:4px 2px 9px}.topbar h1{font-size:19px}.top-actions .primary-btn{font-size:13px;padding:9px 11px;border-radius:12px}
   #map{height:43vh!important;min-height:290px!important;max-height:390px!important}.map-toolbar{align-items:center}.map-actions .ghost-btn{padding:7px 8px}.map-nav-hud-metrics{gap:4px}.map-nav-chip{padding:5px 6px}.map-nav-chip strong{font-size:13px}.map-nav-chip span{font-size:9px}
   .compass-control{left:7px;top:57px}.map-location-control{right:7px;top:57px}.gps-meta{max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+
+
+/* V5: panel desplazable y controles del mapa reubicados */
+@media (min-width:851px){
+  .planner-grid{
+    height:calc(100vh - 112px);
+    min-height:620px;
+    align-items:stretch;
+    overflow:hidden;
+  }
+  .control-column{
+    height:100%;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding-right:8px;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+    scrollbar-color:#9db8e8 #edf2f8;
+  }
+  .control-column::-webkit-scrollbar{width:10px}
+  .control-column::-webkit-scrollbar-track{background:#edf2f8;border-radius:999px}
+  .control-column::-webkit-scrollbar-thumb{background:#9db8e8;border:2px solid #edf2f8;border-radius:999px}
+  .control-column::-webkit-scrollbar-thumb:hover{background:#6f96d5}
+  .map-column{
+    position:relative;
+    top:auto;
+    height:100%;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+  }
+  #map{height:auto!important;min-height:0!important;max-height:none!important;flex:1 1 auto}
+}
+.compass-control{
+  left:50%!important;
+  right:auto!important;
+  transform:translateX(-50%);
+  top:66px!important;
+}
+.map-location-control{right:14px!important;top:66px!important}
+.map-nav-hud{top:138px}
+@media(max-width:850px){
+  .control-column{overflow:visible;height:auto;padding-right:0}
+  .compass-control{left:50%!important;transform:translateX(-50%);top:58px!important}
+  .map-location-control{right:8px!important;top:58px!important}
+  .map-nav-hud{top:114px}
+}
+@media(max-width:520px){
+  .compass-control{left:50%!important;top:57px!important}
+  .map-location-control{right:7px!important;top:57px!important}
+  .map-nav-hud{top:108px}
 }
 
 </style>
