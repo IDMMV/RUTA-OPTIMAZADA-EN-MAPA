@@ -228,6 +228,20 @@ body{overflow-x:hidden}
 .map-column:fullscreen .map-location-control,.map-column.pseudo-fullscreen .map-location-control{top:58px!important}
 .map-column:fullscreen .map-nav-hud,.map-column.pseudo-fullscreen .map-nav-hud{bottom:12px!important}
 body.pseudo-fullscreen-open{overflow:hidden!important}
+/* V9: controles de acercar/alejar siempre visibles durante pantalla completa */
+.map-column:fullscreen .leaflet-top.leaflet-left,
+.map-column.pseudo-fullscreen .leaflet-top.leaflet-left{
+  top:58px!important;left:8px!important;z-index:12000!important;pointer-events:none;
+}
+.map-column:fullscreen .leaflet-control-zoom,
+.map-column.pseudo-fullscreen .leaflet-control-zoom{
+  display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+  border-radius:12px!important;overflow:hidden!important;box-shadow:0 5px 18px rgba(15,23,42,.22)!important;
+}
+.map-column:fullscreen .leaflet-control-zoom a,
+.map-column.pseudo-fullscreen .leaflet-control-zoom a{
+  width:44px!important;height:44px!important;line-height:44px!important;font-size:28px!important;font-weight:700!important;
+}
 @media(max-width:700px){
   .map-column.navigation-active .map-nav-hud{
     width:calc(100% - 16px);bottom:8px;grid-template-columns:minmax(0,1fr) auto;
@@ -244,6 +258,8 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   .map-column:fullscreen .map-actions .ghost-btn,.map-column.pseudo-fullscreen .map-actions .ghost-btn{padding:7px 8px;font-size:11px}
   .map-column:fullscreen .compass-control,.map-column.pseudo-fullscreen .compass-control{top:54px!important}
   .map-column:fullscreen .map-location-control,.map-column.pseudo-fullscreen .map-location-control{top:54px!important}
+  .map-column:fullscreen .leaflet-top.leaflet-left,.map-column.pseudo-fullscreen .leaflet-top.leaflet-left{top:56px!important;left:7px!important}
+  .map-column:fullscreen .leaflet-control-zoom a,.map-column.pseudo-fullscreen .leaflet-control-zoom a{width:46px!important;height:46px!important;line-height:46px!important;font-size:30px!important}
 }
 
 </style>
@@ -1296,7 +1312,15 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
       node?.classList.remove('pseudo-fullscreen');
       document.body.classList.remove('pseudo-fullscreen-open');
     }
-    setTimeout(() => map?.invalidateSize({ pan:false }), 80);
+    setTimeout(() => {
+      map?.invalidateSize({ pan:false });
+      const zoom = node?.querySelector('.leaflet-control-zoom');
+      if (zoom) {
+        zoom.style.display = 'block';
+        zoom.style.visibility = 'visible';
+        zoom.style.opacity = '1';
+      }
+    }, 80);
   }
 
   async function startNavigation() {

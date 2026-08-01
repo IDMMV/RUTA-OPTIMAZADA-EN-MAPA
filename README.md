@@ -40,3 +40,9 @@ La optimización usa una matriz de tiempos reales por carretera. Hasta 14 parada
 
 ## V8
 Antes de optimizar solicita una ubicación GPS nueva y fija como primera parada la ubicación más cercana por carretera.
+
+
+## V9
+- Mantiene visibles los botones + y − de zoom en pantalla completa.
+- Controles ampliados para uso táctil en celular.
+- Recalcula el tamaño del mapa al entrar y salir de pantalla completa.
