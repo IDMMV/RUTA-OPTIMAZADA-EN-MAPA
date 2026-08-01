@@ -262,6 +262,23 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   .map-column:fullscreen .leaflet-control-zoom a,.map-column.pseudo-fullscreen .leaflet-control-zoom a{width:46px!important;height:46px!important;line-height:46px!important;font-size:30px!important}
 }
 
+
+/* V10: rotación del mapa */
+.map-rotation-control{
+  position:absolute;left:14px;top:126px;z-index:1200;display:flex;gap:6px;
+}
+.map-rotation-control .map-round-btn{width:40px;height:40px;font-size:20px;font-weight:800;background:rgba(255,255,255,.96)}
+.map-rotation-help{position:absolute;left:14px;top:172px;z-index:1100;background:rgba(15,23,42,.82);color:#fff;padding:5px 8px;border-radius:8px;font-size:10px;pointer-events:none}
+.map-column:fullscreen .map-rotation-control,.map-column.pseudo-fullscreen .map-rotation-control{top:116px!important;left:8px!important;z-index:12000!important}
+.map-column:fullscreen .map-rotation-help,.map-column.pseudo-fullscreen .map-rotation-help{top:162px!important;left:8px!important;z-index:12000!important}
+@media(max-width:700px){
+  .map-rotation-control{left:7px;top:112px}
+  .map-rotation-control .map-round-btn{width:42px;height:42px}
+  .map-rotation-help{left:7px;top:160px;font-size:9px}
+  .map-column:fullscreen .map-rotation-control,.map-column.pseudo-fullscreen .map-rotation-control{top:108px!important;left:7px!important}
+  .map-column:fullscreen .map-rotation-help,.map-column.pseudo-fullscreen .map-rotation-help{top:156px!important;left:7px!important}
+}
+
 </style>
 </head>
 <body>
@@ -440,6 +457,11 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
               </div>
             </div>
             <button id="compassControl" class="compass-control" type="button" title="Orientar mapa al norte" aria-label="Orientar mapa al norte"><span class="compass-n">N</span><span id="compassArrow" class="compass-arrow"></span></button>
+            <div class="map-rotation-control" aria-label="Controles de rotación del mapa">
+              <button id="rotateMapLeftBtn" class="map-round-btn" type="button" title="Girar mapa a la izquierda" aria-label="Girar mapa a la izquierda">↺</button>
+              <button id="rotateMapRightBtn" class="map-round-btn" type="button" title="Girar mapa a la derecha" aria-label="Girar mapa a la derecha">↻</button>
+            </div>
+            <div class="map-rotation-help">Dos dedos para girar · Shift + arrastrar en PC</div>
             <div class="map-location-control">
               <button id="fullscreenMapBtn" class="map-round-btn fullscreen-toggle" type="button" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
               <button id="mapMyLocationBtn" class="map-round-btn location" type="button" title="Ver mi ubicación" aria-label="Ver mi ubicación">◎</button>
@@ -513,6 +535,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js?v=1.9.4" crossorigin="anonymous"></script>
   <script>if(typeof L==='undefined'){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>');}</script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet-rotate@0.2.8/dist/leaflet-rotate-src.min.js"></script>
   <script>
 (() => {
   'use strict';
@@ -583,7 +606,12 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
       zoomSnap: 0.5,
       wheelPxPerZoomLevel: 90,
       fadeAnimation: false,
-      markerZoomAnimation: false
+      markerZoomAnimation: false,
+      rotate: true,
+      bearing: 0,
+      touchRotate: true,
+      shiftKeyRotate: true,
+      rotateControl: false
     }).setView(DEFAULT_CENTER, 10);
     loadTileProvider(0);
     markersLayer = L.layerGroup().addTo(map);
@@ -652,6 +680,9 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     document.addEventListener('fullscreenchange', syncFullscreenUi);
     document.addEventListener('webkitfullscreenchange', syncFullscreenUi);
     el('compassControl')?.addEventListener('click', resetMapNorth);
+    el('rotateMapLeftBtn')?.addEventListener('click', () => rotateMapBy(-15));
+    el('rotateMapRightBtn')?.addEventListener('click', () => rotateMapBy(15));
+    map?.on?.('rotate', syncMapBearingUi);
     el('simulateBtn').addEventListener('click', toggleSimulation);
     el('finishNavigationBtn').addEventListener('click', () => finishNavigation(true));
     el('returnToStart').addEventListener('change', () => state.route && calculateRoute(false));
@@ -1457,12 +1488,37 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     } catch {}
   }
 
+  function getMapBearing() {
+    const value = map?.getBearing?.();
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  function syncMapBearingUi() {
+    const bearing = getMapBearing();
+    const arrow = el('compassArrow');
+    if (arrow) arrow.style.transform = `rotate(${-bearing}deg)`;
+    const compass = el('compassControl');
+    if (compass) compass.title = `Orientar al norte · giro actual ${Math.round(bearing)}°`;
+  }
+
+  function rotateMapBy(delta) {
+    if (!map) return;
+    if (typeof map.setBearing !== 'function') {
+      setNavigationFeedback('La rotación requiere conexión para cargar el complemento del mapa.', 'error');
+      return;
+    }
+    const next = (getMapBearing() + delta + 360) % 360;
+    map.setBearing(next);
+    syncMapBearingUi();
+    setNavigationFeedback(`Mapa girado a ${Math.round(next)}°. Usa ↺, ↻, dos dedos o Shift + arrastrar.`, 'ok');
+  }
+
   function resetMapNorth() {
     deviceHeading = 0;
-    const arrow = el('compassArrow'); if (arrow) arrow.style.transform = 'rotate(0deg)';
-    if (map) map.setBearing?.(0);
+    if (map?.setBearing) map.setBearing(0);
+    syncMapBearingUi();
     requestOrientationPermission();
-    setNavigationFeedback('Brújula orientada al norte. La N roja indica el norte.', 'ok');
+    setNavigationFeedback('Mapa orientado al norte.', 'ok');
   }
 
   function togglePauseNavigation() {
