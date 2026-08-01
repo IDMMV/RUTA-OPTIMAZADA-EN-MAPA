@@ -776,24 +776,44 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     } catch (error) { setFeedback(error.message, 'error'); }
   }
 
-  function useCurrentLocation() {
-    if (!navigator.geolocation) return setFeedback('Este navegador no permite obtener la ubicación.', 'error');
+  function getFreshCurrentLocation() {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) return reject(new Error('Este navegador no permite obtener la ubicación.'));
+      navigator.geolocation.getCurrentPosition(
+        pos => resolve({
+          label: 'Mi ubicación actual',
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          accuracy: Number(pos.coords.accuracy || 0),
+          capturedAt: new Date().toISOString()
+        }),
+        err => {
+          const messages = {
+            1: 'Permiso de ubicación rechazado. Actívalo desde el candado de la barra de direcciones.',
+            2: 'No se pudo determinar tu ubicación actual.',
+            3: 'La ubicación tardó demasiado. Intenta nuevamente.'
+          };
+          reject(new Error(messages[err.code] || 'No fue posible obtener tu ubicación.'));
+        },
+        { enableHighAccuracy: true, timeout: 22000, maximumAge: 0 }
+      );
+    });
+  }
+
+  async function useCurrentLocation() {
     const button = el('locateBtn');
     button.classList.add('busy-btn'); button.textContent = 'Ubicando…';
     setFeedback('Autoriza el acceso a tu ubicación cuando el navegador lo solicite.');
-    navigator.geolocation.getCurrentPosition(
-      pos => {
-        state.start = { label: 'Mi ubicación actual', lat: pos.coords.latitude, lon: pos.coords.longitude };
-        persist(); renderAll(); fitMap(); setFeedback('Ubicación actual definida.', 'ok');
-        button.classList.remove('busy-btn'); button.textContent = 'Mi ubicación';
-      },
-      err => {
-        const messages = {1:'Permiso de ubicación rechazado. Actívalo desde el candado de la barra de direcciones.',2:'No se pudo determinar tu ubicación.',3:'La ubicación tardó demasiado. Intenta nuevamente.'};
-        setFeedback(messages[err.code] || 'No fue posible obtener tu ubicación.', 'error');
-        button.classList.remove('busy-btn'); button.textContent = 'Mi ubicación';
-      },
-      { enableHighAccuracy: true, timeout: 18000, maximumAge: 30000 }
-    );
+    try {
+      state.start = await getFreshCurrentLocation();
+      persist(); renderAll(); fitMap();
+      const precision = state.start.accuracy ? ` Precisión aproximada: ±${Math.round(state.start.accuracy)} m.` : '';
+      setFeedback(`Ubicación actual definida.${precision}`, 'ok');
+    } catch (error) {
+      setFeedback(error.message, 'error');
+    } finally {
+      button.classList.remove('busy-btn'); button.textContent = 'Mi ubicación';
+    }
   }
 
   function requestLocationOnStart() {
@@ -852,10 +872,23 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     const button = optimize ? el('optimizeBtn') : el('manualOrderBtn');
     const originalText = button.textContent;
     button.classList.add('busy-btn'); button.textContent = optimize ? 'Optimizando…' : 'Calculando…';
-    if (!state.start) await resolveStartInput();
-    if (!state.start) { button.classList.remove('busy-btn'); button.textContent=originalText; return setFeedback('Define primero el punto de partida.', 'error'); }
     if (!state.stops.length) { button.classList.remove('busy-btn'); button.textContent=originalText; return setFeedback('Agrega al menos una parada.', 'error'); }
-    setFeedback(optimize ? 'Calculando el mejor orden…' : 'Calculando la ruta…');
+    if (optimize) {
+      button.textContent = 'Obteniendo ubicación…';
+      setFeedback('Antes de optimizar, necesitamos tu ubicación actual para iniciar la ruta desde donde estás.');
+      try {
+        state.start = await getFreshCurrentLocation();
+        persist(); renderAll(); fitMap();
+      } catch (error) {
+        button.classList.remove('busy-btn'); button.textContent = originalText;
+        return setFeedback(`${error.message} No se optimizó la ruta.`, 'error');
+      }
+      button.textContent = 'Optimizando…';
+    } else {
+      if (!state.start) await resolveStartInput();
+      if (!state.start) { button.classList.remove('busy-btn'); button.textContent=originalText; return setFeedback('Define primero el punto de partida.', 'error'); }
+    }
+    setFeedback(optimize ? 'Ubicación actual confirmada. Calculando el mejor orden desde este punto…' : 'Calculando la ruta…');
     try {
       const returnToStart = el('returnToStart').checked;
       let orderedStops;
@@ -940,9 +973,16 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     const dp = Array.from({ length: size }, () => new Float64Array(stopCount).fill(inf));
     const parent = Array.from({ length: size }, () => new Int16Array(stopCount).fill(-1));
 
+    // La primera visita se fija en la parada más cercana por carretera a la
+    // ubicación GPS actual. Así el recorrido siempre comienza desde donde está
+    // el inspector y evita saltar primero a un punto lejano solo por cerrar el ciclo.
+    let nearestFirst = 0;
+    let nearestCost = Number.POSITIVE_INFINITY;
     for (let j = 0; j < stopCount; j++) {
-      dp[1 << j][j] = safeMatrixValue(matrix, 0, j + 1);
+      const cost = safeMatrixValue(matrix, 0, j + 1);
+      if (cost < nearestCost) { nearestCost = cost; nearestFirst = j; }
     }
+    dp[1 << nearestFirst][nearestFirst] = nearestCost;
 
     for (let mask = 1; mask < size; mask++) {
       for (let last = 0; last < stopCount; last++) {
