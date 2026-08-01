@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <title>Rutas de Inspección V10</title>
-  <meta name="app-version" content="2026.08.01.8" />
+  <meta name="app-version" content="2026.08.01.9" />
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
   <link rel="preconnect" href="https://tile.openstreetmap.org" />
@@ -327,7 +327,8 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
                   <p>Pega una ubicación por línea. Admite direcciones, coordenadas y enlaces con coordenadas.</p>
                 </div>
               </div>
-              <textarea id="bulkInput" class="textarea" rows="6" placeholder="Ejemplos:\nAv. Nicolás Ayllón 123, Ate\n-12.0453, -76.9451\nhttps://www.google.com/maps/@-12.0711,-76.9562,15z"></textarea>
+              <textarea id="bulkInput" class="textarea" rows="6" placeholder="Ejemplos:\nAv. Nicolás Ayllón 123, Ate | SE Vitarte\n-12.0453, -76.9451 | SE Santa Rosa\nhttps://www.google.com/maps/@-12.0711,-76.9562,15z"></textarea>
+              <div class="resolved-text">Opcional: agrega " | Nombre de subestación" al final de la línea para relacionar el punto con su subestación.</div>
               <div class="button-row">
                 <button id="addLocationsBtn" class="primary-btn">Agregar ubicaciones</button>
                 <button id="clearInputBtn" class="ghost-btn">Limpiar cuadro</button>
@@ -762,12 +763,14 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
       item.dataset.index = index;
       item.innerHTML = `
         <div class="drag" title="Arrastrar">⠿</div>
-        <div class="stop-main"><strong>${escapeHtml(stop.label)}</strong><span>${stop.lat.toFixed(5)}, ${stop.lon.toFixed(5)}</span></div>
+        <div class="stop-main"><strong>${escapeHtml(stop.label)}</strong><span>${stop.lat.toFixed(5)}, ${stop.lon.toFixed(5)}${stop.substation ? ` · ⚡ ${escapeHtml(stop.substation)}` : ''}</span></div>
         <div class="stop-actions">
+          <button class="mini-btn" data-action="substation" title="Editar subestación">⚡</button>
           <button class="mini-btn" data-action="up" title="Subir">↑</button>
           <button class="mini-btn" data-action="down" title="Bajar">↓</button>
           <button class="mini-btn danger" data-action="remove" title="Eliminar">✕</button>
         </div>`;
+      item.querySelector('[data-action="substation"]').addEventListener('click', () => editStopSubstation(index));
       item.querySelector('[data-action="up"]').addEventListener('click', () => moveStop(index, -1));
       item.querySelector('[data-action="down"]').addEventListener('click', () => moveStop(index, 1));
       item.querySelector('[data-action="remove"]').addEventListener('click', () => removeStop(index));
@@ -797,6 +800,15 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
 
   function removeStop(index) {
     state.stops.splice(index, 1); state.route = null; persist(); renderAll();
+  }
+
+  function editStopSubstation(index) {
+    const stop = state.stops[index];
+    if (!stop) return;
+    const value = prompt('Subestación relacionada con este punto:', stop.substation || '');
+    if (value === null) return;
+    stop.substation = value.trim();
+    persist(); renderAll();
   }
 
   async function resolveStartInput() {
@@ -949,9 +961,14 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     if (!lines.length) return setFeedback('Escribe al menos una dirección o coordenada.', 'error');
     setFeedback(`Procesando ${lines.length} ubicación(es)…`);
     let added = 0;
-    for (const line of lines) {
+    for (const rawLine of lines) {
+      // Formato opcional: "dirección o coordenadas | nombre de subestación"
+      const pipeIndex = rawLine.lastIndexOf('|');
+      const line = pipeIndex >= 0 ? rawLine.slice(0, pipeIndex).trim() : rawLine;
+      const substation = pipeIndex >= 0 ? rawLine.slice(pipeIndex + 1).trim() : '';
       try {
         const loc = await resolveLocation(line);
+        if (substation) loc.substation = substation;
         if (!state.stops.some(s => distanceKm(s, loc) < 0.02)) { state.stops.push(loc); added++; }
       } catch (error) {
         console.warn(line, error);
@@ -1032,6 +1049,18 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     return null;
   }
 
+  function getStartLocationForOptimize() {
+    // Si el seguimiento continuo ya tiene una lectura reciente y suficientemente
+    // precisa, se reutiliza en vez de lanzar otra búsqueda GPS completa: eso
+    // era lo que hacía que, al presionar "Optimizar ruta", la app pareciera
+    // "volver a buscar" tu ubicación cada vez, incluso teniéndola ya.
+    const p = state.navigation.currentPosition;
+    const isFresh = p && Number.isFinite(p.timestamp) && (Date.now() - p.timestamp) < 12000;
+    const isAccurate = p && (p.accuracy || 9999) <= 40;
+    if (isFresh && isAccurate) return Promise.resolve(p);
+    return getFreshCurrentLocation();
+  }
+
   async function calculateRoute(optimize) {
     const button = optimize ? el('optimizeBtn') : el('manualOrderBtn');
     const originalText = button.textContent;
@@ -1041,7 +1070,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
       button.textContent = 'Obteniendo ubicación…';
       setFeedback('Antes de optimizar, necesitamos tu ubicación actual para iniciar la ruta desde donde estás.');
       try {
-        state.start = await getFreshCurrentLocation();
+        state.start = await getStartLocationForOptimize();
         persist(); renderAll(); fitMap();
       } catch (error) {
         button.classList.remove('busy-btn'); button.textContent = originalText;
@@ -1278,7 +1307,22 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     const data = await response.json();
     if (!data.routes?.length) throw new Error('Sin ruta');
     const route = data.routes[0];
+    assertRealisticDistance(points, route.distance);
     return { distance: route.distance, duration: route.duration, geometry: route.geometry.coordinates.map(([lon,lat]) => [lat,lon]), legs: route.legs, steps: route.legs?.flatMap(l => l.steps || []) || [] };
+  }
+
+  function assertRealisticDistance(points, routeDistanceMeters) {
+    // OSRM puede "enganchar" un punto a una vía muy lejana cuando la
+    // coordenada cae fuera de la red vial (parques, ríos, zonas privadas),
+    // devolviendo una ruta absurdamente larga (p. ej. cientos o miles de km
+    // para dos puntos cercanos). Si la ruta real supera por mucho a la
+    // distancia en línea recta, se descarta y se usa el cálculo directo.
+    let straightKm = 0;
+    for (let i = 0; i < points.length - 1; i++) straightKm += distanceKm(points[i], points[i+1]);
+    const routeKm = routeDistanceMeters / 1000;
+    if (straightKm > 0.05 && routeKm > straightKm * 8 + 10) {
+      throw new Error(`Ruta con distancia irreal (${routeKm.toFixed(0)} km reales vs ${straightKm.toFixed(1)} km en línea recta). Revisa que el punto no haya caído fuera de una vía transitable.`);
+    }
   }
 
   function buildFallbackRoute(points) {
@@ -1305,7 +1349,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
       const item = document.createElement('div'); item.className = 'route-item';
       item.innerHTML = `
         <div class="route-number">${index+1}</div>
-        <div class="route-main"><strong>${escapeHtml(shortLabel(stop.label))}</strong><span>${formatDistance(leg.distance || 0)} desde la parada anterior</span>
+        <div class="route-main"><strong>${escapeHtml(shortLabel(stop.label))}${stop.substation ? ` · ⚡ ${escapeHtml(stop.substation)}` : ''}</strong><span>${formatDistance(leg.distance || 0)} desde la parada anterior</span>
           <div class="route-actions">
             <button class="nav-link map-focus-btn" type="button" data-marker="${index+1}">Ver en mapa</button><a class="nav-link" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${stop.lat},${stop.lon}">Navegar</a>
             <a class="nav-link" target="_blank" rel="noopener" href="${FORM_URL}">Formulario</a>
@@ -1348,7 +1392,8 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     const navigate = `https://www.google.com/maps/dir/?api=1&destination=${point.lat},${point.lon}`;
     const canAdjust = (type === 'stop' || type === 'active') && index >= 0;
     const adjustNote = canAdjust ? '<div style="margin-top:6px;font-size:11px;color:#667085">Mantén pulsado y arrastra el marcador para ajustar el punto exacto.</div>' : '';
-    const popup = `<div class="map-popup"><strong>${escapeHtml(shortLabel(point.label))}</strong><div>${Number(point.lat).toFixed(6)}, ${Number(point.lon).toFixed(6)}</div>${adjustNote}<div class="popup-actions"><a href="${openMap}" target="_blank" rel="noopener">Ver mapa</a><a href="${navigate}" target="_blank" rel="noopener">Navegar</a></div></div>`;
+    const substationNote = point.substation ? `<div style="margin-top:4px;font-weight:700;color:#1267ef">⚡ ${escapeHtml(point.substation)}</div>` : '';
+    const popup = `<div class="map-popup"><strong>${escapeHtml(shortLabel(point.label))}</strong><div>${Number(point.lat).toFixed(6)}, ${Number(point.lon).toFixed(6)}</div>${substationNote}${adjustNote}<div class="popup-actions"><a href="${openMap}" target="_blank" rel="noopener">Ver mapa</a><a href="${navigate}" target="_blank" rel="noopener">Navegar</a></div></div>`;
     const marker = L.marker([point.lat,point.lon],{icon, riseOnHover:true, draggable:canAdjust, autoPan:canAdjust}).bindPopup(popup).addTo(markersLayer);
     if (canAdjust) marker.on('dragend', () => {
       const ll = marker.getLatLng();
@@ -1401,7 +1446,8 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     }
     const idx = Math.min(nav.activeIndex || 0, stops.length - 1);
     const target = stops[idx];
-    el('navDestination').textContent = `Parada ${idx+1}: ${shortLabel(target.label)}`;
+    const substationTag = target.substation ? ` · ⚡ ${shortLabel(target.substation)}` : '';
+    el('navDestination').textContent = `Parada ${idx+1}: ${shortLabel(target.label)}${substationTag}`;
     el('navSubtext').textContent = nav.active ? `Siguiendo el orden 1 → ${stops.length}` : `Ruta lista con ${stops.length} paradas ordenadas.`;
     el('navStopNumber').textContent = `${idx+1}/${stops.length}`;
     const current = nav.currentPosition || state.start;
@@ -1416,7 +1462,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     const hud = el('mapNavigationHud');
     hud?.classList.toggle('show', !!nav.active);
     if (hud) {
-      el('hudTitle').textContent = `Destino: parada ${idx+1} · ${shortLabel(target.label)}`;
+      el('hudTitle').textContent = `Destino: parada ${idx+1} · ${shortLabel(target.label)}${substationTag}`;
       el('hudInstruction').textContent = el('navInstruction').textContent;
       el('hudDistance').textContent = el('navDistance').textContent;
       el('hudTime').textContent = el('navTime').textContent;
@@ -1488,6 +1534,25 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   }
 
   async function startNavigation() {
+    // El botón se relabela a "Continuar recorrido" mientras el recorrido ya
+    // está activo. Si ya está en marcha (o solo pausado), no se debe volver
+    // a inicializar todo el GPS: eso generaba una segunda búsqueda de
+    // ubicación en paralelo que cortaba el seguimiento en tiempo real.
+    if (state.navigation.active && !state.navigation.paused) {
+      await enterNavigationFullscreen();
+      return;
+    }
+    if (state.navigation.active && state.navigation.paused) {
+      state.navigation.paused = false;
+      persist(); renderNavigation();
+      await enterNavigationFullscreen();
+      requestScreenWakeLock();
+      setNavigationFeedback('Recorrido reanudado.', 'ok');
+      const target = state.route?.orderedStops?.[state.navigation.activeIndex];
+      const p = state.navigation.currentPosition;
+      if (p && target) updateActiveLegRoute(p, target);
+      return;
+    }
     if (!state.route?.orderedStops?.length) {
       await calculateRoute(true);
       if (!state.route?.orderedStops?.length) return setNavigationFeedback('No fue posible preparar la ruta.', 'error');
@@ -1503,8 +1568,15 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     setNavigationFeedback('Solicitando ubicación precisa… La línea verde mostrará el tramo actual y la azul la ruta completa.');
     startContinuousLocationTracking();
     requestScreenWakeLock();
-    // Obtener una lectura nueva al iniciar; el seguimiento continuo seguirá activo.
-    refreshCurrentPositionAndCenter(false);
+    // Solo se pide una lectura nueva "aislada" si todavía no hay ninguna
+    // posición conocida. Si el seguimiento continuo ya tiene una lectura,
+    // se usa esa: pedir dos lecturas GPS en paralelo (la continua y la
+    // aislada) es lo que estaba provocando que se perdiera el punto azul.
+    if (state.navigation.currentPosition) {
+      drawLivePosition(state.navigation.currentPosition, true);
+    } else {
+      refreshCurrentPositionAndCenter(false);
+    }
   }
 
   async function requestScreenWakeLock() {
