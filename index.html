@@ -126,6 +126,25 @@ body{overflow-x:hidden}
 .current-location-marker{width:24px;height:24px;border-radius:50%;background:#1677ff;border:4px solid #fff;box-shadow:0 0 0 3px rgba(22,119,255,.28),0 3px 10px rgba(0,0,0,.25);position:relative;cursor:pointer;animation:locationPulse 1.4s ease-out infinite}.current-location-marker::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:50%;background:#fff;transform:translate(-50%,-50%)}@keyframes locationPulse{0%{box-shadow:0 0 0 0 rgba(22,119,255,.45),0 3px 10px rgba(0,0,0,.25)}70%{box-shadow:0 0 0 14px rgba(22,119,255,0),0 3px 10px rgba(0,0,0,.25)}100%{box-shadow:0 0 0 0 rgba(22,119,255,0),0 3px 10px rgba(0,0,0,.25)}}
 .map-location-control{position:absolute;right:14px;top:74px;z-index:760;display:flex;flex-direction:column;gap:8px}.map-round-btn{width:48px;height:48px;border-radius:50%;border:1px solid #cfd9e8;background:rgba(255,255,255,.97);box-shadow:0 5px 18px rgba(31,55,90,.18);display:grid;place-items:center;font-weight:800;color:#172033;cursor:pointer}.map-round-btn:hover{background:#f4f8ff}.map-round-btn.location{font-size:22px;color:#1267ef}.compass-control{position:absolute;left:14px;top:74px;z-index:760;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.97);border:1px solid #cfd9e8;box-shadow:0 5px 18px rgba(31,55,90,.18);display:grid;place-items:center;cursor:pointer;user-select:none}.compass-arrow{position:relative;width:30px;height:36px;transition:transform .25s ease}.compass-arrow::before{content:"";position:absolute;left:8px;top:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:18px solid #e33b3b}.compass-arrow::after{content:"";position:absolute;left:8px;bottom:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:18px solid #4b5563}.compass-n{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:900;color:#b91c1c}.gps-meta{position:absolute;left:14px;bottom:38px;z-index:760;background:rgba(255,255,255,.94);border:1px solid #d9e1ec;border-radius:10px;padding:7px 10px;font-size:12px;color:#465166;box-shadow:0 4px 14px rgba(31,55,90,.12)}
 @media(max-width:700px){.map-location-control{right:8px;top:66px}.compass-control{left:8px;top:66px}.gps-meta{left:8px;bottom:32px}.map-round-btn{width:44px;height:44px}}
+
+/* V4: experiencia móvil y transferencia de rutas entre dispositivos */
+.device-data-notice{display:none;margin:0 0 10px;padding:10px 12px;border:1px solid #cfe0fb;background:#f3f7ff;border-radius:12px;color:#334155;font-size:13px;line-height:1.35}
+.device-data-notice strong{color:#172033}.device-data-notice button{margin-left:6px;border:0;background:transparent;color:#1267ef;font-weight:800;cursor:pointer;padding:2px 4px}
+.map-legend{display:none}.map-legend.is-visible{display:block}
+@media(max-width:850px){
+  .topbar{position:relative;align-items:center}.topbar>div:nth-child(2){min-width:0;flex:1}.topbar h1{font-size:21px;line-height:1.15}.top-actions{flex:0 0 auto}.top-actions .primary-btn{width:auto;padding:10px 13px}
+  .device-data-notice{display:block}
+  .planner-grid{gap:10px}.map-column{border-radius:16px}.map-toolbar{padding:10px 11px;gap:8px}.map-toolbar>div:first-child{min-width:0}.map-toolbar strong{font-size:16px}.map-actions{flex-direction:row;gap:6px}.map-actions .ghost-btn{display:inline-flex!important;width:auto!important;padding:8px 10px;font-size:12px}
+  #map{height:46vh!important;min-height:310px!important;max-height:440px!important}
+  .map-footnote{font-size:10px;padding:6px 10px}.compass-control{top:58px;width:48px;height:48px}.compass-arrow{transform:scale(.82)}.map-location-control{top:58px}.map-round-btn{width:42px;height:42px}.gps-meta{bottom:8px;left:8px;padding:5px 8px;font-size:11px}.map-legend{right:8px;bottom:8px;max-width:210px;padding:6px 8px;font-size:10px}.legend-line{width:20px;height:4px}
+  .map-nav-hud{top:56px}.control-column{padding-bottom:24px}
+}
+@media(max-width:520px){
+  .main{padding:8px}.topbar{padding:4px 2px 9px}.topbar h1{font-size:19px}.top-actions .primary-btn{font-size:13px;padding:9px 11px;border-radius:12px}
+  #map{height:43vh!important;min-height:290px!important;max-height:390px!important}.map-toolbar{align-items:center}.map-actions .ghost-btn{padding:7px 8px}.map-nav-hud-metrics{gap:4px}.map-nav-chip{padding:5px 6px}.map-nav-chip strong{font-size:13px}.map-nav-chip span{font-size:9px}
+  .compass-control{left:7px;top:57px}.map-location-control{right:7px;top:57px}.gps-meta{max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+
 </style>
 </head>
 <body>
@@ -166,6 +185,7 @@ body{overflow-x:hidden}
       </header>
 
       <section id="plannerView" class="view active">
+        <div id="deviceDataNotice" class="device-data-notice"><strong>Datos de este celular:</strong> las rutas guardadas en una computadora no aparecen automáticamente aquí. Usa <b>Compartir ruta</b> en el otro equipo o importa un respaldo. <button id="dismissDeviceNotice" type="button">Entendido</button></div>
         <div class="planner-grid">
           <section class="control-column">
             <div class="card">
@@ -273,6 +293,7 @@ body{overflow-x:hidden}
               </div>
               <div class="button-row wrap">
                 <a id="inspectionFormBtn" class="primary-btn link-btn" href="https://forms.office.com/pages/responsepage.aspx?id=3VEAHJZFGkuYSdBgc1BXae0SDjKHF5pIr8dsxZ1dYYVUQjBHNVRXRkJWNEJJRDM2NzFCQlJBSzdPRi4u&route=shorturl" target="_blank" rel="noopener">Abrir formulario de inspección</a>
+                <button id="shareRouteBtn" class="secondary-btn">Compartir ruta al celular</button>
                 <button id="exportRouteBtn" class="secondary-btn">Exportar respaldo</button>
                 <label class="secondary-btn file-label">Importar respaldo<input id="importInput" type="file" accept="application/json" hidden /></label>
               </div>
@@ -420,10 +441,12 @@ body{overflow-x:hidden}
 
   function init() {
     loadState();
+    importSharedRouteFromUrl();
     cleanupOldCaches();
     initMap();
     bindEvents();
     applySettingsToUI();
+    if(sessionStorage.getItem('hideDeviceNotice')==='1') el('deviceDataNotice')?.remove();
     renderAll();
     setupMapResizeFix();
     setupOrientation();
@@ -515,6 +538,8 @@ body{overflow-x:hidden}
     el('clearRouteBtn').addEventListener('click', clearRouteOnly);
     el('saveRouteBtn').addEventListener('click', openSaveDialog);
     el('confirmSaveBtn').addEventListener('click', saveCurrentRoute);
+    el('shareRouteBtn')?.addEventListener('click', shareRouteToDevice);
+    el('dismissDeviceNotice')?.addEventListener('click', () => { el('deviceDataNotice').style.display='none'; sessionStorage.setItem('hideDeviceNotice','1'); });
     el('exportRouteBtn').addEventListener('click', exportCurrentRoute);
     el('importInput').addEventListener('change', importData);
     el('clearHistoryBtn').addEventListener('click', clearHistory);
@@ -902,6 +927,7 @@ body{overflow-x:hidden}
       L.polyline(state.route.geometry,{color:'#1267ef',weight:6,opacity:.75,className:'route-line-animated'}).bindPopup('<strong>Ruta optimizada</strong><br>Recorrido completo de la parada 1 a la última.').addTo(routeLayer);
     }
     if (state.navigation.currentPosition) drawLivePosition(state.navigation.currentPosition, false);
+    document.querySelector('.map-legend')?.classList.toggle('is-visible', !!state.route || !!state.navigation.active);
     el('mapStatus').textContent = state.navigation.active ? `En recorrido · parada ${Math.min(state.navigation.activeIndex+1, routeStops.length)} de ${routeStops.length}` : (state.route ? `${formatDistance(state.route.distance)} · ${formatDuration(state.route.duration)}` : `${state.stops.length} parada(s)`);
   }
 
@@ -1200,6 +1226,52 @@ body{overflow-x:hidden}
     if (state.route?.geometry?.length) state.route.geometry.forEach(p=>points.push(p));
     if (!points.length) return map.setView(DEFAULT_CENTER,10);
     map.fitBounds(L.latLngBounds(points),{padding:[35,35]});
+  }
+
+
+  function encodeSharedPayload(payload){
+    const json=JSON.stringify(payload);
+    return btoa(unescape(encodeURIComponent(json))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }
+
+  function decodeSharedPayload(value){
+    const normalized=value.replace(/-/g,'+').replace(/_/g,'/');
+    const padded=normalized+'='.repeat((4-normalized.length%4)%4);
+    return JSON.parse(decodeURIComponent(escape(atob(padded))));
+  }
+
+  function importSharedRouteFromUrl(){
+    try{
+      const params=new URLSearchParams(location.hash.replace(/^#/,''));
+      const encoded=params.get('ruta');
+      if(!encoded) return;
+      const payload=decodeSharedPayload(encoded);
+      if(!payload || !payload.start || !Array.isArray(payload.stops)) throw new Error('Formato inválido');
+      const shouldLoad=!state.stops.length || confirm('Hay una ruta compartida en este enlace. ¿Deseas reemplazar la ruta actual?');
+      if(!shouldLoad) return;
+      state.start=payload.start;
+      state.stops=payload.stops;
+      state.route=null;
+      state.navigation={active:false,paused:false,activeIndex:0,currentPosition:null,simulated:false};
+      persist();
+      history.replaceState(null,'',location.pathname+location.search);
+      setTimeout(()=>{ setFeedback(`Ruta compartida cargada: ${state.stops.length} parada(s).`,'ok'); calculateRoute(true); },500);
+    }catch(error){
+      console.warn('No se pudo abrir la ruta compartida',error);
+      setTimeout(()=>setFeedback('El enlace de ruta no es válido o está incompleto.','error'),400);
+    }
+  }
+
+  async function shareRouteToDevice(){
+    if(!state.start || !state.stops.length) return setFeedback('Define el inicio y agrega paradas antes de compartir.','error');
+    const payload={v:1,start:state.start,stops:state.stops,returnToStart:el('returnToStart').checked};
+    const url=`${location.origin}${location.pathname}#ruta=${encodeSharedPayload(payload)}`;
+    const shareData={title:'Ruta de inspecciones',text:`Ruta con ${state.stops.length} parada(s)`,url};
+    try{
+      if(navigator.share){ await navigator.share(shareData); setFeedback('Ruta compartida. Ábrela en el celular para cargar las paradas.','ok'); return; }
+      if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(url); setFeedback('Enlace copiado. Envíalo por WhatsApp y ábrelo en el celular.','ok'); return; }
+    }catch(error){ if(error?.name==='AbortError') return; }
+    window.prompt('Copia este enlace y ábrelo en el celular:',url);
   }
 
   function clearRouteOnly() { state.route = null; persist(); renderRoute(); refreshMap(); }
