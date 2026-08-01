@@ -7,8 +7,8 @@
   <meta name="description" content="Planificador personal de rutas de inspección con OpenStreetMap." />
   <meta name="color-scheme" content="light" />
   <link rel="manifest" href="./manifest.webmanifest" />
-  <title>Rutas de Inspección</title>
-  <meta name="app-version" content="2026.08.01.7" />
+  <title>Rutas de Inspección V10</title>
+  <meta name="app-version" content="2026.08.01.8" />
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
   <link rel="preconnect" href="https://tile.openstreetmap.org" />
@@ -124,7 +124,7 @@ body{overflow-x:hidden}
 
   
 .current-location-marker{width:24px;height:24px;border-radius:50%;background:#1677ff;border:4px solid #fff;box-shadow:0 0 0 3px rgba(22,119,255,.28),0 3px 10px rgba(0,0,0,.25);position:relative;cursor:pointer;animation:locationPulse 1.4s ease-out infinite}.current-location-marker::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:50%;background:#fff;transform:translate(-50%,-50%)}@keyframes locationPulse{0%{box-shadow:0 0 0 0 rgba(22,119,255,.45),0 3px 10px rgba(0,0,0,.25)}70%{box-shadow:0 0 0 14px rgba(22,119,255,0),0 3px 10px rgba(0,0,0,.25)}100%{box-shadow:0 0 0 0 rgba(22,119,255,0),0 3px 10px rgba(0,0,0,.25)}}
-.map-location-control{position:absolute;right:14px;top:74px;z-index:760;display:flex;flex-direction:column;gap:8px}.map-round-btn{width:48px;height:48px;border-radius:50%;border:1px solid #cfd9e8;background:rgba(255,255,255,.97);box-shadow:0 5px 18px rgba(31,55,90,.18);display:grid;place-items:center;font-weight:800;color:#172033;cursor:pointer}.map-round-btn:hover{background:#f4f8ff}.map-round-btn.location{font-size:22px;color:#1267ef}.compass-control{position:absolute;left:14px;top:74px;z-index:760;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.97);border:1px solid #cfd9e8;box-shadow:0 5px 18px rgba(31,55,90,.18);display:grid;place-items:center;cursor:pointer;user-select:none}.compass-arrow{position:relative;width:30px;height:36px;transition:transform .25s ease}.compass-arrow::before{content:"";position:absolute;left:8px;top:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:18px solid #e33b3b}.compass-arrow::after{content:"";position:absolute;left:8px;bottom:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:18px solid #4b5563}.compass-n{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:900;color:#b91c1c}.gps-meta{position:absolute;left:14px;bottom:38px;z-index:760;background:rgba(255,255,255,.94);border:1px solid #d9e1ec;border-radius:10px;padding:7px 10px;font-size:12px;color:#465166;box-shadow:0 4px 14px rgba(31,55,90,.12)}
+.map-location-control{position:absolute;right:14px;top:74px;z-index:760;display:flex;flex-direction:column;gap:8px}.map-round-btn{width:48px;height:48px;border-radius:50%;border:1px solid #cfd9e8;background:rgba(255,255,255,.97);box-shadow:0 5px 18px rgba(31,55,90,.18);display:grid;place-items:center;font-weight:800;color:#172033;cursor:pointer}.map-round-btn:hover{background:#f4f8ff}.map-round-btn.location{font-size:22px;color:#1267ef}.compass-control{position:absolute;left:14px;top:74px;z-index:760;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.97);border:1px solid #cfd9e8;box-shadow:0 5px 18px rgba(31,55,90,.18);display:grid;place-items:center;cursor:pointer;user-select:none}.compass-arrow{position:relative;width:30px;height:36px;transition:transform .25s ease}.compass-arrow::before{content:"";position:absolute;left:8px;top:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:18px solid #e33b3b}.compass-arrow::after{content:"";position:absolute;left:8px;bottom:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:18px solid #4b5563}.compass-n{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:900;color:#b91c1c}.gps-meta.gps-poor{border-color:#f1a1a1;color:#a61b1b;background:rgba(255,244,244,.96)}.gps-meta{position:absolute;left:14px;bottom:38px;z-index:760;background:rgba(255,255,255,.94);border:1px solid #d9e1ec;border-radius:10px;padding:7px 10px;font-size:12px;color:#465166;box-shadow:0 4px 14px rgba(31,55,90,.12)}
 @media(max-width:700px){.map-location-control{right:8px;top:66px}.compass-control{left:8px;top:66px}.gps-meta{left:8px;bottom:32px}.map-round-btn{width:44px;height:44px}}
 
 /* V4: experiencia móvil y transferencia de rutas entre dispositivos */
@@ -262,23 +262,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   .map-column:fullscreen .leaflet-control-zoom a,.map-column.pseudo-fullscreen .leaflet-control-zoom a{width:46px!important;height:46px!important;line-height:46px!important;font-size:30px!important}
 }
 
-
-/* V10: rotación del mapa */
-.map-rotation-control{
-  position:absolute;left:14px;top:126px;z-index:1200;display:flex;gap:6px;
-}
-.map-rotation-control .map-round-btn{width:40px;height:40px;font-size:20px;font-weight:800;background:rgba(255,255,255,.96)}
-.map-rotation-help{position:absolute;left:14px;top:172px;z-index:1100;background:rgba(15,23,42,.82);color:#fff;padding:5px 8px;border-radius:8px;font-size:10px;pointer-events:none}
-.map-column:fullscreen .map-rotation-control,.map-column.pseudo-fullscreen .map-rotation-control{top:116px!important;left:8px!important;z-index:12000!important}
-.map-column:fullscreen .map-rotation-help,.map-column.pseudo-fullscreen .map-rotation-help{top:162px!important;left:8px!important;z-index:12000!important}
-@media(max-width:700px){
-  .map-rotation-control{left:7px;top:112px}
-  .map-rotation-control .map-round-btn{width:42px;height:42px}
-  .map-rotation-help{left:7px;top:160px;font-size:9px}
-  .map-column:fullscreen .map-rotation-control,.map-column.pseudo-fullscreen .map-rotation-control{top:108px!important;left:7px!important}
-  .map-column:fullscreen .map-rotation-help,.map-column.pseudo-fullscreen .map-rotation-help{top:156px!important;left:7px!important}
-}
-
+.leaflet-marker-draggable .marker-bubble{box-shadow:0 0 0 4px rgba(18,103,239,.18),0 4px 12px rgba(0,0,0,.18)}
 </style>
 </head>
 <body>
@@ -457,11 +441,6 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
               </div>
             </div>
             <button id="compassControl" class="compass-control" type="button" title="Orientar mapa al norte" aria-label="Orientar mapa al norte"><span class="compass-n">N</span><span id="compassArrow" class="compass-arrow"></span></button>
-            <div class="map-rotation-control" aria-label="Controles de rotación del mapa">
-              <button id="rotateMapLeftBtn" class="map-round-btn" type="button" title="Girar mapa a la izquierda" aria-label="Girar mapa a la izquierda">↺</button>
-              <button id="rotateMapRightBtn" class="map-round-btn" type="button" title="Girar mapa a la derecha" aria-label="Girar mapa a la derecha">↻</button>
-            </div>
-            <div class="map-rotation-help">Dos dedos para girar · Shift + arrastrar en PC</div>
             <div class="map-location-control">
               <button id="fullscreenMapBtn" class="map-round-btn fullscreen-toggle" type="button" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
               <button id="mapMyLocationBtn" class="map-round-btn location" type="button" title="Ver mi ubicación" aria-label="Ver mi ubicación">◎</button>
@@ -535,7 +514,6 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js?v=1.9.4" crossorigin="anonymous"></script>
   <script>if(typeof L==='undefined'){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>');}</script>
-  <script src="https://cdn.jsdelivr.net/npm/leaflet-rotate@0.2.8/dist/leaflet-rotate-src.min.js"></script>
   <script>
 (() => {
   'use strict';
@@ -543,6 +521,10 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   const FORM_URL = 'https://forms.office.com/pages/responsepage.aspx?id=3VEAHJZFGkuYSdBgc1BXae0SDjKHF5pIr8dsxZ1dYYVUQjBHNVRXRkJWNEJJRDM2NzFCQlJBSzdPRi4u&route=shorturl';
   const STORAGE_KEY = 'rutasInspeccion_v1';
   const DEFAULT_CENTER = [-12.0464, -77.0428];
+  // Caja aproximada de Lima Metropolitana y Callao, usada para priorizar
+  // resultados de geocodificación cercanos y evitar que una calle homónima
+  // de otro distrito lejano o país gane por "importancia" en Nominatim.
+  const LIMA_VIEWBOX = '-77.25,-11.75,-76.75,-12.35'; // izq,arriba,der,abajo
 
   const state = {
     start: null,
@@ -577,6 +559,11 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   let isLiveRouteRequestPending = false;
   let deviceHeading = 0;
   let lastGpsUiAt = 0;
+  let continuousGeoWatchId = null;
+  let lastAcceptedGpsAt = 0;
+  let lastPersistGpsAt = 0;
+  let bestKnownAccuracy = Number.POSITIVE_INFINITY;
+  let screenWakeLock = null;
 
   document.addEventListener('DOMContentLoaded', init);
 
@@ -591,7 +578,10 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     renderAll();
     setupMapResizeFix();
     setupOrientation();
-    if (!state.start) setTimeout(requestLocationOnStart, 700);
+    // Mantener la posición real actualizada desde que se abre la web.
+    // Si el permiso todavía no fue concedido, el navegador lo solicitará.
+    setTimeout(startContinuousLocationTracking, 700);
+    if (!state.start) setTimeout(requestLocationOnStart, 1100);
   }
 
   function initMap() {
@@ -606,12 +596,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
       zoomSnap: 0.5,
       wheelPxPerZoomLevel: 90,
       fadeAnimation: false,
-      markerZoomAnimation: false,
-      rotate: true,
-      bearing: 0,
-      touchRotate: true,
-      shiftKeyRotate: true,
-      rotateControl: false
+      markerZoomAnimation: false
     }).setView(DEFAULT_CENTER, 10);
     loadTileProvider(0);
     markersLayer = L.layerGroup().addTo(map);
@@ -674,15 +659,16 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     el('pauseNavigationBtn').addEventListener('click', togglePauseNavigation);
     el('nextStopBtn').addEventListener('click', () => advanceToNextStop(false));
     el('previousStopBtn').addEventListener('click', goToPreviousStop);
-    el('centerMeBtn').addEventListener('click', centerOnLivePosition);
-    el('mapMyLocationBtn')?.addEventListener('click', () => { centerOnLivePosition(); livePositionMarker?.openPopup(); });
+    el('centerMeBtn').addEventListener('click', () => {
+      const p = state.navigation.currentPosition;
+      if (!p || Date.now() - Number(p.timestamp || 0) > 15000) refreshCurrentPositionAndCenter(false);
+      else centerOnLivePosition();
+    });
+    el('mapMyLocationBtn')?.addEventListener('click', () => refreshCurrentPositionAndCenter(true));
     el('fullscreenMapBtn')?.addEventListener('click', toggleNavigationFullscreen);
     document.addEventListener('fullscreenchange', syncFullscreenUi);
     document.addEventListener('webkitfullscreenchange', syncFullscreenUi);
     el('compassControl')?.addEventListener('click', resetMapNorth);
-    el('rotateMapLeftBtn')?.addEventListener('click', () => rotateMapBy(-15));
-    el('rotateMapRightBtn')?.addEventListener('click', () => rotateMapBy(15));
-    map?.on?.('rotate', syncMapBearingUi);
     el('simulateBtn').addEventListener('click', toggleSimulation);
     el('finishNavigationBtn').addEventListener('click', () => finishNavigation(true));
     el('returnToStart').addEventListener('change', () => state.route && calculateRoute(false));
@@ -823,28 +809,117 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     } catch (error) { setFeedback(error.message, 'error'); }
   }
 
+  function positionToPoint(pos) {
+    return {
+      label: 'Mi ubicación actual',
+      lat: Number(pos.coords.latitude),
+      lon: Number(pos.coords.longitude),
+      accuracy: Number(pos.coords.accuracy || 9999),
+      heading: Number.isFinite(pos.coords.heading) ? pos.coords.heading : deviceHeading,
+      speed: Number.isFinite(pos.coords.speed) ? pos.coords.speed : null,
+      timestamp: Number(pos.timestamp || Date.now()),
+      capturedAt: new Date().toISOString()
+    };
+  }
+
   function getFreshCurrentLocation() {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) return reject(new Error('Este navegador no permite obtener la ubicación.'));
-      navigator.geolocation.getCurrentPosition(
-        pos => resolve({
-          label: 'Mi ubicación actual',
-          lat: pos.coords.latitude,
-          lon: pos.coords.longitude,
-          accuracy: Number(pos.coords.accuracy || 0),
-          capturedAt: new Date().toISOString()
-        }),
+      let best = null;
+      let settled = false;
+      const startedAt = Date.now();
+      const finish = (value, error) => {
+        if (settled) return;
+        settled = true;
+        navigator.geolocation.clearWatch(watchId);
+        clearTimeout(timer);
+        if (error) reject(error); else resolve(value);
+      };
+      const watchId = navigator.geolocation.watchPosition(
+        pos => {
+          const point = positionToPoint(pos);
+          if (!best || point.accuracy < best.accuracy) best = point;
+          updateGpsMeta(point, 'Buscando máxima precisión');
+          // Una precisión de 25 m o menos suele ser adecuada para llegar al punto.
+          if (point.accuracy <= 25) finish(point);
+          // Si ya esperamos varios segundos, aceptar una lectura razonable.
+          else if (Date.now() - startedAt >= 8000 && point.accuracy <= 80) finish(point);
+        },
         err => {
           const messages = {
             1: 'Permiso de ubicación rechazado. Actívalo desde el candado de la barra de direcciones.',
-            2: 'No se pudo determinar tu ubicación actual.',
-            3: 'La ubicación tardó demasiado. Intenta nuevamente.'
+            2: 'No se pudo determinar tu ubicación actual. Activa GPS y precisión alta.',
+            3: 'La ubicación tardó demasiado. Sal a un lugar abierto e intenta nuevamente.'
           };
-          reject(new Error(messages[err.code] || 'No fue posible obtener tu ubicación.'));
+          if (!best) finish(null, new Error(messages[err.code] || 'No fue posible obtener tu ubicación.'));
         },
-        { enableHighAccuracy: true, timeout: 22000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
       );
+      const timer = setTimeout(() => {
+        if (best && best.accuracy <= 120) finish(best);
+        else finish(null, new Error('La señal GPS no fue suficientemente precisa. Activa “Ubicación precisa” y vuelve a intentar.'));
+      }, 15000);
     });
+  }
+
+  function updateGpsMeta(p, prefix = 'GPS') {
+    const meta = el('gpsMeta');
+    if (!meta || !p) return;
+    const acc = Math.round(p.accuracy || 0);
+    const speed = Number.isFinite(p.speed) ? ` · ${(p.speed * 3.6).toFixed(1)} km/h` : '';
+    meta.textContent = `${prefix} ±${acc} m${speed}`;
+    meta.classList.toggle('gps-poor', acc > 80);
+  }
+
+  function startContinuousLocationTracking() {
+    if (!navigator.geolocation || continuousGeoWatchId !== null) return;
+    continuousGeoWatchId = navigator.geolocation.watchPosition(
+      pos => handleContinuousPosition(positionToPoint(pos)),
+      err => {
+        if (err.code === 1) updateGpsMeta({accuracy:0}, 'GPS sin permiso');
+        else updateGpsMeta({accuracy:0}, 'GPS esperando señal');
+      },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 12000 }
+    );
+  }
+
+  function handleContinuousPosition(p) {
+    if (!Number.isFinite(p.lat) || !Number.isFinite(p.lon)) return;
+    // Ignorar saltos extremadamente imprecisos cuando ya existe una lectura mejor.
+    if (p.accuracy > 250 && Number.isFinite(bestKnownAccuracy) && bestKnownAccuracy < 100) {
+      updateGpsMeta(p, 'GPS impreciso');
+      return;
+    }
+    bestKnownAccuracy = Math.min(bestKnownAccuracy, p.accuracy || 9999);
+    lastAcceptedGpsAt = Date.now();
+    updateGpsMeta(p);
+    if (state.navigation.active && !state.navigation.paused && !state.navigation.simulated) {
+      processLivePosition(p, true);
+    } else {
+      state.navigation.currentPosition = p;
+      drawLivePosition(p, false);
+      // No escribir localStorage en cada lectura; hacerlo como máximo cada 5 s.
+      if (Date.now() - lastPersistGpsAt > 5000) {
+        lastPersistGpsAt = Date.now();
+        persist();
+      }
+    }
+  }
+
+  async function refreshCurrentPositionAndCenter(openPopup = true) {
+    setNavigationFeedback('Actualizando tu ubicación GPS…');
+    try {
+      const p = await getFreshCurrentLocation();
+      state.navigation.currentPosition = p;
+      drawLivePosition(p, false);
+      updateGpsMeta(p);
+      map?.setView([p.lat, p.lon], 18, { animate: true });
+      if (openPopup) livePositionMarker?.openPopup();
+      persist();
+      setNavigationFeedback(`Ubicación actualizada con precisión aproximada de ±${Math.round(p.accuracy)} m.`, p.accuracy <= 50 ? 'ok' : 'error');
+    } catch (error) {
+      setNavigationFeedback(error.message, 'error');
+    }
   }
 
   async function useCurrentLocation() {
@@ -889,24 +964,66 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   }
 
   async function resolveLocation(text) {
-    const coords = extractCoordinates(text);
-    if (coords) return { label: text.length > 70 ? `Ubicación ${coords.lat.toFixed(5)}, ${coords.lon.toFixed(5)}` : text, ...coords };
-    const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=pe&q=${encodeURIComponent(text)}`;
-    const response = await fetchWithTimeout(url, { headers: { 'Accept-Language': 'es' } }, 15000);
-    if (!response.ok) throw new Error('No se pudo buscar la dirección.');
-    const data = await response.json();
+    const normalized = decodeURIComponent(String(text).replace(/\+/g, ' '));
+    const coords = extractCoordinates(normalized);
+    if (coords) return { label: text.length > 70 ? `Ubicación ${coords.lat.toFixed(6)}, ${coords.lon.toFixed(6)}` : text, ...coords, source:'coordinates' };
+    if (/https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl\/maps|maps\.google\.)/i.test(text)) {
+      throw new Error('Ese enlace corto no contiene coordenadas visibles. En Google Maps usa Compartir → Copiar enlace completo, o pega las coordenadas exactas.');
+    }
+    const data = await geocodeCandidates(text);
     if (!data.length) throw new Error(`No se encontró: ${text}`);
-    return { label: data[0].display_name || text, lat: Number(data[0].lat), lon: Number(data[0].lon) };
+    const best = pickBestCandidate(data);
+    return { label: best.display_name || text, lat: Number(best.lat), lon: Number(best.lon), source:'geocoded', importance:Number(best.importance||0) };
+  }
+
+  async function geocodeCandidates(text) {
+    const base = `format=jsonv2&limit=5&countrycodes=pe&addressdetails=1&q=${encodeURIComponent(text)}`;
+    // 1) Búsqueda acotada a Lima Metropolitana/Callao: evita que una calle
+    //    homónima en otro distrito lejano gane por "importancia".
+    const boundedUrl = `https://nominatim.openstreetmap.org/search?${base}&viewbox=${LIMA_VIEWBOX}&bounded=1`;
+    try {
+      const res = await fetchWithTimeout(boundedUrl, { headers: { 'Accept-Language': 'es' } }, 15000);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.length) return data;
+      }
+    } catch {}
+    // 2) Si no hay coincidencias dentro de Lima, buscar en todo el Perú sin acotar.
+    const openUrl = `https://nominatim.openstreetmap.org/search?${base}`;
+    const response = await fetchWithTimeout(openUrl, { headers: { 'Accept-Language': 'es' } }, 15000);
+    if (!response.ok) throw new Error('No se pudo buscar la dirección.');
+    return response.json();
+  }
+
+  function pickBestCandidate(data) {
+    // Nominatim ya ordena por relevancia, pero cuando existe un punto de
+    // referencia (el punto de partida) preferimos el candidato más cercano
+    // a él entre los primeros resultados, para reducir ambigüedad entre
+    // distritos con calles del mismo nombre.
+    const ref = state.start;
+    if (!ref || data.length === 1) return data[0];
+    let closest = data[0];
+    let closestDist = distanceKm(ref, { lat: Number(closest.lat), lon: Number(closest.lon) });
+    for (const cand of data.slice(1)) {
+      const d = distanceKm(ref, { lat: Number(cand.lat), lon: Number(cand.lon) });
+      if (d < closestDist) { closest = cand; closestDist = d; }
+    }
+    // Solo usar el más cercano si no está absurdamente lejos del mejor resultado
+    // por relevancia (evita "corregir" hacia un resultado poco relacionado).
+    return closestDist <= 60 ? closest : data[0];
   }
 
   function extractCoordinates(text) {
+    const decoded = decodeURIComponent(String(text));
     const patterns = [
       /@(-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)/,
-      /[?&](?:query|q|destination)=(-?\d{1,2}\.\d+)%?2C(-?\d{1,3}\.\d+)/i,
+      /!3d(-?\d{1,2}\.\d+)!4d(-?\d{1,3}\.\d+)/i,
+      /[?&](?:query|q|destination|center|ll)=(-?\d{1,2}\.\d+)[,\s](-?\d{1,3}\.\d+)/i,
+      /[?&](?:query|q|destination|center|ll)=(-?\d{1,2}\.\d+)%2C(-?\d{1,3}\.\d+)/i,
       /(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/,
     ];
     for (const pattern of patterns) {
-      const m = text.match(pattern);
+      const m = decoded.match(pattern);
       if (m) {
         const lat = Number(m[1]); const lon = Number(m[2]);
         if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) return { lat, lon };
@@ -1212,10 +1329,10 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   function refreshMap() {
     if (!map) return;
     markersLayer.clearLayers(); routeLayer.clearLayers(); markerRefs.clear();
-    if (state.start) addMarker(state.start, 'Inicio', 'start');
+    if (state.start) addMarker(state.start, 'Inicio', 'start', -1);
     const routeStops = state.route?.orderedStops || state.stops;
-    routeStops.forEach((stop,i)=>addMarker(stop, String(i+1), state.navigation.active && i===state.navigation.activeIndex ? 'active' : 'stop'));
-    if (state.route?.returnToStart && state.start) addMarker({ ...state.start, lat: state.start.lat+0.00001 }, '⌂', 'end');
+    routeStops.forEach((stop,i)=>addMarker(stop, String(i+1), state.navigation.active && i===state.navigation.activeIndex ? 'active' : 'stop', i));
+    if (state.route?.returnToStart && state.start) addMarker({ ...state.start, lat: state.start.lat+0.00001 }, '⌂', 'end', -1);
     if (state.route?.geometry?.length) {
       L.polyline(state.route.geometry,{color:'#ffffff',weight:10,opacity:.9,interactive:false}).addTo(routeLayer);
       L.polyline(state.route.geometry,{color:'#1267ef',weight:6,opacity:.75,className:'route-line-animated'}).bindPopup('<strong>Ruta optimizada</strong><br>Recorrido completo de la parada 1 a la última.').addTo(routeLayer);
@@ -1225,12 +1342,28 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     el('mapStatus').textContent = state.navigation.active ? `En recorrido · parada ${Math.min(state.navigation.activeIndex+1, routeStops.length)} de ${routeStops.length}` : (state.route ? `${formatDistance(state.route.distance)} · ${formatDuration(state.route.duration)}` : `${state.stops.length} parada(s)`);
   }
 
-  function addMarker(point,label,type) {
+  function addMarker(point,label,type,index=-1) {
     const icon = L.divIcon({ className:'custom-marker', html:`<div class="marker-bubble marker-${type}">${label}</div>`, iconSize:[34,34], iconAnchor:[17,17] });
-    const openMap = `https://www.openstreetmap.org/?mlat=${point.lat}&mlon=${point.lon}#map=18/${point.lat}/${point.lon}`;
+    const openMap = `https://www.openstreetmap.org/?mlat=${point.lat}&mlon=${point.lon}#map=19/${point.lat}/${point.lon}`;
     const navigate = `https://www.google.com/maps/dir/?api=1&destination=${point.lat},${point.lon}`;
-    const popup = `<div class="map-popup"><strong>${escapeHtml(shortLabel(point.label))}</strong><div class="popup-actions"><a href="${openMap}" target="_blank" rel="noopener">Ver mapa</a><a href="${navigate}" target="_blank" rel="noopener">Navegar</a></div></div>`;
-    const marker = L.marker([point.lat,point.lon],{icon, riseOnHover:true}).bindPopup(popup).addTo(markersLayer);
+    const canAdjust = (type === 'stop' || type === 'active') && index >= 0;
+    const adjustNote = canAdjust ? '<div style="margin-top:6px;font-size:11px;color:#667085">Mantén pulsado y arrastra el marcador para ajustar el punto exacto.</div>' : '';
+    const popup = `<div class="map-popup"><strong>${escapeHtml(shortLabel(point.label))}</strong><div>${Number(point.lat).toFixed(6)}, ${Number(point.lon).toFixed(6)}</div>${adjustNote}<div class="popup-actions"><a href="${openMap}" target="_blank" rel="noopener">Ver mapa</a><a href="${navigate}" target="_blank" rel="noopener">Navegar</a></div></div>`;
+    const marker = L.marker([point.lat,point.lon],{icon, riseOnHover:true, draggable:canAdjust, autoPan:canAdjust}).bindPopup(popup).addTo(markersLayer);
+    if (canAdjust) marker.on('dragend', () => {
+      const ll = marker.getLatLng();
+      const target = (state.route?.orderedStops || state.stops)[index];
+      if (!target) return;
+      target.lat = Number(ll.lat.toFixed(7));
+      target.lon = Number(ll.lng.toFixed(7));
+      target.source = 'manual-adjustment';
+      // Mantener la misma referencia en la lista principal.
+      const original = state.stops.find(s => s === target || (s.label === target.label && Math.abs(s.lat-point.lat)<0.001 && Math.abs(s.lon-point.lon)<0.001));
+      if (original) { original.lat = target.lat; original.lon = target.lon; original.source = target.source; }
+      state.route = null;
+      persist(); renderAll(); fitMap();
+      setFeedback('Punto ajustado manualmente. Vuelve a optimizar la ruta para recalcular el recorrido.', 'ok');
+    });
     markerRefs.set(type === 'start' ? 'start' : String(label), marker);
   }
 
@@ -1368,23 +1501,37 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     persist(); renderNavigation();
     await enterNavigationFullscreen();
     setNavigationFeedback('Solicitando ubicación precisa… La línea verde mostrará el tramo actual y la azul la ruta completa.');
-    if (geoWatchId !== null) navigator.geolocation.clearWatch(geoWatchId);
-    geoWatchId = navigator.geolocation.watchPosition(handleLivePosition, handleLocationError, {
-      enableHighAccuracy: true, maximumAge: 0, timeout: 8000
-    });
+    startContinuousLocationTracking();
+    requestScreenWakeLock();
+    // Obtener una lectura nueva al iniciar; el seguimiento continuo seguirá activo.
+    refreshCurrentPositionAndCenter(false);
   }
 
-  function handleLivePosition(position) {
-    if (!state.navigation.active || state.navigation.paused || state.navigation.simulated) return;
-    const p = { lat: position.coords.latitude, lon: position.coords.longitude, accuracy: position.coords.accuracy, heading: Number.isFinite(position.coords.heading) ? position.coords.heading : deviceHeading, speed: position.coords.speed, timestamp: position.timestamp };
-    const now = Date.now();
-    if (now - lastGpsUiAt > 500) {
-      lastGpsUiAt = now;
-      const acc = Math.round(p.accuracy || 0);
-      const speed = Number.isFinite(p.speed) ? ` · ${(p.speed*3.6).toFixed(1)} km/h` : '';
-      const meta = el('gpsMeta'); if (meta) meta.textContent = `GPS ±${acc} m${speed}`;
+  async function requestScreenWakeLock() {
+    try {
+      if ('wakeLock' in navigator) {
+        screenWakeLock = await navigator.wakeLock.request('screen');
+        screenWakeLock.addEventListener('release', () => { screenWakeLock = null; });
+      }
+    } catch { screenWakeLock = null; }
+  }
+
+  function releaseScreenWakeLock() {
+    try { screenWakeLock?.release(); } catch {}
+    screenWakeLock = null;
+  }
+
+  // Algunos navegadores liberan el wake lock al minimizar la app; si el
+  // recorrido sigue activo al volver, se vuelve a solicitar para que el
+  // GPS no deje de actualizarse en segundo plano por la pantalla apagada.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && state.navigation.active && !state.navigation.paused) {
+      requestScreenWakeLock();
     }
-    processLivePosition(p, true);
+  });
+
+  function handleLivePosition(position) {
+    handleContinuousPosition(positionToPoint(position));
   }
 
   function handleLocationError(error) {
@@ -1445,7 +1592,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     if (!livePositionMarker) {
       const icon=L.divIcon({className:'',html:'<div class="current-location-marker" title="Tu ubicación"></div>',iconSize:[22,22],iconAnchor:[11,11]});
       livePositionMarker=L.marker(latlng,{icon,zIndexOffset:1500,keyboard:true,title:'Tu ubicación actual'}).addTo(markersLayer).bindPopup('<strong>Tu ubicación actual</strong><br><span id="livePopupCoords"></span><br><button type="button" id="popupCenterMe" style="margin-top:7px;padding:6px 9px;border:1px solid #cfd9e8;border-radius:8px;background:#fff;cursor:pointer">Centrar aquí</button>');
-      livePositionMarker.on('popupopen',()=>{const c=document.getElementById('livePopupCoords');if(c)c.textContent=`${p.lat.toFixed(6)}, ${p.lon.toFixed(6)} · precisión ±${Math.round(p.accuracy||0)} m`;document.getElementById('popupCenterMe')?.addEventListener('click',centerOnLivePosition,{once:true});});
+      livePositionMarker.on('popupopen',()=>{const latest=state.navigation.currentPosition||p;const c=document.getElementById('livePopupCoords');if(c)c.textContent=`${latest.lat.toFixed(6)}, ${latest.lon.toFixed(6)} · precisión ±${Math.round(latest.accuracy||0)} m`;document.getElementById('popupCenterMe')?.addEventListener('click',centerOnLivePosition,{once:true});});
       liveAccuracyCircle=L.circle(latlng,{radius:Math.min(p.accuracy||20,250),color:'#1677ff',weight:1,fillColor:'#1677ff',fillOpacity:.08,interactive:false}).addTo(markersLayer);
     } else { livePositionMarker.setLatLng(latlng); liveAccuracyCircle?.setLatLng(latlng).setRadius(Math.min(p.accuracy||20,250)); }
     const markerEl = livePositionMarker?.getElement()?.querySelector('.current-location-marker');
@@ -1462,8 +1609,8 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
 
   function centerOnLivePosition() {
     const p=state.navigation.currentPosition;
-    if(!p || !map) return setNavigationFeedback('Todavía no existe una ubicación actual.', 'error');
-    map.setView([p.lat,p.lon],17,{animate:true});
+    if(!p || !map) return refreshCurrentPositionAndCenter(false);
+    map.setView([p.lat,p.lon],18,{animate:true});
   }
 
   function setupOrientation() {
@@ -1488,43 +1635,19 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     } catch {}
   }
 
-  function getMapBearing() {
-    const value = map?.getBearing?.();
-    return Number.isFinite(value) ? value : 0;
-  }
-
-  function syncMapBearingUi() {
-    const bearing = getMapBearing();
-    const arrow = el('compassArrow');
-    if (arrow) arrow.style.transform = `rotate(${-bearing}deg)`;
-    const compass = el('compassControl');
-    if (compass) compass.title = `Orientar al norte · giro actual ${Math.round(bearing)}°`;
-  }
-
-  function rotateMapBy(delta) {
-    if (!map) return;
-    if (typeof map.setBearing !== 'function') {
-      setNavigationFeedback('La rotación requiere conexión para cargar el complemento del mapa.', 'error');
-      return;
-    }
-    const next = (getMapBearing() + delta + 360) % 360;
-    map.setBearing(next);
-    syncMapBearingUi();
-    setNavigationFeedback(`Mapa girado a ${Math.round(next)}°. Usa ↺, ↻, dos dedos o Shift + arrastrar.`, 'ok');
-  }
-
   function resetMapNorth() {
     deviceHeading = 0;
-    if (map?.setBearing) map.setBearing(0);
-    syncMapBearingUi();
+    const arrow = el('compassArrow'); if (arrow) arrow.style.transform = 'rotate(0deg)';
+    if (map) map.setBearing?.(0);
     requestOrientationPermission();
-    setNavigationFeedback('Mapa orientado al norte.', 'ok');
+    setNavigationFeedback('Brújula orientada al norte. La N roja indica el norte.', 'ok');
   }
 
   function togglePauseNavigation() {
     if(!state.navigation.active) return setNavigationFeedback('Primero inicia el recorrido.', 'error');
     state.navigation.paused=!state.navigation.paused;
-    if(state.navigation.paused) el('map').classList.remove('map-following');
+    if(state.navigation.paused) { el('map').classList.remove('map-following'); releaseScreenWakeLock(); }
+    else requestScreenWakeLock();
     persist(); renderNavigation();
   }
 
@@ -1562,6 +1685,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   function finishNavigation(confirmFirst=true) {
     if(confirmFirst && state.navigation.active && !confirm('¿Finalizar el recorrido actual?')) return;
     if(geoWatchId!==null){navigator.geolocation.clearWatch(geoWatchId);geoWatchId=null;}
+    releaseScreenWakeLock();
     stopSimulation(false);
     state.navigation.active=false; state.navigation.paused=false; state.navigation.simulated=false; state.navigation.arrived=false;
     state.navigation.instruction='Recorrido finalizado.';
