@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f67ff" />
+  <meta name="description" content="Planificador personal de rutas de inspección con OpenStreetMap." />
+  <title>Rutas de Inspección</title>
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="preconnect" href="https://tile.openstreetmap.org" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3MZIGfN5la2YbP3RzvEGF2iX+5VwM=" crossorigin="" />
+  <?!= include('Styles'); ?>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">◆</div>
+        <div>
+          <strong>Rutas de</strong>
+          <span>Inspección</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Navegación principal">
+        <button class="nav-item active" data-view="planner">⌂ <span>Inicio</span></button>
+        <button class="nav-item" data-view="planner">＋ <span>Nueva ruta</span></button>
+        <button class="nav-item" data-view="saved">⌖ <span>Rutas guardadas</span></button>
+        <button class="nav-item" data-view="history">↻ <span>Historial</span></button>
+        <button class="nav-item" data-view="settings">⚙ <span>Configuración</span></button>
+      </nav>
+
+      <div class="side-note">
+        <strong>Optimiza tus inspecciones</strong>
+        <span>Ordena ubicaciones y ahorra tiempo en campo.</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button id="menuBtn" class="icon-btn mobile-only" aria-label="Abrir menú">☰</button>
+        <div>
+          <h1>Planificador de ruta de inspecciones</h1>
+          <p>Sin Google Maps ni Supabase. Tus rutas se guardan en tu Google Drive y también en este dispositivo.</p>
+        </div>
+        <div class="top-actions">
+          <button id="newRouteBtn" class="primary-btn compact">Nueva ruta</button>
+        </div>
+      </header>
+
+      <section id="plannerView" class="view active">
+        <div class="drive-bar">
+          <div>
+            <strong>Google Drive</strong>
+            <span id="driveStatus" class="drive-status pending">Conectando con Drive…</span>
+          </div>
+          <div class="button-row">
+            <button id="reloadDriveBtn" class="ghost-btn compact">Recargar desde Drive</button>
+            <button id="syncDriveBtn" class="secondary-btn compact">Guardar ahora</button>
+          </div>
+        </div>
+        <div class="planner-grid">
+          <section class="control-column">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h2>1. Punto de partida</h2>
+                  <p>Escribe una dirección, pega coordenadas o usa tu ubicación.</p>
+                </div>
+              </div>
+              <div class="row gap">
+                <input id="startInput" class="input" placeholder="Ej.: Vitarte, Lima" autocomplete="off" />
+                <button id="locateBtn" class="secondary-btn">Mi ubicación</button>
+              </div>
+              <div id="startResolved" class="resolved-text">Todavía no se ha definido el punto de partida.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h2>2. Agregar ubicaciones</h2>
+                  <p>Pega una ubicación por línea. Admite direcciones, coordenadas y enlaces con coordenadas.</p>
+                </div>
+              </div>
+              <textarea id="bulkInput" class="textarea" rows="6" placeholder="Ejemplos:\nAv. Nicolás Ayllón 123, Ate\n-12.0453, -76.9451\nhttps://www.google.com/maps/@-12.0711,-76.9562,15z"></textarea>
+              <div class="button-row">
+                <button id="addLocationsBtn" class="primary-btn">Agregar ubicaciones</button>
+                <button id="clearInputBtn" class="ghost-btn">Limpiar cuadro</button>
+              </div>
+              <div id="feedback" class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="card locations-card">
+              <div class="card-head inline">
+                <div>
+                  <h2>3. Paradas</h2>
+                  <p id="stopCounter">0 ubicaciones agregadas</p>
+                </div>
+                <button id="clearStopsBtn" class="danger-link">Eliminar todas</button>
+              </div>
+              <div id="stopsList" class="stops-list empty-state">
+                <div class="empty-message">Agrega direcciones para comenzar.</div>
+              </div>
+              <div class="button-row stack-mobile">
+                <button id="optimizeBtn" class="primary-btn grow">Optimizar ruta</button>
+                <button id="manualOrderBtn" class="secondary-btn">Usar orden actual</button>
+              </div>
+            </div>
+
+            <div class="card" id="summaryCard">
+              <div class="card-head inline">
+                <div>
+                  <h2>Resumen de ruta</h2>
+                  <p>Estimaciones basadas en la ruta calculada.</p>
+                </div>
+                <button id="saveRouteBtn" class="secondary-btn">Guardar ruta</button>
+              </div>
+              <div class="metrics">
+                <div class="metric"><span>Tiempo total</span><strong id="totalTime">—</strong></div>
+                <div class="metric"><span>Distancia total</span><strong id="totalDistance">—</strong></div>
+                <div class="metric"><span>Paradas</span><strong id="totalStops">0</strong></div>
+              </div>
+              <div class="toggle-row">
+                <label class="switch-label">
+                  <input type="checkbox" id="returnToStart" checked />
+                  <span>Regresar al punto de partida</span>
+                </label>
+              </div>
+              <div id="routeList" class="route-list empty-state">
+                <div class="empty-message">Optimiza la ruta para ver el orden y los tiempos.</div>
+              </div>
+              <div class="button-row wrap">
+                <a id="inspectionFormBtn" class="primary-btn link-btn" href="https://forms.office.com/pages/responsepage.aspx?id=3VEAHJZFGkuYSdBgc1BXae0SDjKHF5pIr8dsxZ1dYYVUQjBHNVRXRkJWNEJJRDM2NzFCQlJBSzdPRi4u&route=shorturl" target="_blank" rel="noopener">Abrir formulario de inspección</a>
+                <button id="exportRouteBtn" class="secondary-btn">Exportar respaldo</button>
+                <label class="secondary-btn file-label">Importar respaldo<input id="importInput" type="file" accept="application/json" hidden /></label>
+              </div>
+            </div>
+          </section>
+
+          <section class="map-column">
+            <div class="map-toolbar">
+              <div>
+                <strong>Mapa de inspecciones</strong>
+                <span id="mapStatus">Esperando ubicaciones</span>
+              </div>
+              <div class="map-actions">
+                <button id="fitMapBtn" class="ghost-btn compact">Ver todo</button>
+                <button id="clearRouteBtn" class="ghost-btn compact">Limpiar trazo</button>
+              </div>
+            </div>
+            <div id="map" aria-label="Mapa de rutas"></div>
+            <div class="map-footnote">Mapa: OpenStreetMap. Rutas: servicio público OSRM. Los tiempos son aproximados y pueden no considerar tráfico en tiempo real.</div>
+          </section>
+        </div>
+      </section>
+
+      <section id="savedView" class="view">
+        <div class="page-card">
+          <div class="card-head inline">
+            <div><h2>Rutas guardadas</h2><p>Rutas sincronizadas con tu Google Drive y disponibles en este dispositivo.</p></div>
+          </div>
+          <div id="savedRoutesList" class="saved-list empty-state"><div class="empty-message">No hay rutas guardadas.</div></div>
+        </div>
+      </section>
+
+      <section id="historyView" class="view">
+        <div class="page-card">
+          <div class="card-head inline">
+            <div><h2>Historial</h2><p>Registro de rutas abiertas o marcadas como realizadas.</p></div>
+            <button id="clearHistoryBtn" class="danger-link">Borrar historial</button>
+          </div>
+          <div id="historyList" class="saved-list empty-state"><div class="empty-message">Todavía no hay actividad.</div></div>
+        </div>
+      </section>
+
+      <section id="settingsView" class="view">
+        <div class="page-card settings-grid">
+          <div class="card">
+            <h2>Configuración</h2>
+            <label class="field-label" for="defaultStart">Punto de partida predeterminado</label>
+            <input id="defaultStart" class="input" placeholder="Vitarte, Lima" />
+            <label class="field-label" for="routeNamePrefix">Nombre predeterminado de ruta</label>
+            <input id="routeNamePrefix" class="input" placeholder="Inspecciones" />
+            <button id="saveSettingsBtn" class="primary-btn">Guardar configuración</button>
+          </div>
+          <div class="card">
+            <h2>Google Drive y respaldo local</h2>
+            <p>La información principal se guarda en una carpeta privada de tu Google Drive. También se conserva una copia local para trabajar si la conexión falla.</p>
+            <div class="button-row wrap">
+              <button id="exportAllBtn" class="secondary-btn">Exportar todos los datos</button>
+              <button id="eraseAllBtn" class="danger-btn">Borrar todos los datos</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="saveDialog" class="dialog">
+    <form method="dialog" id="saveForm">
+      <h2>Guardar ruta</h2>
+      <label class="field-label" for="routeName">Nombre de la ruta</label>
+      <input id="routeName" class="input" required />
+      <div class="button-row right">
+        <button value="cancel" class="ghost-btn">Cancelar</button>
+        <button id="confirmSaveBtn" value="default" class="primary-btn">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <?!= include('Script'); ?>
+</body>
+</html>

@@ -1,0 +1,532 @@
+<script>
+(() => {
+  'use strict';
+
+  const FORM_URL = 'https://forms.office.com/pages/responsepage.aspx?id=3VEAHJZFGkuYSdBgc1BXae0SDjKHF5pIr8dsxZ1dYYVUQjBHNVRXRkJWNEJJRDM2NzFCQlJBSzdPRi4u&route=shorturl';
+  const STORAGE_KEY = 'rutasInspeccion_v1';
+  const DEFAULT_CENTER = [-12.0464, -77.0428];
+
+  const state = {
+    start: null,
+    stops: [],
+    route: null,
+    savedRoutes: [],
+    history: [],
+    settings: { defaultStart: 'Vitarte, Lima', routeNamePrefix: 'Inspecciones' },
+  };
+
+  const el = (id) => document.getElementById(id);
+  const qsAll = (sel) => [...document.querySelectorAll(sel)];
+  let map;
+  let markersLayer;
+  let routeLayer;
+  let deferredPrompt;
+  let driveReady = false;
+  let driveSaveTimer = null;
+  let lastDriveSave = null;
+
+  document.addEventListener('DOMContentLoaded', init);
+
+  function init() {
+    loadState();
+    initMap();
+    bindEvents();
+    applySettingsToUI();
+    renderAll();
+    registerServiceWorker();
+    initializeDriveSync();
+  }
+
+  function initMap() {
+    map = L.map('map', { zoomControl: true }).setView(DEFAULT_CENTER, 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(map);
+    markersLayer = L.layerGroup().addTo(map);
+    routeLayer = L.layerGroup().addTo(map);
+  }
+
+  function bindEvents() {
+    el('menuBtn').addEventListener('click', () => el('sidebar').classList.toggle('open'));
+    qsAll('.nav-item').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
+    el('newRouteBtn').addEventListener('click', newRoute);
+    el('locateBtn').addEventListener('click', useCurrentLocation);
+    el('addLocationsBtn').addEventListener('click', addBulkLocations);
+    el('clearInputBtn').addEventListener('click', () => el('bulkInput').value = '');
+    el('clearStopsBtn').addEventListener('click', clearStops);
+    el('optimizeBtn').addEventListener('click', () => calculateRoute(true));
+    el('manualOrderBtn').addEventListener('click', () => calculateRoute(false));
+    el('returnToStart').addEventListener('change', () => state.route && calculateRoute(false));
+    el('fitMapBtn').addEventListener('click', fitMap);
+    el('clearRouteBtn').addEventListener('click', clearRouteOnly);
+    el('saveRouteBtn').addEventListener('click', openSaveDialog);
+    el('confirmSaveBtn').addEventListener('click', saveCurrentRoute);
+    el('exportRouteBtn').addEventListener('click', exportCurrentRoute);
+    el('importInput').addEventListener('change', importData);
+    el('clearHistoryBtn').addEventListener('click', clearHistory);
+    el('saveSettingsBtn').addEventListener('click', saveSettings);
+    el('exportAllBtn').addEventListener('click', exportAllData);
+    el('eraseAllBtn').addEventListener('click', eraseAllData);
+    el('syncDriveBtn').addEventListener('click', () => syncToDrive(true));
+    el('reloadDriveBtn').addEventListener('click', () => loadFromDrive(true));
+    el('startInput').addEventListener('change', resolveStartInput);
+    el('bulkInput').addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') addBulkLocations();
+    });
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault(); deferredPrompt = e; el('installBtn').hidden = false;
+    });
+    el('installBtn').addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; el('installBtn').hidden = true;
+    });
+  }
+
+  function switchView(view) {
+    qsAll('.view').forEach(v => v.classList.remove('active'));
+    qsAll('.nav-item').forEach(v => v.classList.remove('active'));
+    const target = el(view + 'View') || el('plannerView');
+    target.classList.add('active');
+    const matching = qsAll(`.nav-item[data-view="${view}"]`)[0];
+    if (matching) matching.classList.add('active');
+    el('sidebar').classList.remove('open');
+    if (view === 'planner') setTimeout(() => map.invalidateSize(), 50);
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      Object.assign(state, saved);
+      state.settings = { defaultStart: 'Vitarte, Lima', routeNamePrefix: 'Inspecciones', ...(saved.settings || {}) };
+    } catch (error) {
+      console.warn('No se pudo cargar el almacenamiento local', error);
+    }
+  }
+
+  function persist() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    scheduleDriveSave();
+  }
+
+  function initializeDriveSync() {
+    if (!(window.google && google.script && google.script.run)) {
+      updateDriveStatus('Modo local: abre la versión publicada desde Google Apps Script.', 'warning');
+      return;
+    }
+    driveReady = true;
+    loadFromDrive(false);
+  }
+
+  function scheduleDriveSave() {
+    if (!driveReady) return;
+    clearTimeout(driveSaveTimer);
+    updateDriveStatus('Cambios pendientes de guardar…', 'pending');
+    driveSaveTimer = setTimeout(() => syncToDrive(false), 900);
+  }
+
+  function syncToDrive(showFeedback) {
+    if (!driveReady) {
+      updateDriveStatus('Drive no está disponible en esta vista.', 'error');
+      return;
+    }
+    updateDriveStatus('Guardando en Google Drive…', 'pending');
+    google.script.run
+      .withSuccessHandler((result) => {
+        lastDriveSave = new Date();
+        updateDriveStatus(`Guardado en Drive: ${lastDriveSave.toLocaleTimeString('es-PE', {hour:'2-digit', minute:'2-digit'})}`, 'ok');
+        if (showFeedback) setFeedback('Datos sincronizados con Google Drive.', 'ok');
+      })
+      .withFailureHandler((error) => {
+        updateDriveStatus('No se pudo guardar en Drive. Se conserva la copia local.', 'error');
+        if (showFeedback) setFeedback(error?.message || 'Error al guardar en Drive.', 'error');
+      })
+      .saveAppState(JSON.stringify(state));
+  }
+
+  function loadFromDrive(showFeedback) {
+    if (!driveReady) return;
+    updateDriveStatus('Cargando datos desde Google Drive…', 'pending');
+    google.script.run
+      .withSuccessHandler((payload) => {
+        try {
+          if (payload && payload.data) {
+            const remote = JSON.parse(payload.data);
+            Object.assign(state, remote);
+            state.settings = { defaultStart: 'Vitarte, Lima', routeNamePrefix: 'Inspecciones', ...(remote.settings || {}) };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            applySettingsToUI();
+            renderAll();
+          }
+          updateDriveStatus(payload?.data ? 'Datos cargados desde Google Drive.' : 'Drive conectado. Aún no hay datos guardados.', 'ok');
+          if (showFeedback) setFeedback('Datos actualizados desde Google Drive.', 'ok');
+        } catch (error) {
+          updateDriveStatus('El respaldo de Drive no pudo leerse.', 'error');
+        }
+      })
+      .withFailureHandler((error) => {
+        updateDriveStatus('No se pudo conectar con Drive. Se usará la copia local.', 'error');
+        if (showFeedback) setFeedback(error?.message || 'Error al cargar desde Drive.', 'error');
+      })
+      .loadAppState();
+  }
+
+  function updateDriveStatus(message, type='') {
+    const node = el('driveStatus');
+    if (!node) return;
+    node.textContent = message;
+    node.className = `drive-status ${type}`;
+  }
+
+  function applySettingsToUI() {
+    el('defaultStart').value = state.settings.defaultStart || '';
+    el('routeNamePrefix').value = state.settings.routeNamePrefix || '';
+    if (!state.start && !el('startInput').value) el('startInput').value = state.settings.defaultStart || '';
+  }
+
+  function renderAll() {
+    renderStart(); renderStops(); renderRoute(); renderSavedRoutes(); renderHistory(); refreshMap();
+  }
+
+  function renderStart() {
+    if (!state.start) {
+      el('startResolved').textContent = 'Todavía no se ha definido el punto de partida.';
+      return;
+    }
+    el('startInput').value = state.start.label || `${state.start.lat}, ${state.start.lon}`;
+    el('startResolved').textContent = `Ubicación definida: ${state.start.label} (${state.start.lat.toFixed(5)}, ${state.start.lon.toFixed(5)})`;
+  }
+
+  function renderStops() {
+    const list = el('stopsList');
+    el('stopCounter').textContent = `${state.stops.length} ${state.stops.length === 1 ? 'ubicación agregada' : 'ubicaciones agregadas'}`;
+    if (!state.stops.length) {
+      list.className = 'stops-list empty-state';
+      list.innerHTML = '<div class="empty-message">Agrega direcciones para comenzar.</div>';
+      return;
+    }
+    list.className = 'stops-list';
+    list.innerHTML = '';
+    state.stops.forEach((stop, index) => {
+      const item = document.createElement('div');
+      item.className = 'stop-item';
+      item.draggable = true;
+      item.dataset.index = index;
+      item.innerHTML = `
+        <div class="drag" title="Arrastrar">⠿</div>
+        <div class="stop-main"><strong>${escapeHtml(stop.label)}</strong><span>${stop.lat.toFixed(5)}, ${stop.lon.toFixed(5)}</span></div>
+        <div class="stop-actions">
+          <button class="mini-btn" data-action="up" title="Subir">↑</button>
+          <button class="mini-btn" data-action="down" title="Bajar">↓</button>
+          <button class="mini-btn danger" data-action="remove" title="Eliminar">✕</button>
+        </div>`;
+      item.querySelector('[data-action="up"]').addEventListener('click', () => moveStop(index, -1));
+      item.querySelector('[data-action="down"]').addEventListener('click', () => moveStop(index, 1));
+      item.querySelector('[data-action="remove"]').addEventListener('click', () => removeStop(index));
+      item.addEventListener('dragstart', onDragStart);
+      item.addEventListener('dragover', e => e.preventDefault());
+      item.addEventListener('drop', onDropStop);
+      list.appendChild(item);
+    });
+  }
+
+  function onDragStart(e) { e.dataTransfer.setData('text/plain', e.currentTarget.dataset.index); }
+  function onDropStop(e) {
+    e.preventDefault();
+    const from = Number(e.dataTransfer.getData('text/plain'));
+    const to = Number(e.currentTarget.dataset.index);
+    if (Number.isNaN(from) || from === to) return;
+    const [moved] = state.stops.splice(from, 1); state.stops.splice(to, 0, moved);
+    state.route = null; persist(); renderAll();
+  }
+
+  function moveStop(index, dir) {
+    const target = index + dir;
+    if (target < 0 || target >= state.stops.length) return;
+    [state.stops[index], state.stops[target]] = [state.stops[target], state.stops[index]];
+    state.route = null; persist(); renderAll();
+  }
+
+  function removeStop(index) {
+    state.stops.splice(index, 1); state.route = null; persist(); renderAll();
+  }
+
+  async function resolveStartInput() {
+    const text = el('startInput').value.trim();
+    if (!text) return;
+    setFeedback('Buscando punto de partida…');
+    try {
+      state.start = await resolveLocation(text);
+      persist(); renderAll(); setFeedback('Punto de partida definido.', 'ok');
+    } catch (error) { setFeedback(error.message, 'error'); }
+  }
+
+  function useCurrentLocation() {
+    if (!navigator.geolocation) return setFeedback('Este navegador no permite obtener la ubicación.', 'error');
+    setFeedback('Obteniendo tu ubicación…');
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        state.start = { label: 'Mi ubicación actual', lat: pos.coords.latitude, lon: pos.coords.longitude };
+        persist(); renderAll(); fitMap(); setFeedback('Ubicación actual definida.', 'ok');
+      },
+      () => setFeedback('No fue posible obtener tu ubicación. Revisa los permisos del navegador.', 'error'),
+      { enableHighAccuracy: true, timeout: 12000 }
+    );
+  }
+
+  async function addBulkLocations() {
+    const lines = el('bulkInput').value.split(/\n+/).map(v => v.trim()).filter(Boolean);
+    if (!lines.length) return setFeedback('Escribe al menos una dirección o coordenada.', 'error');
+    setFeedback(`Procesando ${lines.length} ubicación(es)…`);
+    let added = 0;
+    for (const line of lines) {
+      try {
+        const loc = await resolveLocation(line);
+        if (!state.stops.some(s => distanceKm(s, loc) < 0.02)) { state.stops.push(loc); added++; }
+      } catch (error) {
+        console.warn(line, error);
+      }
+      await sleep(1050); // respetar uso moderado de geocodificación pública
+    }
+    state.route = null; persist(); renderAll(); el('bulkInput').value = '';
+    setFeedback(`${added} ubicación(es) agregada(s).`, added ? 'ok' : 'error');
+    fitMap();
+  }
+
+  async function resolveLocation(text) {
+    const coords = extractCoordinates(text);
+    if (coords) return { label: text.length > 70 ? `Ubicación ${coords.lat.toFixed(5)}, ${coords.lon.toFixed(5)}` : text, ...coords };
+    const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=pe&q=${encodeURIComponent(text)}`;
+    const response = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+    if (!response.ok) throw new Error('No se pudo buscar la dirección.');
+    const data = await response.json();
+    if (!data.length) throw new Error(`No se encontró: ${text}`);
+    return { label: data[0].display_name || text, lat: Number(data[0].lat), lon: Number(data[0].lon) };
+  }
+
+  function extractCoordinates(text) {
+    const patterns = [
+      /@(-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)/,
+      /[?&](?:query|q|destination)=(-?\d{1,2}\.\d+)%?2C(-?\d{1,3}\.\d+)/i,
+      /(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/,
+    ];
+    for (const pattern of patterns) {
+      const m = text.match(pattern);
+      if (m) {
+        const lat = Number(m[1]); const lon = Number(m[2]);
+        if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) return { lat, lon };
+      }
+    }
+    return null;
+  }
+
+  async function calculateRoute(optimize) {
+    if (!state.start) await resolveStartInput();
+    if (!state.start) return setFeedback('Define primero el punto de partida.', 'error');
+    if (!state.stops.length) return setFeedback('Agrega al menos una parada.', 'error');
+    setFeedback(optimize ? 'Calculando el mejor orden…' : 'Calculando la ruta…');
+    try {
+      const orderedStops = optimize ? await optimizeStops(state.start, state.stops) : [...state.stops];
+      const points = [state.start, ...orderedStops];
+      if (el('returnToStart').checked) points.push(state.start);
+      const routeData = await requestOsrmRoute(points);
+      state.stops = orderedStops;
+      state.route = {
+        createdAt: new Date().toISOString(),
+        orderedStops,
+        returnToStart: el('returnToStart').checked,
+        distance: routeData.distance,
+        duration: routeData.duration,
+        geometry: routeData.geometry,
+        legs: routeData.legs,
+      };
+      persist(); renderAll(); setFeedback('Ruta calculada correctamente.', 'ok'); fitMap();
+    } catch (error) {
+      console.error(error);
+      setFeedback('No se pudo calcular la ruta por carreteras. Se usará una estimación por distancia directa.', 'error');
+      const orderedStops = optimize ? nearestNeighbor(state.start, state.stops) : [...state.stops];
+      const points = [state.start, ...orderedStops, ...(el('returnToStart').checked ? [state.start] : [])];
+      const fallback = buildFallbackRoute(points);
+      state.stops = orderedStops;
+      state.route = { createdAt:new Date().toISOString(), orderedStops, returnToStart:el('returnToStart').checked, ...fallback };
+      persist(); renderAll(); fitMap();
+    }
+  }
+
+  async function optimizeStops(start, stops) {
+    if (stops.length <= 1) return [...stops];
+    try {
+      const points = [start, ...stops];
+      const coords = points.map(p => `${p.lon},${p.lat}`).join(';');
+      const url = `https://router.project-osrm.org/table/v1/driving/${coords}?sources=all&destinations=all&annotations=duration`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Table OSRM error');
+      const data = await response.json();
+      if (!data.durations) throw new Error('Sin matriz');
+      const unvisited = stops.map((_, i) => i + 1);
+      const order = []; let current = 0;
+      while (unvisited.length) {
+        let bestIndex = 0; let best = Infinity;
+        unvisited.forEach((idx, pos) => {
+          const d = data.durations[current][idx];
+          if (Number.isFinite(d) && d < best) { best = d; bestIndex = pos; }
+        });
+        const next = unvisited.splice(bestIndex, 1)[0]; order.push(next - 1); current = next;
+      }
+      return order.map(i => stops[i]);
+    } catch { return nearestNeighbor(start, stops); }
+  }
+
+  function nearestNeighbor(start, stops) {
+    const remaining = [...stops]; const result = []; let current = start;
+    while (remaining.length) {
+      let bestIndex = 0; let bestDistance = Infinity;
+      remaining.forEach((stop, i) => { const d = distanceKm(current, stop); if (d < bestDistance) { bestDistance = d; bestIndex = i; } });
+      current = remaining.splice(bestIndex, 1)[0]; result.push(current);
+    }
+    return result;
+  }
+
+  async function requestOsrmRoute(points) {
+    const coords = points.map(p => `${p.lon},${p.lat}`).join(';');
+    const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson&steps=false`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('No route');
+    const data = await response.json();
+    if (!data.routes?.length) throw new Error('Sin ruta');
+    const route = data.routes[0];
+    return { distance: route.distance, duration: route.duration, geometry: route.geometry.coordinates.map(([lon,lat]) => [lat,lon]), legs: route.legs };
+  }
+
+  function buildFallbackRoute(points) {
+    const legs = []; let distance = 0; let duration = 0;
+    for (let i=0;i<points.length-1;i++) {
+      const km = distanceKm(points[i], points[i+1]); const sec = (km / 30) * 3600;
+      legs.push({ distance: km*1000, duration: sec }); distance += km*1000; duration += sec;
+    }
+    return { distance, duration, geometry: points.map(p => [p.lat,p.lon]), legs };
+  }
+
+  function renderRoute() {
+    el('totalStops').textContent = state.route ? state.route.orderedStops.length : state.stops.length;
+    const list = el('routeList');
+    if (!state.route) {
+      el('totalTime').textContent = '—'; el('totalDistance').textContent = '—';
+      list.className = 'route-list empty-state'; list.innerHTML = '<div class="empty-message">Optimiza la ruta para ver el orden y los tiempos.</div>'; return;
+    }
+    el('totalTime').textContent = formatDuration(state.route.duration);
+    el('totalDistance').textContent = formatDistance(state.route.distance);
+    list.className = 'route-list'; list.innerHTML = '';
+    state.route.orderedStops.forEach((stop,index) => {
+      const leg = state.route.legs?.[index] || {};
+      const item = document.createElement('div'); item.className = 'route-item';
+      item.innerHTML = `
+        <div class="route-number">${index+1}</div>
+        <div class="route-main"><strong>${escapeHtml(shortLabel(stop.label))}</strong><span>${formatDistance(leg.distance || 0)} desde la parada anterior</span>
+          <div class="route-actions">
+            <a class="nav-link" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${stop.lat},${stop.lon}">Navegar</a>
+            <a class="nav-link" target="_blank" rel="noopener" href="${FORM_URL}">Formulario</a>
+            <select class="status-select" data-index="${index}"><option>Pendiente</option><option>Visitada</option><option>Reprogramada</option><option>No encontrada</option></select>
+          </div>
+        </div>
+        <div class="route-time"><strong>${formatDuration(leg.duration || 0)}</strong><span>aprox.</span></div>`;
+      const select = item.querySelector('select'); select.value = stop.status || 'Pendiente';
+      select.addEventListener('change', () => { stop.status = select.value; persist(); if(select.value==='Visitada') addHistory(`Inspección visitada: ${shortLabel(stop.label)}`); });
+      list.appendChild(item);
+    });
+    if (state.route.returnToStart) {
+      const leg = state.route.legs?.[state.route.legs.length-1] || {};
+      const item = document.createElement('div'); item.className = 'route-item';
+      item.innerHTML = `<div class="route-number" style="background:#d94343">⌂</div><div class="route-main"><strong>Regreso al punto de partida</strong><span>${escapeHtml(shortLabel(state.start.label))}</span></div><div class="route-time"><strong>${formatDuration(leg.duration||0)}</strong><span>${formatDistance(leg.distance||0)}</span></div>`;
+      list.appendChild(item);
+    }
+  }
+
+  function refreshMap() {
+    if (!map) return;
+    markersLayer.clearLayers(); routeLayer.clearLayers();
+    if (state.start) addMarker(state.start, 'Inicio', 'start');
+    state.stops.forEach((s,i)=>addMarker(s, String(i+1), 'stop'));
+    if (state.route?.returnToStart && state.start) addMarker({ ...state.start, lat: state.start.lat+0.00001 }, '⌂', 'end');
+    if (state.route?.geometry?.length) L.polyline(state.route.geometry,{color:'#1267ef',weight:5,opacity:.9}).addTo(routeLayer);
+    el('mapStatus').textContent = state.route ? `${formatDistance(state.route.distance)} · ${formatDuration(state.route.duration)}` : `${state.stops.length} parada(s)`;
+  }
+
+  function addMarker(point,label,type) {
+    const icon = L.divIcon({ className:'custom-marker', html:`<div class="marker-bubble marker-${type}">${label}</div>`, iconSize:[31,31], iconAnchor:[15,15] });
+    L.marker([point.lat,point.lon],{icon}).bindPopup(`<strong>${escapeHtml(shortLabel(point.label))}</strong>`).addTo(markersLayer);
+  }
+
+  function fitMap() {
+    const points = [];
+    if (state.start) points.push([state.start.lat,state.start.lon]);
+    state.stops.forEach(s=>points.push([s.lat,s.lon]));
+    if (state.route?.geometry?.length) state.route.geometry.forEach(p=>points.push(p));
+    if (!points.length) return map.setView(DEFAULT_CENTER,10);
+    map.fitBounds(L.latLngBounds(points),{padding:[35,35]});
+  }
+
+  function clearRouteOnly() { state.route = null; persist(); renderRoute(); refreshMap(); }
+  function clearStops() { if(confirm('¿Eliminar todas las paradas?')) { state.stops=[]; state.route=null; persist(); renderAll(); } }
+  function newRoute() { if((state.stops.length||state.route) && !confirm('¿Crear una ruta nueva y limpiar la actual?')) return; state.start=null; state.stops=[]; state.route=null; applySettingsToUI(); persist(); renderAll(); switchView('planner'); }
+
+  function openSaveDialog() {
+    if (!state.route) return setFeedback('Primero calcula una ruta.', 'error');
+    const prefix = state.settings.routeNamePrefix || 'Inspecciones';
+    el('routeName').value = `${prefix} ${new Date().toLocaleDateString('es-PE')}`;
+    el('saveDialog').showModal();
+  }
+
+  function saveCurrentRoute(e) {
+    e.preventDefault();
+    if (!state.route) return;
+    const name = el('routeName').value.trim(); if (!name) return;
+    state.savedRoutes.unshift({ id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), name, savedAt:new Date().toISOString(), start:state.start, stops:state.stops, route:state.route });
+    addHistory(`Ruta guardada: ${name}`); persist(); renderSavedRoutes(); el('saveDialog').close(); setFeedback('Ruta guardada en este dispositivo.', 'ok');
+  }
+
+  function renderSavedRoutes() {
+    const list = el('savedRoutesList');
+    if (!state.savedRoutes.length) { list.className='saved-list empty-state'; list.innerHTML='<div class="empty-message">No hay rutas guardadas.</div>'; return; }
+    list.className='saved-list'; list.innerHTML='';
+    state.savedRoutes.forEach(route => {
+      const item=document.createElement('div'); item.className='saved-item';
+      item.innerHTML=`<div><strong>${escapeHtml(route.name)}</strong><div class="saved-meta">${new Date(route.savedAt).toLocaleString('es-PE')} · ${route.stops.length} paradas · ${formatDistance(route.route.distance)}</div></div><div class="saved-actions"><button class="secondary-btn compact" data-load>Cargar</button><button class="ghost-btn compact" data-export>Exportar</button><button class="danger-link" data-delete>Eliminar</button></div>`;
+      item.querySelector('[data-load]').addEventListener('click',()=>loadSavedRoute(route));
+      item.querySelector('[data-export]').addEventListener('click',()=>downloadJson(route, `${safeFileName(route.name)}.json`));
+      item.querySelector('[data-delete]').addEventListener('click',()=>deleteSavedRoute(route.id)); list.appendChild(item);
+    });
+  }
+
+  function loadSavedRoute(saved) { state.start=saved.start; state.stops=saved.stops; state.route=saved.route; addHistory(`Ruta cargada: ${saved.name}`); persist(); renderAll(); switchView('planner'); fitMap(); }
+  function deleteSavedRoute(id) { if(!confirm('¿Eliminar esta ruta guardada?'))return; state.savedRoutes=state.savedRoutes.filter(r=>r.id!==id); persist(); renderSavedRoutes(); }
+
+  function addHistory(text) { state.history.unshift({id:String(Date.now()+Math.random()),text,date:new Date().toISOString()}); state.history=state.history.slice(0,100); persist(); renderHistory(); }
+  function renderHistory() {
+    const list=el('historyList');
+    if(!state.history.length){list.className='saved-list empty-state';list.innerHTML='<div class="empty-message">Todavía no hay actividad.</div>';return;}
+    list.className='saved-list'; list.innerHTML=''; state.history.forEach(h=>{const d=document.createElement('div');d.className='saved-item';d.innerHTML=`<div><strong>${escapeHtml(h.text)}</strong><div class="saved-meta">${new Date(h.date).toLocaleString('es-PE')}</div></div>`;list.appendChild(d);});
+  }
+  function clearHistory(){if(confirm('¿Borrar todo el historial?')){state.history=[];persist();renderHistory();}}
+
+  function saveSettings(){state.settings.defaultStart=el('defaultStart').value.trim();state.settings.routeNamePrefix=el('routeNamePrefix').value.trim();persist();setFeedback('Configuración guardada.','ok');}
+  function exportCurrentRoute(){if(!state.route)return setFeedback('No hay una ruta calculada para exportar.','error');downloadJson({start:state.start,stops:state.stops,route:state.route},`ruta-inspeccion-${Date.now()}.json`);}
+  function exportAllData(){downloadJson(state,`respaldo-rutas-inspeccion-${new Date().toISOString().slice(0,10)}.json`);}
+  function importData(e){const file=e.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);if(data.savedRoutes||data.settings){Object.assign(state,data);}else if(data.start&&data.stops){state.start=data.start;state.stops=data.stops;state.route=data.route||null;}persist();renderAll();setFeedback('Respaldo importado correctamente.','ok');}catch{setFeedback('El archivo no es un respaldo válido.','error');}};reader.readAsText(file);e.target.value='';}
+  function eraseAllData(){if(!confirm('Esto borrará rutas, historial y configuración local y de Google Drive. ¿Continuar?'))return;localStorage.removeItem(STORAGE_KEY);if(driveReady){google.script.run.withSuccessHandler(()=>location.reload()).withFailureHandler(()=>location.reload()).deleteAppState();}else{location.reload();}}
+
+  function downloadJson(data,filename){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),500);}
+  function setFeedback(message,type=''){const f=el('feedback');f.textContent=message;f.className=`feedback ${type}`;}
+  function formatDuration(sec){if(!sec)return '0 min';const min=Math.round(sec/60);const h=Math.floor(min/60);const m=min%60;return h?`${h} h ${m} min`:`${m} min`;}
+  function formatDistance(m){if(!m)return '0 km';return m<1000?`${Math.round(m)} m`:`${(m/1000).toFixed(m>=10000?0:1)} km`;}
+  function shortLabel(label){return label?.split(',').slice(0,2).join(',')||'Ubicación';}
+  function safeFileName(v){return v.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase();}
+  function escapeHtml(v=''){return String(v).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));}
+  function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+  function distanceKm(a,b){const R=6371;const dLat=(b.lat-a.lat)*Math.PI/180;const dLon=(b.lon-a.lon)*Math.PI/180;const x=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLon/2)**2;return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
+  function registerServiceWorker(){}
+})();
+
+</script>
