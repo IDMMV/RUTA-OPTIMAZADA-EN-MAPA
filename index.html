@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <title>Rutas de Inspección</title>
-  <meta name="app-version" content="2026.08.01.6" />
+  <meta name="app-version" content="2026.08.01.7" />
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
   <link rel="preconnect" href="https://tile.openstreetmap.org" />
@@ -198,6 +198,54 @@ body{overflow-x:hidden}
   .map-nav-hud{top:108px}
 }
 
+/* V6: modo navegación a pantalla completa y panel compacto */
+.map-column.navigation-active .map-nav-hud{
+  top:auto!important;bottom:42px;left:50%;right:auto;transform:translateX(-50%);
+  width:min(680px,calc(100% - 24px));padding:8px 10px;border-radius:13px;
+  grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;
+  background:rgba(255,255,255,.94);
+}
+.map-column.navigation-active .map-nav-hud-title{font-size:14px}
+.map-column.navigation-active .map-nav-hud-instruction{font-size:11px;margin-top:1px}
+.map-column.navigation-active .map-nav-chip{min-width:68px;padding:5px 7px}
+.map-column.navigation-active .map-nav-chip span{font-size:9px}
+.map-column.navigation-active .map-nav-chip strong{font-size:13px}
+.map-column.navigation-active .map-legend{display:none!important}
+.fullscreen-toggle{font-size:20px}
+.map-column:fullscreen,.map-column.pseudo-fullscreen{
+  position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+  max-width:none!important;min-height:0!important;border:0!important;border-radius:0!important;
+  z-index:99999!important;background:#fff!important;display:flex!important;flex-direction:column!important;
+}
+.map-column:fullscreen #map,.map-column.pseudo-fullscreen #map{
+  height:auto!important;min-height:0!important;max-height:none!important;flex:1 1 auto!important;
+}
+.map-column:fullscreen .map-toolbar,.map-column.pseudo-fullscreen .map-toolbar{
+  padding:8px 10px;background:rgba(255,255,255,.97);flex:0 0 auto;
+}
+.map-column:fullscreen .map-footnote,.map-column.pseudo-fullscreen .map-footnote{display:none}
+.map-column:fullscreen .compass-control,.map-column.pseudo-fullscreen .compass-control{top:58px!important}
+.map-column:fullscreen .map-location-control,.map-column.pseudo-fullscreen .map-location-control{top:58px!important}
+.map-column:fullscreen .map-nav-hud,.map-column.pseudo-fullscreen .map-nav-hud{bottom:12px!important}
+body.pseudo-fullscreen-open{overflow:hidden!important}
+@media(max-width:700px){
+  .map-column.navigation-active .map-nav-hud{
+    width:calc(100% - 16px);bottom:8px;grid-template-columns:minmax(0,1fr) auto;
+    padding:7px 8px;gap:6px;
+  }
+  .map-column.navigation-active .map-nav-hud-main{min-width:0}
+  .map-column.navigation-active .map-nav-hud-title{font-size:13px}
+  .map-column.navigation-active .map-nav-hud-instruction{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .map-column.navigation-active .map-nav-hud-metrics{gap:3px}
+  .map-column.navigation-active .map-nav-chip{min-width:54px;padding:4px 5px}
+  .map-column.navigation-active .map-nav-chip span{display:none}
+  .map-column.navigation-active .map-nav-chip strong{font-size:12px;white-space:nowrap}
+  .map-column:fullscreen .map-toolbar,.map-column.pseudo-fullscreen .map-toolbar{padding:7px 8px}
+  .map-column:fullscreen .map-actions .ghost-btn,.map-column.pseudo-fullscreen .map-actions .ghost-btn{padding:7px 8px;font-size:11px}
+  .map-column:fullscreen .compass-control,.map-column.pseudo-fullscreen .compass-control{top:54px!important}
+  .map-column:fullscreen .map-location-control,.map-column.pseudo-fullscreen .map-location-control{top:54px!important}
+}
+
 </style>
 </head>
 <body>
@@ -377,6 +425,7 @@ body{overflow-x:hidden}
             </div>
             <button id="compassControl" class="compass-control" type="button" title="Orientar mapa al norte" aria-label="Orientar mapa al norte"><span class="compass-n">N</span><span id="compassArrow" class="compass-arrow"></span></button>
             <div class="map-location-control">
+              <button id="fullscreenMapBtn" class="map-round-btn fullscreen-toggle" type="button" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
               <button id="mapMyLocationBtn" class="map-round-btn location" type="button" title="Ver mi ubicación" aria-label="Ver mi ubicación">◎</button>
             </div>
             <div id="gpsMeta" class="gps-meta">GPS esperando señal</div>
@@ -583,6 +632,9 @@ body{overflow-x:hidden}
     el('previousStopBtn').addEventListener('click', goToPreviousStop);
     el('centerMeBtn').addEventListener('click', centerOnLivePosition);
     el('mapMyLocationBtn')?.addEventListener('click', () => { centerOnLivePosition(); livePositionMarker?.openPopup(); });
+    el('fullscreenMapBtn')?.addEventListener('click', toggleNavigationFullscreen);
+    document.addEventListener('fullscreenchange', syncFullscreenUi);
+    document.addEventListener('webkitfullscreenchange', syncFullscreenUi);
     el('compassControl')?.addEventListener('click', resetMapNorth);
     el('simulateBtn').addEventListener('click', toggleSimulation);
     el('finishNavigationBtn').addEventListener('click', () => finishNavigation(true));
@@ -1009,6 +1061,7 @@ body{overflow-x:hidden}
     const card = el('navigationCard');
     const badge = el('liveBadge');
     card?.classList.toggle('running', !!nav.active && !nav.paused);
+    document.querySelector('.map-column')?.classList.toggle('navigation-active', !!nav.active);
     badge?.classList.toggle('active', !!nav.active && !nav.paused);
     el('liveBadgeText').textContent = nav.active ? (nav.paused ? 'Pausado' : (nav.simulated ? 'Simulación' : 'GPS activo')) : 'Detenido';
     el('startNavigationBtn').textContent = nav.active ? '▶ Continuar recorrido' : '▶ Iniciar recorrido';
@@ -1049,6 +1102,61 @@ body{overflow-x:hidden}
     }
   }
 
+  function mapColumnNode() { return document.querySelector('.map-column'); }
+
+  function isNavigationFullscreen() {
+    const node = mapColumnNode();
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || node?.classList.contains('pseudo-fullscreen'));
+  }
+
+  async function enterNavigationFullscreen() {
+    const node = mapColumnNode();
+    if (!node || isNavigationFullscreen()) return;
+    try {
+      const request = node.requestFullscreen || node.webkitRequestFullscreen;
+      if (request) await request.call(node, { navigationUI: 'hide' });
+      else throw new Error('Fullscreen API unavailable');
+    } catch (_) {
+      node.classList.add('pseudo-fullscreen');
+      document.body.classList.add('pseudo-fullscreen-open');
+      syncFullscreenUi();
+    }
+    setTimeout(() => { map?.invalidateSize({ pan:false }); if(state.navigation.currentPosition) centerOnLivePosition(); }, 180);
+  }
+
+  async function exitNavigationFullscreen() {
+    const node = mapColumnNode();
+    if (!node) return;
+    node.classList.remove('pseudo-fullscreen');
+    document.body.classList.remove('pseudo-fullscreen-open');
+    try {
+      if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen();
+      else if (document.webkitFullscreenElement && document.webkitExitFullscreen) document.webkitExitFullscreen();
+    } catch (_) {}
+    syncFullscreenUi();
+    setTimeout(() => map?.invalidateSize({ pan:false }), 120);
+  }
+
+  function toggleNavigationFullscreen() {
+    if (isNavigationFullscreen()) exitNavigationFullscreen(); else enterNavigationFullscreen();
+  }
+
+  function syncFullscreenUi() {
+    const node = mapColumnNode();
+    const active = isNavigationFullscreen();
+    const btn = el('fullscreenMapBtn');
+    if (btn) {
+      btn.textContent = active ? '✕' : '⛶';
+      btn.title = active ? 'Salir de pantalla completa' : 'Pantalla completa';
+      btn.setAttribute('aria-label', btn.title);
+    }
+    if (!active) {
+      node?.classList.remove('pseudo-fullscreen');
+      document.body.classList.remove('pseudo-fullscreen-open');
+    }
+    setTimeout(() => map?.invalidateSize({ pan:false }), 80);
+  }
+
   async function startNavigation() {
     if (!state.route?.orderedStops?.length) {
       await calculateRoute(true);
@@ -1061,6 +1169,7 @@ body{overflow-x:hidden}
     state.navigation.simulated = false;
     state.navigation.activeIndex = Math.min(state.navigation.activeIndex || 0, state.route.orderedStops.length - 1);
     persist(); renderNavigation();
+    await enterNavigationFullscreen();
     setNavigationFeedback('Solicitando ubicación precisa… La línea verde mostrará el tramo actual y la azul la ruta completa.');
     if (geoWatchId !== null) navigator.geolocation.clearWatch(geoWatchId);
     geoWatchId = navigator.geolocation.watchPosition(handleLivePosition, handleLocationError, {
@@ -1234,6 +1343,7 @@ body{overflow-x:hidden}
     stopSimulation(false);
     state.navigation.active=false; state.navigation.paused=false; state.navigation.simulated=false; state.navigation.arrived=false;
     state.navigation.instruction='Recorrido finalizado.';
+    exitNavigationFullscreen();
     if(liveRouteLine){routeLayer.removeLayer(liveRouteLine);liveRouteLine=null;}
     el('map')?.classList.remove('map-following'); persist(); renderNavigation();
     setNavigationFeedback('Recorrido finalizado.','ok');

@@ -27,3 +27,9 @@ La ubicación requiere HTTPS y permiso del navegador. GitHub Pages ya usa HTTPS.
 - Mapa fijo y siempre visible durante la edición de la ruta.
 - Brújula ubicada en el centro superior del mapa.
 - Botón de ubicación ubicado en la esquina superior derecha.
+
+
+## V6
+- Inicia el recorrido en pantalla completa.
+- Botón superior para entrar/salir de pantalla completa.
+- Panel de distancia, tiempo y parada compactado en la parte inferior del mapa.
