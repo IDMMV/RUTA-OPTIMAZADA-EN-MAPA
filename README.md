@@ -22,3 +22,8 @@
 
 ## Nota
 El formulario de Microsoft Forms se abre con parámetros añadidos a la URL. Para que aparezcan prellenados, los nombres de parámetros deben coincidir con un enlace prellenado real generado por Microsoft Forms.
+
+## Corrección V12.1
+- Acceso corregido: funciona con clic o tecla Enter.
+- El modal de identificación ya no depende de la sincronización ni de la carga completa de librerías externas.
+- Si el navegador bloquea el almacenamiento local, igualmente permite entrar durante la sesión.
