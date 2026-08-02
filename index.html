@@ -321,9 +321,10 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
                 <button id="quickAddBtn" class="secondary-btn">Agregar</button>
               </div>
               <div id="savedPlaceRow" class="quick-add-row" style="margin-top:6px">
-                <input id="savedPlaceInput" class="input" list="savedPlacesList" placeholder="Buscar en mis ubicaciones guardadas…" autocomplete="off" />
+                <input id="savedPlaceInput" class="input" list="savedPlacesList" placeholder="Buscar por nombre o código de subestación…" autocomplete="off" />
                 <datalist id="savedPlacesList"></datalist>
-                <button id="savedPlaceAddBtn" class="secondary-btn">Agregar guardada</button>
+                <button id="savedPlaceSearchBtn" class="secondary-btn">Buscar</button>
+                <button id="savedPlaceAddBtn" class="secondary-btn">Agregar</button>
               </div>
               <textarea id="bulkInput" class="textarea" rows="6" placeholder="Ejemplos:\nAv. Nicolás Ayllón 123, Ate | SE Vitarte\n-12.0453, -76.9451 | SE Santa Rosa\nhttps://www.google.com/maps/@-12.0711,-76.9562,15z"></textarea>
               <div class="resolved-text">Opcional: agrega " | Nombre de subestación" al final de la línea para relacionar el punto con su subestación.</div>
@@ -552,6 +553,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   let map;
   let markersLayer;
   let routeLayer;
+  let liveRouteLayer;
   let deferredPrompt;
   let activeTileLayer;
   let tileProviderIndex = 0;
@@ -613,6 +615,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     loadTileProvider(0);
     markersLayer = L.layerGroup().addTo(map);
     routeLayer = L.layerGroup().addTo(map);
+    liveRouteLayer = L.layerGroup().addTo(map);
     requestAnimationFrame(() => { map.invalidateSize(true); setTimeout(() => map.invalidateSize(true), 300); });
   }
 
@@ -664,8 +667,9 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     el('addLocationsBtn').addEventListener('click', addBulkLocations);
     el('quickAddBtn')?.addEventListener('click', quickAddLocation);
     el('quickAddInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') quickAddLocation(); });
+    el('savedPlaceSearchBtn')?.addEventListener('click', searchSavedPlace);
     el('savedPlaceAddBtn')?.addEventListener('click', addSavedPlaceToStops);
-    el('savedPlaceInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') addSavedPlaceToStops(); });
+    el('savedPlaceInput')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') searchSavedPlace(); });
     el('clearInputBtn').addEventListener('click', () => el('bulkInput').value = '');
     el('clearStopsBtn').addEventListener('click', clearStops);
     el('optimizeBtn').addEventListener('click', () => calculateRoute(true));
@@ -1035,34 +1039,63 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   }
 
   // ---- Sincronización de subestaciones con Google Apps Script + Google Sheet ----
-  // El Web App se comporta como un almacén compartido: GET devuelve todas las
-  // ubicaciones guardadas; POST recibe el catálogo local y responde con el
-  // catálogo ya fusionado (gana el registro con updatedAt más reciente por id).
-  function getSyncUrl() { return (state.settings.syncUrl || '').trim(); }
+  // POST no-cors para escribir y JSONP para leer, evitando "Failed to fetch".
+  function getSyncUrl() { return (state.settings.syncUrl || '').trim().replace(/\/$/, ''); }
+
+  function postToCloudNoCors(payload) {
+    const url = getSyncUrl();
+    if (!url) return Promise.reject(new Error('Falta la URL del Web App.'));
+    return fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+  }
+
+  function jsonpRequest(action = 'places', timeout = 18000) {
+    const url = getSyncUrl();
+    if (!url) return Promise.reject(new Error('Falta la URL del Web App.'));
+    return new Promise((resolve, reject) => {
+      const callbackName = `__seSync_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+      const script = document.createElement('script');
+      const timer = setTimeout(() => cleanup(new Error('Tiempo de espera agotado al leer Google Sheets.')), timeout);
+      function cleanup(error, data) {
+        clearTimeout(timer);
+        script.remove();
+        try { delete window[callbackName]; } catch {}
+        error ? reject(error) : resolve(data);
+      }
+      window[callbackName] = data => cleanup(null, data);
+      script.onerror = () => cleanup(new Error('No se pudo leer el Web App. Debe estar publicado para “Cualquier persona”.'));
+      const joiner = url.includes('?') ? '&' : '?';
+      script.src = `${url}${joiner}action=${encodeURIComponent(action)}&callback=${encodeURIComponent(callbackName)}&_=${Date.now()}`;
+      document.head.appendChild(script);
+    });
+  }
 
   async function pushSavedPlaceToCloud(record) {
-    const url = getSyncUrl();
-    if (!url || !record) return;
-    try {
-      // Content-Type text/plain evita el preflight CORS que Apps Script no maneja bien.
-      await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'upsert', record }) });
-    } catch (error) { console.warn('No se pudo sincronizar con la nube todavía', error); }
+    if (!getSyncUrl() || !record) return;
+    try { await postToCloudNoCors({ action: 'upsert', record }); }
+    catch (error) { console.warn('No se pudo guardar la subestación en Google Sheets', error); }
   }
 
   async function syncSavedPlacesNow() {
     const url = getSyncUrl();
     const btn = el('syncNowBtn');
-    if (!url) { setSyncFeedback('Primero guarda la URL de tu Web App.', 'error'); return; }
+    if (!url) return setSyncFeedback('Primero guarda la URL de tu Web App.', 'error');
     btn.classList.add('busy-btn'); btn.textContent = 'Sincronizando…';
-    setSyncFeedback('Sincronizando ubicaciones guardadas…');
+    setSyncFeedback('Guardando en Google Sheets y leyendo el catálogo…');
     try {
-      const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'bulkSync', records: state.savedPlaces }) });
-      if (!response.ok) throw new Error('El Web App respondió con un error.');
-      const data = await response.json();
-      if (!Array.isArray(data.records)) throw new Error('Respuesta inesperada del Web App.');
-      state.savedPlaces = data.records;
+      await postToCloudNoCors({ action: 'bulkSync', records: state.savedPlaces });
+      await sleep(1200);
+      const data = await jsonpRequest('places');
+      if (!Array.isArray(data.records)) throw new Error(data.error || 'Respuesta inesperada del Web App.');
+      state.savedPlaces = data.records
+        .filter(r => Number.isFinite(Number(r.lat)) && Number.isFinite(Number(r.lon)))
+        .map(r => ({ ...r, lat:Number(r.lat), lon:Number(r.lon) }));
       persist(); renderSavedPlacesList();
-      setSyncFeedback(`Sincronizado: ${data.records.length} ubicación(es) guardada(s) en total.`, 'ok');
+      setSyncFeedback(`Sincronizado: ${state.savedPlaces.length} subestación(es). La hoja quedó guardada en Drive.`, 'ok');
     } catch (error) {
       setSyncFeedback(`No se pudo sincronizar: ${error.message}`, 'error');
     } finally {
@@ -1076,14 +1109,37 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     node.textContent = msg; node.className = `feedback${type ? ' ' + type : ''}`;
   }
 
+  function findSavedPlace(query) {
+    const q = String(query || '').trim().toLowerCase();
+    if (!q) return null;
+    return state.savedPlaces.find(p => {
+      const full = `${p.substation || ''} — ${shortLabel(p.label || '')}`.toLowerCase();
+      return full === q || String(p.substation || '').toLowerCase() === q || String(p.label || '').toLowerCase() === q;
+    }) || state.savedPlaces.find(p =>
+      String(p.substation || '').toLowerCase().includes(q) ||
+      String(p.label || '').toLowerCase().includes(q)
+    ) || null;
+  }
+
+  function searchSavedPlace() {
+    const input = el('savedPlaceInput');
+    const match = findSavedPlace(input?.value);
+    if (!match) return setFeedback('No encontré esa subestación. Sincroniza o revisa el nombre/código.', 'error');
+    input.value = match.substation ? `${match.substation} — ${shortLabel(match.label)}` : shortLabel(match.label);
+    if (map) {
+      map.setView([match.lat, match.lon], 18, { animate:true });
+      L.popup().setLatLng([match.lat, match.lon])
+        .setContent(`<strong>${escapeHtml(match.substation || 'Subestación')}</strong><br>${escapeHtml(shortLabel(match.label))}<br><small>${Number(match.lat).toFixed(6)}, ${Number(match.lon).toFixed(6)}</small>`)
+        .openOn(map);
+    }
+    setFeedback(`Subestación encontrada: ${match.substation || shortLabel(match.label)}. Presiona Agregar para incluirla en la ruta.`, 'ok');
+  }
+
   function addSavedPlaceToStops() {
     const input = el('savedPlaceInput');
     const value = input.value.trim();
     if (!value) return setFeedback('Escribe o elige una ubicación guardada.', 'error');
-    const match = state.savedPlaces.find(p => {
-      const text = p.substation ? `${p.substation} — ${shortLabel(p.label)}` : shortLabel(p.label);
-      return text === value;
-    });
+    const match = findSavedPlace(value);
     if (!match) return setFeedback('No encontré esa ubicación en tus guardadas. Elige una de la lista.', 'error');
     if (state.stops.some(s => distanceKm(s, match) < 0.02)) return setFeedback('Esa ubicación ya estaba en la lista de paradas.', 'error');
     state.stops.push({ label: match.label, lat: match.lat, lon: match.lon, substation: match.substation, source: 'saved-place' });
@@ -1221,6 +1277,12 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
       if (!state.start) { button.classList.remove('busy-btn'); button.textContent=originalText; return setFeedback('Define primero el punto de partida.', 'error'); }
     }
     setFeedback(optimize ? 'Ubicación actual confirmada. Calculando el mejor orden desde este punto…' : 'Calculando la ruta…');
+    if (liveRouteLayer) liveRouteLayer.clearLayers();
+    liveRouteLine = null;
+    completedRouteLine = null;
+    state.navigation.active = false;
+    state.navigation.paused = false;
+    state.navigation.activeIndex = 0;
     try {
       const returnToStart = el('returnToStart').checked;
       let orderedStops;
@@ -1511,7 +1573,12 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
 
   function refreshMap() {
     if (!map) return;
-    markersLayer.clearLayers(); routeLayer.clearLayers(); markerRefs.clear();
+    markersLayer.clearLayers();
+    routeLayer.clearLayers();
+    if (liveRouteLayer) liveRouteLayer.clearLayers();
+    liveRouteLine = null;
+    completedRouteLine = null;
+    markerRefs.clear();
     if (state.start) addMarker(state.start, 'Inicio', 'start', -1);
     const routeStops = state.route?.orderedStops || state.stops;
     routeStops.forEach((stop,i)=>addMarker(stop, String(i+1), state.navigation.active && i===state.navigation.activeIndex ? 'active' : 'stop', i));
@@ -1815,9 +1882,11 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
   }
 
   function drawLiveRoute(geometry) {
-    if (!map || !geometry?.length) return;
-    if (liveRouteLine) routeLayer.removeLayer(liveRouteLine);
-    liveRouteLine=L.polyline(geometry,{color:'#16a05d',weight:7,opacity:1}).addTo(routeLayer);
+    if (!map || !geometry?.length || !liveRouteLayer) return;
+    liveRouteLayer.clearLayers();
+    liveRouteLine = L.polyline(geometry, {
+      color:'#16a05d', weight:7, opacity:1, interactive:false, className:'live-route-line'
+    }).addTo(liveRouteLayer);
     liveRouteLine.bringToFront();
   }
 
@@ -1872,7 +1941,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     if(current){ current.status='Visitada'; addHistory(`Inspección visitada: ${shortLabel(current.label)}`); }
     if(state.navigation.activeIndex>=stops.length-1) return finishNavigation(false);
     state.navigation.activeIndex+=1; state.navigation.arrived=false; state.navigation.remainingDistance=0; state.navigation.remainingDuration=0; state.navigation.instruction='Calculando el siguiente tramo…';
-    if(liveRouteLine){routeLayer.removeLayer(liveRouteLine);liveRouteLine=null;}
+    if(liveRouteLayer) liveRouteLayer.clearLayers(); liveRouteLine=null;
     persist(); renderAll();
     const p=state.navigation.currentPosition||state.start; if(p) updateActiveLegRoute(p,stops[state.navigation.activeIndex]);
     setNavigationFeedback(`Ahora dirígete a la parada ${state.navigation.activeIndex+1}.`,'ok');
@@ -1904,7 +1973,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
     state.navigation.active=false; state.navigation.paused=false; state.navigation.simulated=false; state.navigation.arrived=false;
     state.navigation.instruction='Recorrido finalizado.';
     exitNavigationFullscreen();
-    if(liveRouteLine){routeLayer.removeLayer(liveRouteLine);liveRouteLine=null;}
+    if(liveRouteLayer) liveRouteLayer.clearLayers(); liveRouteLine=null;
     el('map')?.classList.remove('map-following'); persist(); renderNavigation();
     setNavigationFeedback('Recorrido finalizado.','ok');
   }
@@ -2055,7 +2124,7 @@ body.pseudo-fullscreen-open{overflow:hidden!important}
       '',
       '1. Crea un Google Sheet nuevo (vacío).',
       '2. Extensiones → Apps Script.',
-      '3. Borra el contenido y pega el código del archivo "apps-script-subestaciones.gs" que viene junto a esta app.',
+      '3. Borra el contenido y pega el código del archivo "apps-script-subestaciones.gs". El script creará automáticamente una hoja de cálculo en Drive.',
       '4. Implementar → Nueva implementación → tipo "Aplicación web".',
       '5. "Ejecutar como": Yo. "Quién tiene acceso": Cualquier usuario.',
       '6. Copia la URL que termina en /exec y pégala aquí, en "URL del Web App".',
