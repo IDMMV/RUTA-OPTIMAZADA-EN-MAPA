@@ -1,19 +1,19 @@
-# Rutas de Inspección V13
+# Rutas de Inspección V13.3 – Revalidación automática
 
-## Novedades
-- Catálogo con filtros por fecha, alimentador, subestación y técnico.
-- Selección individual, múltiple y botón para añadir todos los resultados filtrados a la ruta.
-- Nueva pestaña **Mapa general** con todas las subestaciones sincronizadas desde Google Sheets.
-- Buscador y filtros sobre el mapa general.
-- Cada marcador permite añadir la subestación a la ruta o abrirla en Google Maps.
-- La base agrega los campos `technician`, `createdAt` y `updatedAt`.
+## Cambios
+- Extrae coordenadas exactas de Google Maps priorizando `!3d/!4d`.
+- Si no existen, interpreta coordenadas en grados/minutos/segundos del `/place/`.
+- Usa coordenadas `@lat,lon` únicamente como señal de baja confianza y no reemplaza automáticamente el punto.
+- Al sincronizar, revalida automáticamente el catálogo y corrige diferencias mayores a 8 metros cuando existe una fuente exacta.
+- Botón manual **Revalidar coordenadas** en el catálogo.
+- Guarda fuente, estado, fecha de validación y coordenada anterior en Google Sheets.
 
-## Actualización
-1. Sube los archivos web a GitHub Pages.
-2. Copia `apps-script.gs` en tu proyecto de Google Apps Script como `Code.gs`.
-3. Ejecuta `initializeDatabase` una vez; el script agregará las columnas nuevas si la hoja ya existía.
-4. Implementa una nueva versión como Aplicación web, ejecutando como tú y con acceso para cualquier persona.
-5. Si la URL `/exec` cambió, actualiza `config.js`.
+## Instalación
+1. Reemplaza `index.html` en GitHub.
+2. Reemplaza `Code.gs` por `apps-script.gs` en Google Apps Script.
+3. Ejecuta `initializeDatabase`.
+4. Publica una nueva versión de la aplicación web.
+5. Si la URL `/exec` cambia, actualiza `config.js`.
 
-## URL automática
-Esta versión ya incluye la URL `/exec` en `config.js`. Al abrir la web desde cualquier dispositivo, el campo Configuración se completa automáticamente y la sincronización comienza sin pegar la URL manualmente.
+## Importante
+Los enlaces cortos de Google Maps que no contienen coordenadas no pueden revalidarse automáticamente desde el navegador. Se marcarán como **Revisión manual**.

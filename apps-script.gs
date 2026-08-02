@@ -3,7 +3,7 @@ const FOLDER='Rutas de Inspección';
 const BOOK='Base Central - Rutas de Inspección';
 const SHEETS={places:'Subestaciones',history:'Historial',users:'Usuarios'};
 const SCHEMA={
-  Subestaciones:['id','feeder','substation','address','lat','lon','technician','createdAt','updatedAt'],
+  Subestaciones:['id','feeder','substation','address','lat','lon','technician','createdAt','updatedAt','coordinateSource','validationStatus','validatedAt','validationAddress','previousLat','previousLon'],
   Historial:['id','date','user','feeder','substation','address','order','distance','duration','status','lat','lon'],
   Usuarios:['name','role','lastAccess']
 };
