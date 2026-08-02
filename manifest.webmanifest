@@ -1,1 +1,23 @@
-{"name":"Rutas de Inspección","short_name":"Rutas","start_url":"./","display":"standalone","theme_color":"#0b63d8","background_color":"#f4f7fb"}
+{
+  "name": "Rutas de Inspección",
+  "short_name": "Rutas SE",
+  "description": "Planificador, catálogo, mapa general e historial de rutas de inspección de subestaciones.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f7fb",
+  "theme_color": "#0b63d8",
+  "lang": "es-PE",
+  "icons": [
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
+    {"src":"icons/icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+  ],
+  "shortcuts": [
+    {"name":"Nueva ruta","short_name":"Nueva ruta","url":"./#home","icons":[{"src":"icons/icon-192.png","sizes":"192x192"}]},
+    {"name":"Subestaciones","short_name":"Subestaciones","url":"./#catalog","icons":[{"src":"icons/icon-192.png","sizes":"192x192"}]},
+    {"name":"Mapa general","short_name":"Mapa","url":"./#generalmap","icons":[{"src":"icons/icon-192.png","sizes":"192x192"}]}
+  ]
+}
