@@ -9,8 +9,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Rutas SE">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Rutas SE">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>Rutas de Inspección</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="config.js"></script>
@@ -55,18 +59,23 @@
     @media(max-width:520px){.toast-stack{top:10px;left:10px;right:10px;width:auto}.toast{padding:11px 38px 11px 12px}.catalog-toolbar,.general-map-toolbar{grid-template-columns:1fr}.catalog-summary{margin-left:0;width:100%}.catalog-row{grid-template-columns:28px minmax(0,1fr);padding:12px 6px;gap:7px 10px}.catalog-row .c-date,.catalog-row .catalog-code,.catalog-row .catalog-location,.catalog-row .catalog-action{grid-column:2}.catalog-row .catalog-action{grid-row:auto;justify-self:start}.catalog-code{display:grid;grid-template-columns:1fr;gap:5px;font-size:16px}.catalog-code .code-divider{display:none}.catalog-code .code-part{display:grid;grid-template-columns:92px minmax(0,1fr);gap:6px}.catalog-code .code-label{font-size:11px;margin:0}.catalog-code .code-value{font-size:17px;line-height:1.25}.catalog-location .coords,.catalog-location .tech{font-size:14px;line-height:1.4}.catalog-row .address-main{white-space:normal;overflow-wrap:anywhere}.catalog-row .address-meta{font-size:13px;line-height:1.35}.catalog-row .btn{width:100%;max-width:230px}.tag-inroute{display:inline-flex;padding:6px 0}.general-map-layout{grid-template-rows:auto 60vh}.row3{grid-template-columns:1fr}.row3 .dir,.row3 .del{grid-column:auto}.metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.metric{padding:7px 4px}.metric b{font-size:14px}.filters{grid-template-columns:1fr}.navhud{font-size:13px;left:8px;right:8px;bottom:8px;padding:9px}.map-tools{top:62px;right:8px}.map-tools button{width:40px;height:40px}.compass{top:8px}.btns .btn{flex:1 1 auto}.import-title .btns{width:100%}.import-title .btns .btn,.import-title .file-label{flex:1}.topbar{align-items:flex-start}.topbar>div{font-size:11px;text-align:right}#mapWrap{height:55vh;min-height:390px}}
     #mapWrap:fullscreen,#mapWrap.fullscreen-fallback{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;z-index:1900!important;border-radius:0!important}.fullscreen-fallback{display:block}
 
-    .top-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}.install-btn{display:none;border:1px solid #0b63d8;background:#fff;color:#0b63d8;border-radius:9px;padding:7px 10px;font-weight:800}.install-btn.show{display:inline-flex;align-items:center;gap:6px}.install-hint{position:fixed;z-index:2300;left:50%;bottom:18px;transform:translateX(-50%);width:min(520px,calc(100% - 24px));background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 44px 13px 14px;box-shadow:0 10px 30px #0003;display:none}.install-hint.show{display:block}.install-hint b{display:block;margin-bottom:3px}.install-hint small{color:var(--muted)}.install-hint button{position:absolute;right:10px;top:10px;border:0;background:transparent;font-size:20px}.pwa-icon-preview{width:34px;height:34px;border-radius:9px;vertical-align:middle;margin-right:7px}
+    .top-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}.install-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid #0b63d8;background:#fff;color:#0b63d8;border-radius:9px;padding:7px 10px;font-weight:800}.install-btn.show{display:inline-flex;align-items:center;gap:6px}.install-hint{position:fixed;z-index:2300;left:50%;bottom:18px;transform:translateX(-50%);width:min(520px,calc(100% - 24px));background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 44px 13px 14px;box-shadow:0 10px 30px #0003;display:none}.install-hint.show{display:block}.install-hint b{display:block;margin-bottom:3px}.install-hint small{color:var(--muted)}.install-hint button{position:absolute;right:10px;top:10px;border:0;background:transparent;font-size:20px}.pwa-icon-preview{width:34px;height:34px;border-radius:9px;vertical-align:middle;margin-right:7px}
     @media(max-width:520px){.top-actions{max-width:55%}.install-btn{padding:6px 8px;font-size:12px}.topbar #userBadge{display:none}}
   </style>
 </head>
 <body><div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+<div id="installHint" class="install-hint" role="dialog" aria-live="polite" aria-label="Instalar aplicación">
+  <button id="closeInstallHint" type="button" aria-label="Cerrar">×</button>
+  <b><img src="icon-192.png" alt="" class="pwa-icon-preview">Instalar Rutas de Inspección</b>
+  <small id="installHintText">En Chrome, toca el menú ⋮ y elige “Instalar aplicación”. Si no aparece, selecciona “Añadir a pantalla principal”.</small>
+</div>
 <div id="login" class="login" role="dialog" aria-modal="true" aria-labelledby="loginTitle"><form id="loginForm" class="loginbox" novalidate><h2 id="loginTitle">Rutas de Inspección</h2><p>Identifícate para registrar tus recorridos.</p><label class="label" for="loginName">Nombre</label><input id="loginName" class="input" placeholder="Ej. José Hugo" autocomplete="name" required><label class="label" for="loginRole">Rol</label><select id="loginRole" class="input"><option value="Inspector">Inspector</option><option value="Consulta">Consulta</option><option value="Administrador">Administrador</option></select><button id="loginBtn" type="submit" class="btn primary" style="width:100%;margin-top:12px">Ingresar</button><div id="loginFeedback" class="feedback" aria-live="polite"></div></form></div>
 <div class="app">
   <aside><div class="brand"><b>⌖</b><span>Rutas de Inspección</span></div><div class="nav">
     <button class="active" data-view="planner">⌂ Inicio</button><button data-view="catalog">⚡ Subestaciones</button><button data-view="generalmap">◉ Mapa general</button><button data-view="history">↻ Historial</button><button data-view="settings">⚙ Configuración</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Planificador de ruta</h1><div class="top-actions"><button id="installPwaBtn" class="install-btn" type="button">⬇ Instalar app</button><span><span id="userBadge"></span> · <span id="syncState" class="sync">Sin sincronizar</span></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Planificador de ruta</h1><div class="top-actions"><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><span><span id="userBadge"></span> · <span id="syncState" class="sync">Sin sincronizar</span></span></div></div>
     <section id="planner" class="view active">
       <div class="layout">
         <div class="left">
@@ -185,49 +194,117 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
 <script>
 (() => {
   let deferredInstallPrompt = null;
+  let swReady = false;
   const installBtn = document.getElementById('installPwaBtn');
   const hint = document.getElementById('installHint');
   const hintText = document.getElementById('installHintText');
   const closeHint = document.getElementById('closeInstallHint');
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
-  function showInstallButton() {
-    if (!isStandalone && installBtn) installBtn.classList.add('show');
+  function setInstallButton(label = '⬇ Instalar app', disabled = false) {
+    if (!installBtn) return;
+    if (isStandalone()) {
+      installBtn.style.display = 'none';
+      return;
+    }
+    installBtn.style.display = 'inline-flex';
+    installBtn.classList.add('show');
+    installBtn.textContent = label;
+    installBtn.disabled = disabled;
+  }
+
+  function showHelp(message) {
+    if (hintText) hintText.textContent = message;
+    hint?.classList.add('show');
   }
 
   window.addEventListener('beforeinstallprompt', event => {
     event.preventDefault();
     deferredInstallPrompt = event;
-    showInstallButton();
+    setInstallButton('⬇ Instalar app', false);
   });
 
-  installBtn?.addEventListener('click', async () => {
-    if (deferredInstallPrompt) {
-      deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice;
-      deferredInstallPrompt = null;
-      installBtn.classList.remove('show');
+  async function registerPwa() {
+    if (!('serviceWorker' in navigator) || location.protocol !== 'https:') {
+      setInstallButton('Instalación no disponible', true);
       return;
     }
-    hintText.textContent = isIOS
-      ? 'En Safari, toca Compartir y luego “Añadir a pantalla de inicio”.'
-      : 'En Chrome, abre el menú ⋮ y selecciona “Instalar aplicación” o “Añadir a pantalla principal”.';
-    hint?.classList.add('show');
+    try {
+      const registration = await navigator.serviceWorker.register(new URL('service-worker.js', document.baseURI).href, {scope: './', updateViaCache: 'none'});
+      await registration.update().catch(() => {});
+      await navigator.serviceWorker.ready;
+      swReady = true;
+
+      // Chrome normalmente exige que la página ya esté controlada por el service worker.
+      // En la primera visita se recarga una sola vez para completar esa condición.
+      if (!navigator.serviceWorker.controller && !sessionStorage.getItem('pwa-controller-reload')) {
+        sessionStorage.setItem('pwa-controller-reload', '1');
+        setInstallButton('Preparando instalación…', true);
+        location.reload();
+        return;
+      }
+      sessionStorage.removeItem('pwa-controller-reload');
+      setInstallButton('⬇ Instalar app', false);
+    } catch (error) {
+      console.error('No se pudo registrar la PWA:', error);
+      setInstallButton('Reintentar instalación', false);
+    }
+  }
+
+  installBtn?.addEventListener('click', async () => {
+    if (isStandalone()) return;
+
+    if (!swReady) {
+      setInstallButton('Preparando instalación…', true);
+      await registerPwa();
+    }
+
+    if (deferredInstallPrompt) {
+      const promptEvent = deferredInstallPrompt;
+      deferredInstallPrompt = null;
+      await promptEvent.prompt();
+      const choice = await promptEvent.userChoice;
+      if (choice.outcome === 'accepted') {
+        setInstallButton('Instalando…', true);
+      } else {
+        setInstallButton('⬇ Instalar app', false);
+      }
+      return;
+    }
+
+    // El evento puede tardar un instante tras activar el SW.
+    setInstallButton('Comprobando…', true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    if (deferredInstallPrompt) {
+      const promptEvent = deferredInstallPrompt;
+      deferredInstallPrompt = null;
+      await promptEvent.prompt();
+      const choice = await promptEvent.userChoice;
+      setInstallButton(choice.outcome === 'accepted' ? 'Instalando…' : '⬇ Instalar app', choice.outcome === 'accepted');
+      return;
+    }
+
+    setInstallButton('⬇ Instalar app', false);
+    showHelp(isIOS
+      ? 'En Safari toca Compartir y luego “Añadir a pantalla de inicio”.'
+      : 'Chrome está verificando la instalación. Si no aparece el cuadro, abre el menú ⋮ y comprueba que figure “Instalar aplicación”. Si no figura, cierra esta pestaña y vuelve a abrirla después de la publicación.');
   });
 
   closeHint?.addEventListener('click', () => hint?.classList.remove('show'));
 
   window.addEventListener('appinstalled', () => {
-    installBtn?.classList.remove('show');
+    installBtn && (installBtn.style.display = 'none');
     hint?.classList.remove('show');
   });
 
-  if (!isStandalone && isIOS) showInstallButton();
+  navigator.serviceWorker?.addEventListener('controllerchange', () => {
+    swReady = true;
+    setInstallButton('⬇ Instalar app', false);
+  });
 
-  if ('serviceWorker' in navigator && location.protocol === 'https:') {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(console.warn));
-  }
+  setInstallButton('Preparando instalación…', true);
+  registerPwa();
 })();
 </script>
 </body></html>

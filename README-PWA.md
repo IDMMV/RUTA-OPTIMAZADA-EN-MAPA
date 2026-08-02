@@ -1,22 +1,20 @@
-# Rutas de Inspección V13.7 PWA
+# Instalación PWA V13.10
 
-## Archivos nuevos
-- `manifest.webmanifest`
-- `service-worker.js`
-- `icons/icon-192.png`
-- `icons/icon-512.png`
-- `icons/icon-maskable-512.png`
-- `icons/apple-touch-icon.png`
+Sube a la raíz del repositorio estos archivos, sin colocarlos dentro de una carpeta:
 
-## Publicación
-Sube todos los archivos y la carpeta `icons` a la raíz de GitHub Pages.
+- index.html
+- config.js
+- manifest.webmanifest
+- service-worker.js
+- icon-192.png
+- icon-512.png
+- icon-maskable-512.png
+- apple-touch-icon.png
 
-## Instalación en Android
-1. Abre la web publicada con Chrome.
-2. Pulsa `Instalar app` dentro de la web.
-3. Confirma la instalación.
+Los iconos están en la raíz para evitar que GitHub omita la carpeta `icons`.
 
-Si el botón no aparece, usa el menú de Chrome `⋮` y elige `Instalar aplicación` o `Añadir a pantalla principal`.
-
-## Importante
-GitHub Pages usa HTTPS, requisito para instalar una PWA y usar geolocalización. El service worker usa red primero para `index.html` y `config.js` para reducir el riesgo de conservar versiones antiguas.
+Después de publicar:
+1. Espera el check verde en GitHub Actions.
+2. En Chrome, elimina los datos del sitio una sola vez.
+3. Cierra la pestaña y vuelve a abrir la web.
+4. Pulsa Instalar app.
