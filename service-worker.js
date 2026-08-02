@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rutas-inspeccion-v13-16';
+const CACHE_NAME='rutas-inspeccion-v13-19';
 const CORE = [
   './index.html',
   './config.js',
