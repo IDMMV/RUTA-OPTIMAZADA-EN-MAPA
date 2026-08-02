@@ -14,3 +14,6 @@
 3. Ejecuta `initializeDatabase` una vez; el script agregará las columnas nuevas si la hoja ya existía.
 4. Implementa una nueva versión como Aplicación web, ejecutando como tú y con acceso para cualquier persona.
 5. Si la URL `/exec` cambió, actualiza `config.js`.
+
+## URL automática
+Esta versión ya incluye la URL `/exec` en `config.js`. Al abrir la web desde cualquier dispositivo, el campo Configuración se completa automáticamente y la sincronización comienza sin pegar la URL manualmente.
