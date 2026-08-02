@@ -27,3 +27,11 @@ El formulario de Microsoft Forms se abre con parámetros añadidos a la URL. Par
 - Acceso corregido: funciona con clic o tecla Enter.
 - El modal de identificación ya no depende de la sincronización ni de la carga completa de librerías externas.
 - Si el navegador bloquea el almacenamiento local, igualmente permite entrar durante la sesión.
+
+
+## Novedades V12.2
+- Importación masiva de Excel, XLS o CSV.
+- Plantilla descargable con Alimentador, Subestación, Dirección / URL, Latitud y Longitud.
+- Vista previa con validación de filas, duplicados y registros existentes.
+- Botón Guardar ubicaciones independiente de Optimizar ruta.
+- La importación actualiza una subestación existente usando Alimentador + Subestación como identificador.
