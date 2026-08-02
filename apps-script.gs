@@ -3,8 +3,8 @@ const FOLDER='Rutas de Inspección';
 const BOOK='Base Central - Rutas de Inspección';
 const SHEETS={places:'Subestaciones',history:'Historial',users:'Usuarios'};
 const SCHEMA={
-  Subestaciones:['id','feeder','substation','address','lat','lon','technician','createdAt','updatedAt','coordinateSource','validationStatus','validatedAt','validationAddress','previousLat','previousLon'],
-  Historial:['id','date','user','feeder','substation','address','order','distance','duration','status','lat','lon'],
+  Subestaciones:['id','feeder','substation','address','lat','lon','technician','createdAt','updatedAt','coordinateSource','validationStatus','validatedAt','validationAddress','previousLat','previousLon','status','inspectedAt','inspectedBy','resultReason','rescheduledFor','resultNote','resultAt','resultBy'],
+  Historial:['id','date','user','feeder','substation','address','order','distance','duration','status','lat','lon','resultReason','rescheduledFor','resultNote','resultAt','resultBy'],
   Usuarios:['name','role','lastAccess']
 };
 function doGet(e){try{const action=(e.parameter.action||'all');let data={ok:true};if(action==='all'){data.places=readSheet_(SHEETS.places);data.history=readSheet_(SHEETS.history);data.users=readSheet_(SHEETS.users);data.sheetUrl=getBook_().getUrl()}else if(action==='places')data.places=readSheet_(SHEETS.places);else if(action==='history')data.history=readSheet_(SHEETS.history);return out_(data,e.parameter.callback)}catch(err){return out_({ok:false,error:err.message},e.parameter.callback)}}
