@@ -3,7 +3,7 @@
 Correcciones: seguimiento GPS continuo, botón de ubicación con lectura nueva, filtro de precisión, enlaces con coordenadas ampliados y marcadores arrastrables para ajustar puntos exactos.
 
 ## Últimos cambios
-- Nuevo: sincronización opcional del catálogo de "ubicaciones guardadas" (subestaciones) entre varios dispositivos, usando Google Apps Script + Google Sheet como backend gratuito. Ver `apps-script-subestaciones.gs` y Configuración → "Sincronizar subestaciones (SE)" dentro de la app.
+- Nuevo: sincronización opcional del catálogo de "ubicaciones guardadas" (subestaciones) entre varios dispositivos. `apps-script-subestaciones.gs` está preparado para integrarse con un backend de Google Apps Script + Google Drive (el mismo patrón de `loadAppState`/`saveAppState` que ya usa el proyecto), sin tocar el respaldo completo existente. Ver Configuración → "Sincronizar subestaciones (SE)" dentro de la app.
 - El nombre de la subestación ahora aparece como etiqueta directamente sobre el punto en el mapa (antes solo se veía dentro del popup, y solo si el punto la tenía asignada).
 - Se eliminó la tarjeta separada "Punto de partida": ahora se define solo con GPS automáticamente, con un botón compacto para actualizarlo o escribirlo manualmente si hace falta.
 - Nuevo cuadro de "agregado rápido" (una dirección + su subestación) además del cuadro de texto masivo.
