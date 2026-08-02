@@ -1,28 +1,24 @@
-# Rutas de Inspección V11 — Catálogo de Subestaciones
+# Rutas de Inspección V12
 
-## Correcciones principales
-- Cada optimización reemplaza el trazo anterior; no acumula rutas.
-- La línea verde del tramo activo usa una capa independiente y queda visible durante el recorrido.
-- Botón **Buscar** para localizar una subestación guardada por nombre o código.
-- Sincronización compatible con GitHub Pages mediante POST `no-cors` + lectura JSONP.
-- Google Apps Script crea automáticamente una hoja de cálculo en Drive con:
-  `ID | Subestación | Nombre/Dirección | Latitud | Longitud | Actualizado`.
+## Incluye
+- Alimentador + Subestación + Dirección/URL por punto.
+- Catálogo compartido en Google Sheets.
+- Buscador por alimentador, subestación o dirección.
+- Historial tipo Excel y descarga XLSX/CSV.
+- GPS continuo con vehículo, rumbo, precisión y recálculo.
+- Ruta azul completa y tramo verde activo sin acumulación.
+- Formulario habilitado al llegar (70 m y dos lecturas).
+- Roles básicos: Administrador, Inspector y Consulta.
+- Sincronización automática al abrir, volver a la pestaña y cada 60 segundos.
 
-## Publicar la web
-Sube a la raíz del repositorio:
-- `index.html`
-- `404.html`
-- `manifest.webmanifest`
-- `service-worker.js`
+## Instalación de Apps Script
+1. Cree un proyecto en script.google.com.
+2. Pegue `apps-script.gs`.
+3. Ejecute `initializeDatabase` y autorice Drive/Sheets.
+4. Implemente como Aplicación web: ejecutar como Yo, acceso Cualquier persona.
+5. Copie la URL terminada en `/exec`.
+6. Péguela en `config.js` reemplazando `PEGA_AQUI_TU_URL_EXEC`.
+7. Suba todos los archivos a la raíz de GitHub Pages.
 
-## Configurar Google Apps Script
-1. Abre https://script.google.com y crea un proyecto.
-2. Copia todo el contenido de `apps-script-subestaciones.gs` en `Code.gs`.
-3. Implementar → Nueva implementación → Aplicación web.
-4. Ejecutar como: **Yo**.
-5. Acceso: **Cualquier persona**.
-6. Copia la URL terminada en `/exec`.
-7. En la web: Configuración → pega la URL → Guardar URL → Sincronizar ahora.
-
-La hoja se creará en Drive dentro de la carpeta **Rutas de Inspección**.
-Desde Google Sheets puedes descargarla como Excel: Archivo → Descargar → Microsoft Excel (.xlsx).
+## Nota
+El formulario de Microsoft Forms se abre con parámetros añadidos a la URL. Para que aparezcan prellenados, los nombres de parámetros deben coincidir con un enlace prellenado real generado por Microsoft Forms.
