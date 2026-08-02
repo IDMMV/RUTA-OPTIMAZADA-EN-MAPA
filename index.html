@@ -13,8 +13,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Rutas SE">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>Rutas de Inspección</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="config.js"></script>
@@ -66,7 +66,7 @@
 <body><div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
 <div id="installHint" class="install-hint" role="dialog" aria-live="polite" aria-label="Instalar aplicación">
   <button id="closeInstallHint" type="button" aria-label="Cerrar">×</button>
-  <b><img src="icons/icon-192.png" alt="" class="pwa-icon-preview">Instalar Rutas de Inspección</b>
+  <b><img src="icon-192.png" alt="" class="pwa-icon-preview">Instalar Rutas de Inspección</b>
   <small id="installHintText">En Chrome, toca el menú ⋮ y elige “Instalar aplicación”. Si no aparece, selecciona “Añadir a pantalla principal”.</small>
 </div>
 <div id="login" class="login" role="dialog" aria-modal="true" aria-labelledby="loginTitle"><form id="loginForm" class="loginbox" novalidate><h2 id="loginTitle">Rutas de Inspección</h2><p>Identifícate para registrar tus recorridos.</p><label class="label" for="loginName">Nombre</label><input id="loginName" class="input" placeholder="Ej. José Hugo" autocomplete="name" required><label class="label" for="loginRole">Rol</label><select id="loginRole" class="input"><option value="Inspector">Inspector</option><option value="Consulta">Consulta</option><option value="Administrador">Administrador</option></select><button id="loginBtn" type="submit" class="btn primary" style="width:100%;margin-top:12px">Ingresar</button><div id="loginFeedback" class="feedback" aria-live="polite"></div></form></div>
@@ -231,7 +231,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
       return;
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js', {scope: './', updateViaCache: 'none'});
+      const registration = await navigator.serviceWorker.register(new URL('service-worker.js', document.baseURI).href, {scope: './', updateViaCache: 'none'});
       await registration.update().catch(() => {});
       await navigator.serviceWorker.ready;
       swReady = true;
@@ -288,7 +288,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
     setInstallButton('⬇ Instalar app', false);
     showHelp(isIOS
       ? 'En Safari toca Compartir y luego “Añadir a pantalla de inicio”.'
-      : 'Chrome todavía no habilitó el instalador automático. Recarga una vez la página y vuelve a pulsar “Instalar app”. También puedes usar el menú ⋮ → Instalar aplicación.');
+      : 'Chrome está verificando la instalación. Si no aparece el cuadro, abre el menú ⋮ y comprueba que figure “Instalar aplicación”. Si no figura, cierra esta pestaña y vuelve a abrirla después de la publicación.');
   });
 
   closeHint?.addEventListener('click', () => hint?.classList.remove('show'));
