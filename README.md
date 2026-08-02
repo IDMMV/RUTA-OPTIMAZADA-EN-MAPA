@@ -35,3 +35,11 @@ El formulario de Microsoft Forms se abre con parámetros añadidos a la URL. Par
 - Vista previa con validación de filas, duplicados y registros existentes.
 - Botón Guardar ubicaciones independiente de Optimizar ruta.
 - La importación actualiza una subestación existente usando Alimentador + Subestación como identificador.
+
+
+## V12.3
+- Rotación estable con Leaflet Rotate (dos dedos en móvil o botón ↻).
+- Las tarjetas ya no muestran URLs largas; muestran coordenadas o dirección corta.
+- Cada parada y popup incluye botón Abrir en Google Maps.
+- Panel lateral más compacto, sin desplazamiento horizontal general.
+- Mejor distribución móvil con mapa primero y tarjetas adaptadas.
