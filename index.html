@@ -241,7 +241,7 @@ body{background:#edf3f9}.app{grid-template-columns:240px 1fr}aside{background:li
     <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="catalog">⚡ Subestaciones</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.43</small><span id="syncState" class="sync">Sin sincronizar</span></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.45</small><span id="syncState" class="sync">Sin sincronizar</span></span></div></div>
     <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
@@ -297,7 +297,24 @@ let overlayReturnContext=null;
 let map,generalMap,generalMarkers=L.layerGroup(),markers=L.layerGroup(),routeGroup=L.layerGroup(),liveGroup=L.layerGroup(),vehicleMarker=null,gpsWatch=null,lastReroute=0,lastGps=null;
 const $=id=>document.getElementById(id); const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function setFb(id,msg,type=''){const n=$(id);n.textContent=msg;n.className='feedback '+type}
-function init(){bindLogin();try{initMap();bind();loadLocal();loadRouteDraft();renderRows();renderCatalog();renderHistory();renderDashboard();renderUsers();renderAssignments();startGpsWatch();autoSync();if(state.user)loadUserPlannerCloud(false);setInterval(autoSync,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){restoreRouteDraftIfNeeded();autoSync()}});window.addEventListener('beforeunload',saveRouteDraft);window.addEventListener('pagehide',saveRouteDraft);window.addEventListener('pageshow',restoreRouteDraftIfNeeded);window.addEventListener('popstate',handleNavigationBack)}catch(e){console.error('Error de inicio:',e);setFb('loginFeedback','No se pudo iniciar un módulo. La sesión seguirá disponible; revisa la conexión y vuelve a intentar.','err')}}
+function init(){
+  bindLogin();
+  // La navegación y los botones deben quedar activos aunque el mapa o la red fallen.
+  try{bind()}catch(e){console.error('Error al enlazar controles:',e)}
+  try{loadLocal()}catch(e){console.error('Error al cargar sesión local:',e)}
+  try{loadRouteDraft()}catch(e){console.error('Error al recuperar ruta:',e)}
+  try{initMap()}catch(e){console.error('Error al iniciar mapa principal:',e)}
+  ['renderRows','renderCatalog','renderHistory','renderDashboard','renderUsers','renderAssignments'].forEach(name=>{try{window[name]?.()}catch(e){console.error('Error en '+name+':',e)}});
+  try{startGpsWatch()}catch(e){console.error('Error GPS:',e)}
+  try{autoSync()}catch(e){console.error('Error sincronización:',e)}
+  try{if(state.user)loadUserPlannerCloud(false)}catch(e){console.error('Error planificador cloud:',e)}
+  setInterval(()=>{try{autoSync()}catch(e){console.error(e)}},60000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){try{restoreRouteDraftIfNeeded()}catch{};try{autoSync()}catch{}}});
+  window.addEventListener('beforeunload',()=>{try{saveRouteDraft()}catch{}});
+  window.addEventListener('pagehide',()=>{try{saveRouteDraft()}catch{}});
+  window.addEventListener('pageshow',()=>{try{restoreRouteDraftIfNeeded()}catch{}});
+  window.addEventListener('popstate',()=>{try{handleNavigationBack()}catch{}});
+}
 function loadLocal(){
   try{
     const savedUser=JSON.parse(localStorage.getItem('ri_user')||'null');
@@ -1041,4 +1058,38 @@ const originalRenderRoute=window.renderRoute;if(typeof originalRenderRoute==='fu
 })();
 </script>
 
+
+<script>
+// V13.45: respaldo de navegación. Evita que un fallo aislado desactive toda la interfaz.
+document.addEventListener('click', function(event){
+  const nav = event.target.closest('[data-view]');
+  if(nav){
+    event.preventDefault();
+    try{ showView(nav.dataset.view, nav); }catch(error){ console.error('Navegación:', error); }
+    return;
+  }
+  const go = event.target.closest('[data-go]');
+  if(go){
+    event.preventDefault();
+    const target = go.dataset.go;
+    const btn = document.querySelector('.nav button[data-view="'+target+'"]');
+    try{ showView(target, btn); }catch(error){ console.error('Acceso rápido:', error); }
+  }
+});
+</script>
+<style>
+/* V13.45 · ajuste visual del panel */
+:root{--panel-radius:18px;--soft-shadow:0 10px 28px rgba(15,45,80,.08)}
+.enterprise-hero{box-shadow:0 14px 35px rgba(4,38,76,.16);border:1px solid rgba(255,255,255,.08)}
+.enterprise-metrics>div,.enterprise-panel{box-shadow:var(--soft-shadow);border:1px solid #dbe6f1}
+.enterprise-metrics>div{transition:transform .18s ease,box-shadow .18s ease}
+.enterprise-metrics>div:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(15,45,80,.12)}
+.nav button{transition:background .18s ease,transform .18s ease,border-color .18s ease}
+.nav button:hover{transform:translateX(3px);background:rgba(255,255,255,.09)}
+.topbar{backdrop-filter:blur(8px)}
+.btn,.install-btn{transition:transform .15s ease,box-shadow .15s ease}
+.btn:hover,.install-btn:hover{transform:translateY(-1px)}
+@media(max-width:900px){.enterprise-hero{padding:22px}.home-actions{width:100%;justify-content:flex-start}.enterprise-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.enterprise-metrics{grid-template-columns:1fr}.enterprise-hero h2{font-size:28px}.topbar h1{font-size:22px}}
+</style>
 </body></html>
