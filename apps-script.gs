@@ -1,7 +1,8 @@
-/** RUTAS DE INSPECCIÓN V13.38 - Usuarios, dashboard y programación */
+/** RUTAS DE INSPECCIÓN V13.39 - Usuarios, dashboard y programación */
 const FOLDER='Rutas de Inspección';
 const BOOK='Base Central - Rutas de Inspección';
 const SHEETS={places:'Subestaciones',history:'Historial',users:'Usuarios',planners:'Planificadores',assignments:'Programacion',audit:'Auditoria',sessions:'Sesiones',inspections:'Inspecciones',inspectionPhotos:'InspeccionFotos'};
+let BOOK_CACHE_=null;
 const SCHEMA={
   Subestaciones:['id','feeder','substation','address','lat','lon','technician','createdAt','updatedAt','coordinateSource','validationStatus','validatedAt','validationAddress','previousLat','previousLon','status','inspectedAt','inspectedBy','resultReason','rescheduledFor','resultNote','resultAt','resultBy'],
   Historial:['id','date','user','feeder','substation','address','order','distance','duration','status','lat','lon','resultReason','rescheduledFor','resultNote','resultAt','resultBy'],
@@ -27,7 +28,23 @@ function transferPrimary_(actor,targetUsername){const target=findUser_(targetUse
 function savePreferences_(username,prefs){const u=findUser_(username);if(!u)return;u.preferences=JSON.stringify(prefs||{});u.updatedAt=new Date().toISOString();upsert_(SHEETS.users,u,'username')}
 
 function saveUser_(obj,actor){if(!obj||!obj.username)return;const existing=findUser_(obj.username)||{};const existingPrimary=String(existing.protected).toLowerCase()==='true'||String(existing.role||'').toLowerCase().includes('principal');if(existingPrimary&&String(actor.username)!==String(existing.username))throw Error('La cuenta principal está protegida.');let requestedRole=String(obj.role||existing.role||'Inspector');if(requestedRole.toLowerCase().includes('principal')&&!String(actor.role||'').toLowerCase().includes('principal'))throw Error('Solo el Administrador principal puede asignar ese rol.');const row={...existing,...obj,username:String(obj.username).toLowerCase(),updatedAt:new Date().toISOString()};if(obj.pin)row.pinHash=hash_(obj.pin);delete row.pin;if(existingPrimary){row.role='Administrador principal';row.protected=true;row.active=true;row.blocked=false;row.deleted=false}row.active=row.active===false||String(row.active).toLowerCase()==='false'?false:true;row.blocked=String(row.blocked).toLowerCase()==='true';row.deleted=String(row.deleted).toLowerCase()==='true';row.protected=String(row.protected).toLowerCase()==='true';if(!row.createdAt)row.createdAt=new Date().toISOString();if(!row.createdBy)row.createdBy=actor.username;upsert_(SHEETS.users,row,'username');upsert_(SHEETS.audit,{id:Utilities.getUuid(),date:new Date().toISOString(),username:actor.username,action:'GESTION_USUARIO',entity:'Usuario',entityId:row.username,detail:JSON.stringify({role:row.role,active:row.active,blocked:row.blocked,deleted:row.deleted})},'id')}
-function getBook_(){const props=PropertiesService.getScriptProperties();const id=props.getProperty('BOOK_ID');if(id){try{const ss=SpreadsheetApp.openById(id);ensureSchema_(ss);ensureAdmin_();return ss}catch(e){}}const folders=DriveApp.getFoldersByName(FOLDER);const folder=folders.hasNext()?folders.next():DriveApp.createFolder(FOLDER);const ss=SpreadsheetApp.create(BOOK);DriveApp.getFileById(ss.getId()).moveTo(folder);props.setProperty('BOOK_ID',ss.getId());setup_(ss);ensureAdmin_();return ss}
+function getBook_(){
+  if(BOOK_CACHE_)return BOOK_CACHE_;
+  const props=PropertiesService.getScriptProperties();
+  const id=props.getProperty('BOOK_ID');
+  if(id){
+    try{BOOK_CACHE_=SpreadsheetApp.openById(id);return BOOK_CACHE_}catch(e){}
+  }
+  const folders=DriveApp.getFoldersByName(FOLDER);
+  const folder=folders.hasNext()?folders.next():DriveApp.createFolder(FOLDER);
+  const ss=SpreadsheetApp.create(BOOK);
+  DriveApp.getFileById(ss.getId()).moveTo(folder);
+  props.setProperty('BOOK_ID',ss.getId());
+  BOOK_CACHE_=ss;
+  setup_(ss);
+  ensureAdmin_();
+  return ss;
+}
 function setup_(ss){Object.keys(SCHEMA).forEach((n,i)=>{let sh=i===0?ss.getSheets()[0]:ss.insertSheet();sh.setName(n);sh.getRange(1,1,1,SCHEMA[n].length).setValues([SCHEMA[n]]).setFontWeight('bold').setBackground('#dbeafe');sh.setFrozenRows(1);sh.autoResizeColumns(1,SCHEMA[n].length)})}
 function ensureSchema_(ss){Object.keys(SCHEMA).forEach(name=>{let sh=ss.getSheetByName(name);if(!sh){sh=ss.insertSheet(name);sh.getRange(1,1,1,SCHEMA[name].length).setValues([SCHEMA[name]]).setFontWeight('bold').setBackground('#dbeafe');sh.setFrozenRows(1);return}const last=Math.max(1,sh.getLastColumn());const current=sh.getRange(1,1,1,last).getValues()[0].filter(String);const missing=SCHEMA[name].filter(h=>!current.includes(h));if(missing.length)sh.getRange(1,current.length+1,1,missing.length).setValues([missing]).setFontWeight('bold').setBackground('#dbeafe')})}
 function ensureAdmin_(){
@@ -65,7 +82,22 @@ function resetAdminAccess(){
 function readSheet_(name){const sh=getBook_().getSheetByName(name);const v=sh.getDataRange().getValues();if(v.length<2)return[];const h=v[0];return v.slice(1).filter(r=>r.some(x=>x!=='' )).map(r=>{const o={};h.forEach((k,i)=>o[k]=r[i]);return o})}
 function upsert_(name,obj,key){if(!obj)return;const sh=getBook_().getSheetByName(name);const v=sh.getDataRange().getValues();const h=v[0];const idx=h.indexOf(key);let row=-1;for(let i=1;i<v.length;i++)if(String(v[i][idx])===String(obj[key])){row=i+1;break}const vals=h.map(k=>obj[k]??'');if(row>0)sh.getRange(row,1,1,h.length).setValues([vals]);else sh.appendRow(vals)}
 function out_(obj,cb){const json=JSON.stringify(obj);if(cb)return ContentService.createTextOutput(`${cb}(${json})`).setMimeType(ContentService.MimeType.JAVASCRIPT);return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON)}
-function initializeDatabase(){const ss=getBook_();ensureSchema_(ss);ensureAdmin_();return ss.getUrl()}
+function initializeDatabase(){const ss=getBook_();ensureSchema_(ss);repairUsersSheet_();ensureAdmin_();return ss.getUrl()}
+function repairUsersSheet_(){
+  const ss=getBook_();
+  let sh=ss.getSheetByName(SHEETS.users);
+  if(!sh){sh=ss.insertSheet(SHEETS.users);sh.getRange(1,1,1,SCHEMA.Usuarios.length).setValues([SCHEMA.Usuarios]);return}
+  const values=sh.getDataRange().getValues();
+  if(!values.length)return;
+  const oldHeaders=values[0].map(x=>String(x||'').trim());
+  const rows=values.slice(1).filter(r=>r.some(v=>v!==''));
+  const normalized=rows.map(r=>{const o={};oldHeaders.forEach((h,i)=>{if(h)o[h]=r[i]});return SCHEMA.Usuarios.map(h=>o[h]??'')});
+  sh.clearContents();
+  sh.getRange(1,1,1,SCHEMA.Usuarios.length).setValues([SCHEMA.Usuarios]).setFontWeight('bold').setBackground('#dbeafe');
+  if(normalized.length)sh.getRange(2,1,normalized.length,SCHEMA.Usuarios.length).setValues(normalized);
+  sh.setFrozenRows(1);sh.autoResizeColumns(1,SCHEMA.Usuarios.length);
+}
+function repairUserDatabase(){const ss=getBook_();ensureSchema_(ss);repairUsersSheet_();ensureAdmin_();return 'Usuarios reparados. Prueba admin / 1234.'}
 
 
 function inspectionFolder_(){
