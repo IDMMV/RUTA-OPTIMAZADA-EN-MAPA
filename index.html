@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b63d8">
+  <meta name="theme-color" content="#0f3d63">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Rutas SE">
-  <link rel="manifest" href="manifest.webmanifest?v=13.42">
+  <link rel="manifest" href="manifest.webmanifest?v=13.46">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -154,6 +154,39 @@ body{background:#edf3f9}.app{grid-template-columns:240px 1fr}aside{background:li
 @media(max-width:900px){.app{grid-template-columns:1fr}aside{height:auto;position:sticky;padding:8px;overflow-x:auto}.brand{display:none}.nav{display:flex;gap:5px;min-width:max-content}.nav button{white-space:nowrap}.topbar{margin:-18px -18px 12px}.enterprise-metrics{grid-template-columns:repeat(2,1fr)}.welcome-strip{align-items:flex-start;flex-direction:column}.home-actions{justify-content:flex-start}.lower-grid{grid-template-columns:1fr}.audit-filters{grid-template-columns:1fr 1fr}.audit-metrics{grid-template-columns:1fr 1fr}}
 @media(max-width:540px){.enterprise-metrics{grid-template-columns:1fr 1fr}.enterprise-metric{grid-template-columns:36px 1fr;padding:11px}.enterprise-metric i{width:36px;height:36px}.enterprise-metric b{font-size:18px}.audit-filters{grid-template-columns:1fr}.audit-header{align-items:flex-start;flex-direction:column}.dashboard-map-preview{height:260px}.top-actions .share-app-btn,.top-actions #quickUsersBtn{display:none!important}}
 
+
+/* V13.46 · Diseño corporativo aprobado (Rutas de Inspección JH) */
+:root{
+  --blue:#1976e9;--blue-dark:#0b2f55;--blue-deep:#071f38;--blue-soft:#eaf3ff;
+  --green:#13b981;--purple:#7c4de8;--orange:#ff9940;--cyan:#20a9ce;
+  --red:#e34b5f;--ink:#122033;--muted:#6c7b90;--line:#dce5ef;--border:#dce5ef;
+  --bg:#f4f7fb;--card:#fff;--shadow:0 10px 30px rgba(25,53,82,.09)
+}
+html,body{background:#f4f7fb;color:var(--ink)}
+.app{grid-template-columns:244px minmax(0,1fr)}
+aside{background:linear-gradient(180deg,#092c50 0%,#061f39 100%);border-right:0;padding:22px 14px;color:#fff;box-shadow:10px 0 28px rgba(5,31,56,.08)}
+.brand{color:#fff;font-size:19px;line-height:1.15;margin:4px 10px 25px}.brand b{color:#40a6ff}.brand span{max-width:160px}
+.nav{gap:6px}.nav button{color:#d7e5f3;padding:12px 13px;border-radius:10px;font-weight:600;transition:.18s ease}.nav button:hover{background:rgba(255,255,255,.08);color:#fff;transform:translateX(2px)}.nav button.active{background:linear-gradient(90deg,#1976e9,#1167d0);color:#fff;font-weight:800;box-shadow:0 7px 18px rgba(0,105,230,.25)}
+.nav-order-btn{color:#d7e5f3!important;background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.1)!important}
+main{padding:0 22px 28px;background:linear-gradient(180deg,#fff 0,#f4f7fb 145px)}
+main>.topbar{min-height:80px;margin:0 -22px 22px;padding:0 22px;background:#fff;border-bottom:1px solid #e8eef5;position:sticky;top:0;z-index:1100;box-shadow:0 4px 16px rgba(15,45,75,.035)}
+main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.install-btn{background:#fff;border:1px solid #dce5ef;color:#1765c1;border-radius:11px;padding:9px 12px;font-weight:750;box-shadow:0 2px 7px rgba(30,70,110,.035)}.install-btn:hover{background:#f5f9ff;border-color:#bcd4ee}
+.fullview,.card,.dash-panel,.enterprise-panel,.audit-view{border-color:#e1e8f0!important;box-shadow:var(--shadow)!important}
+.fullview{background:#fff;border-radius:16px;padding:20px}.card{border-radius:15px}.btn{border-radius:10px;transition:.18s ease}.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 7px 16px rgba(15,50,85,.11)}.btn.primary{background:linear-gradient(135deg,#2586ef,#0966d7);border-color:#126dd7}.btn.green{background:linear-gradient(135deg,#22ba83,#0b9868);border-color:#0c9d6c}
+.input{border-color:#d6e0eb;background:#fff}.input:focus{outline:3px solid rgba(37,134,239,.13);border-color:#3b91eb}
+.enterprise-hero{background:linear-gradient(120deg,#0c3158 0%,#104875 67%,#126099 100%)!important;border:0!important;box-shadow:0 14px 35px rgba(8,48,84,.22)!important;position:relative;overflow:hidden}.enterprise-hero:after{content:'';position:absolute;width:340px;height:340px;border-radius:50%;right:-120px;top:-190px;background:rgba(74,171,255,.14)}
+.enterprise-hero .eyebrow{color:#72c3ff!important}.enterprise-hero h2,.enterprise-hero p{color:#fff!important}
+.enterprise-metrics{gap:13px!important}.enterprise-metric{border:1px solid #e1e8f0!important;border-radius:14px!important;box-shadow:0 8px 22px rgba(35,69,102,.07)!important;padding:17px!important;min-height:105px;position:relative;overflow:hidden}.enterprise-metric:before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--metric-color,#1976e9)}.enterprise-metric:nth-child(1){--metric-color:#2788ef}.enterprise-metric:nth-child(2){--metric-color:#8458e8}.enterprise-metric:nth-child(3){--metric-color:#17b983}.enterprise-metric:nth-child(4){--metric-color:#ff9940}.enterprise-metric:nth-child(5){--metric-color:#24a9c9}.enterprise-metric i{background:color-mix(in srgb,var(--metric-color) 13%,white)!important;color:var(--metric-color)!important;border-radius:12px!important;font-style:normal!important}.enterprise-metric b{font-size:25px!important;color:#10243b}.enterprise-metric small{color:#718096!important}
+.enterprise-panels{gap:16px!important}.enterprise-panel{border-radius:15px!important}.dashboard-map-shell{border-radius:13px!important;overflow:hidden}.activity-item{border-bottom:1px solid #edf1f5!important}.activity-item i{border-radius:10px!important}
+.general-map-layout{gap:13px}.general-map-toolbar{background:#f7f9fc;border:1px solid #e1e8f0;border-radius:13px;padding:11px}.general-map-shell{border:1px solid #dce5ef!important;border-radius:15px!important;box-shadow:0 10px 26px rgba(20,55,85,.08)}
+.general-map-info{background:rgba(7,37,64,.89)!important;color:#fff!important;border:0!important;backdrop-filter:blur(8px)}
+.toast{border-radius:14px!important;box-shadow:0 16px 38px rgba(10,40,70,.18)!important}
+.audit-header{background:linear-gradient(120deg,#0c3158,#155583)!important;border-radius:14px;padding:18px;color:#fff}.audit-header h2,.audit-header p{color:#fff!important}.audit-card{border-radius:13px!important;box-shadow:0 6px 18px rgba(20,55,85,.07)!important}
+@media(max-width:900px){
+  .app{display:block}aside{background:#082b4d!important;padding:7px 8px!important;box-shadow:0 5px 16px rgba(3,28,50,.2)}.brand{display:none}.nav button{color:#dbeafa}.nav button.active{background:#1976e9}.nav-order-btn{background:#103c64!important}.nav-order-btn::before{color:#fff}main{padding:8px 10px 24px}main>.topbar{margin:-8px -10px 10px;padding:8px 10px;position:sticky;top:58px;min-height:auto;background:#fff}.enterprise-metrics{grid-template-columns:1fr 1fr!important}.enterprise-panels{grid-template-columns:1fr!important}
+}
+@media(max-width:520px){.enterprise-metric{min-height:94px;padding:12px!important}.enterprise-metric b{font-size:21px!important}.enterprise-metric i{width:38px!important;height:38px!important}.fullview{padding:12px;border-radius:13px}.top-actions .install-btn{padding:8px 9px;font-size:12px}}
+
 </style>
 
 <style>
@@ -241,7 +274,7 @@ body{background:#edf3f9}.app{grid-template-columns:240px 1fr}aside{background:li
     <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="catalog">⚡ Subestaciones</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.45</small><span id="syncState" class="sync">Sin sincronizar</span></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.46</small><span id="syncState" class="sync">Sin sincronizar</span></span></div></div>
     <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
@@ -701,7 +734,7 @@ try{localStorage.removeItem('inspection-compact-map')}catch{}
       return;
     }
     try {
-      const registration = await navigator.serviceWorker.register(new URL('service-worker.js?v=13.31', document.baseURI).href, {scope: './', updateViaCache: 'none'});
+      const registration = await navigator.serviceWorker.register(new URL('service-worker.js?v=13.46', document.baseURI).href, {scope: './', updateViaCache: 'none'});
       await registration.update().catch(() => {});
       await navigator.serviceWorker.ready;
       swReady = true;
