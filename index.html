@@ -155,7 +155,7 @@ body{background:#edf3f9}.app{grid-template-columns:240px 1fr}aside{background:li
 @media(max-width:540px){.enterprise-metrics{grid-template-columns:1fr 1fr}.enterprise-metric{grid-template-columns:36px 1fr;padding:11px}.enterprise-metric i{width:36px;height:36px}.enterprise-metric b{font-size:18px}.audit-filters{grid-template-columns:1fr}.audit-header{align-items:flex-start;flex-direction:column}.dashboard-map-preview{height:260px}.top-actions .share-app-btn,.top-actions #quickUsersBtn{display:none!important}}
 
 
-/* V13.46 · Diseño corporativo aprobado (Rutas de Inspección JH) */
+/* V13.47 · Diseño corporativo aprobado (Rutas de Inspección JH) */
 :root{
   --blue:#1976e9;--blue-dark:#0b2f55;--blue-deep:#071f38;--blue-soft:#eaf3ff;
   --green:#13b981;--purple:#7c4de8;--orange:#ff9940;--cyan:#20a9ce;
@@ -208,6 +208,10 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
 
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+.connection-help-btn{width:26px;height:26px;border-radius:50%;border:1px solid #cbd5e1;background:#fff;color:#0f4c81;font-weight:900;cursor:pointer;margin-left:6px}.connection-help-btn:hover{background:#eaf3fb}.connection-panel{position:fixed;right:18px;top:78px;z-index:99999;width:min(420px,calc(100vw - 36px));background:#fff;border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 18px 50px rgba(15,23,42,.22);padding:18px}.connection-panel h3{margin:0 0 10px;color:#0f2942}.connection-panel p{margin:7px 0;color:#475569;line-height:1.45}.connection-panel code{display:block;padding:10px;background:#f1f5f9;border-radius:10px;overflow:auto;font-size:12px}.connection-panel .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.registry-loading{padding:28px;text-align:center;color:#64748b}.sync.err{font-weight:800}.sync.ok{font-weight:800}
+</style>
 </head>
 <body><div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
 <div id="installHint" class="install-hint" role="dialog" aria-live="polite" aria-label="Instalar aplicación">
@@ -274,7 +278,7 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
     <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="catalog">⚡ Subestaciones</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.46</small><span id="syncState" class="sync">Sin sincronizar</span></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.47</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
     <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
@@ -1091,6 +1095,37 @@ const originalRenderRoute=window.renderRoute;if(typeof originalRenderRoute==='fu
 })();
 </script>
 
+
+<script>
+// V13.47: diagnóstico de conexión y acceso robusto al registro de usuarios.
+(function(){
+  function byId(id){return document.getElementById(id)}
+  function openConnectionPanel(){
+    document.querySelector('.connection-panel')?.remove();
+    const panel=document.createElement('div');panel.className='connection-panel';
+    const url=(window.APP_CONFIG?.SCRIPT_URL||localStorage.getItem('ri_script')||'').trim();
+    const token=JSON.parse(localStorage.getItem('ri_user')||'null')?.token||'';
+    panel.innerHTML=`<h3>Estado de conexión</h3><p><b>Apps Script:</b> ${url?'Configurado':'No configurado'}</p><p><b>Sesión:</b> ${token?'Token encontrado':'No iniciada o vencida'}</p><code>${url||'Ve a Configuración y pega la URL terminada en /exec.'}</code><div class="btns"><button class="btn primary" data-test>Comprobar ahora</button><button class="btn" data-settings>Ir a Configuración</button><button class="btn" data-close>Cerrar</button></div>`;
+    panel.querySelector('[data-close]').onclick=()=>panel.remove();
+    panel.querySelector('[data-settings]').onclick=()=>{panel.remove();const b=document.querySelector('.nav button[data-view="settings"]');window.showView?.('settings',b)};
+    panel.querySelector('[data-test]').onclick=async()=>{panel.remove();if(window.autoSync)await window.autoSync(true)};
+    document.body.appendChild(panel);
+  }
+  async function openRegistry(){
+    const create=byId('userCreatePanel'),reg=byId('userRegistryPanel'),a=byId('showCreateUserBtn'),b=byId('showRegistryBtn'),list=byId('userList');
+    if(!create||!reg)return;create.style.display='none';reg.style.display='block';a?.classList.remove('active');b?.classList.add('active');
+    if(list&&!Array.isArray(window.state?.users)&&!list.children.length)list.innerHTML='<div class="registry-loading">Cargando usuarios…</div>';
+    try{ if(window.renderUsers)window.renderUsers(); if(window.autoSync)await window.autoSync(true); if(window.renderUsers)window.renderUsers(); }catch(e){console.error('Registro usuarios',e);if(list)list.innerHTML='<div class="registry-loading">No se pudo cargar. Comprueba Apps Script y vuelve a iniciar sesión.</div>'}
+  }
+  document.addEventListener('click',function(e){
+    if(e.target.closest('#connectionHelpBtn')){e.preventDefault();openConnectionPanel()}
+    if(e.target.closest('#showRegistryBtn')){e.preventDefault();openRegistry()}
+    if(e.target.closest('#showCreateUserBtn')){e.preventDefault();const c=byId('userCreatePanel'),r=byId('userRegistryPanel');if(c)c.style.display='grid';if(r)r.style.display='none';byId('showCreateUserBtn')?.classList.add('active');byId('showRegistryBtn')?.classList.remove('active')}
+    if(e.target.closest('#refreshUsersBtn')){e.preventDefault();openRegistry()}
+  });
+  window.addEventListener('load',()=>{const url=(window.APP_CONFIG?.SCRIPT_URL||localStorage.getItem('ri_script')||'').trim();if(!url){const s=byId('syncState');if(s){s.textContent='Falta URL de Apps Script';s.classList.add('err')}}});
+})();
+</script>
 
 <script>
 // V13.45: respaldo de navegación. Evita que un fallo aislado desactive toda la interfaz.

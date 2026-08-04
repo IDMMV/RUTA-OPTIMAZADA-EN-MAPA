@@ -16,7 +16,7 @@ const SCHEMA={
 };
 function doGet(e){
   try{
-    const p=e.parameter||{};const action=String(p.action||'all');let data={ok:true};
+    const p=e.parameter||{};const action=String(p.action||'all');let data={ok:true};if(action==='health')return out_({ok:true,service:'Rutas de Inspección',version:'13.47',bookReady:!!PropertiesService.getScriptProperties().getProperty('BOOK_ID')},p.callback);
     if(action==='login')return out_(login_(p.username,p.pin),p.callback);
     if(action==='requestReset')return out_(requestReset_(p.username),p.callback);
     if(action==='confirmReset')return out_(confirmReset_(p.username,p.code,p.pin),p.callback);
