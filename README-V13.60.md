@@ -1,4 +1,4 @@
-# Rutas de Inspección V13.60
+# Rutas de Inspección V13.61
 
 Correcciones principales:
 - Administrador secundario reconocido correctamente para cambiar estados y registrar acciones.
