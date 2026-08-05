@@ -278,7 +278,7 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
     <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="catalog">⚡ Subestaciones</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.50</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.52</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
     <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
@@ -1163,7 +1163,7 @@ document.addEventListener('click', function(event){
 </style>
 
 <script>
-// V13.50: cierre de sesión independiente y resistente a errores de inicialización.
+// V13.52: cierre de sesión independiente y resistente a errores de inicialización.
 (function(){
   function logoutNow(event){
     if(event){ event.preventDefault(); event.stopImmediatePropagation(); }
@@ -1204,10 +1204,62 @@ document.addEventListener('click', function(event){
 
 
 <script>
-// V13.50: sincronización resiliente. El mapa no depende de usuarios, historial o programación.
+// V13.52: caché persistente del catálogo en IndexedDB.
+// Las ubicaciones se muestran de inmediato y solo se descargan completas cuando el caché vence o el usuario fuerza la recarga.
 (function(){
   let syncRunning=false;
   const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  const CACHE_DB='RutasInspeccionDB';
+  const CACHE_STORE='cache';
+  const CATALOG_KEY='catalog-v1';
+  const CACHE_MAX_AGE=12*60*60*1000; // 12 horas
+
+  function openCacheDb(){
+    return new Promise((resolve,reject)=>{
+      if(!('indexedDB' in window)) return reject(new Error('IndexedDB no disponible'));
+      const req=indexedDB.open(CACHE_DB,1);
+      req.onupgradeneeded=()=>{
+        const db=req.result;
+        if(!db.objectStoreNames.contains(CACHE_STORE)) db.createObjectStore(CACHE_STORE);
+      };
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error||new Error('No se pudo abrir la caché'));
+    });
+  }
+  async function cacheGet(key){
+    const db=await openCacheDb();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(CACHE_STORE,'readonly');
+      const req=tx.objectStore(CACHE_STORE).get(key);
+      req.onsuccess=()=>resolve(req.result||null);
+      req.onerror=()=>reject(req.error);
+      tx.oncomplete=()=>db.close();
+    });
+  }
+  async function cacheSet(key,value){
+    const db=await openCacheDb();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(CACHE_STORE,'readwrite');
+      tx.objectStore(CACHE_STORE).put(value,key);
+      tx.oncomplete=()=>{db.close();resolve(true)};
+      tx.onerror=()=>{db.close();reject(tx.error)};
+    });
+  }
+  async function hydrateCatalogCache(){
+    try{
+      const saved=await cacheGet(CATALOG_KEY);
+      if(!saved||!Array.isArray(saved.rows)||!saved.rows.length) return null;
+      state.catalog=normalizeRows(saved.rows);
+      renderCatalog();renderDashboard();renderGeneralMap();
+      const age=Date.now()-Number(saved.savedAt||0);
+      const label=age<CACHE_MAX_AGE?'Catálogo guardado':'Catálogo guardado · pendiente de actualizar';
+      setSync(`${label} · ${state.catalog.length.toLocaleString('es-PE')} ubicaciones`,'ok');
+      return {count:state.catalog.length,age,savedAt:saved.savedAt||0};
+    }catch(err){
+      console.warn('[V13.52] No se pudo leer IndexedDB:',err);
+      return null;
+    }
+  }
   async function getJsonp(action,params={},timeout=30000){
     const query=new URLSearchParams({action,...params}).toString();
     return jsonp(state.scriptUrl+'?'+query,timeout);
@@ -1216,18 +1268,18 @@ document.addEventListener('click', function(event){
     let offset=0, all=[];
     const pageSize=500;
     while(true){
-      setSync(`Cargando ubicaciones… ${all.length.toLocaleString('es-PE')}`);
+      setSync(`Actualizando ubicaciones… ${all.length.toLocaleString('es-PE')}`);
       const page=await getJsonp('placesPage',{offset:String(offset),limit:String(pageSize),token},30000);
       if(page?.ok===false) throw new Error(page.error||'Error al leer Subestaciones');
       const rows=Array.isArray(page.places)?page.places:[];
       all.push(...rows);
       if(!page.hasMore||rows.length===0) break;
       offset+=rows.length;
-      await wait(40);
+      await wait(30);
     }
     state.catalog=normalizeRows(all);
-    try{ if(state.catalog.length<=5000)localStorage.setItem('ri_catalog_cache',JSON.stringify(state.catalog)); }
-    catch(e){}
+    try{await cacheSet(CATALOG_KEY,{rows:state.catalog,savedAt:Date.now()});}
+    catch(err){console.warn('[V13.52] No se pudo guardar el catálogo:',err);}
     renderCatalog();renderDashboard();renderGeneralMap();
     setSync(`Sincronizado · ${state.catalog.length.toLocaleString('es-PE')} ubicaciones`,'ok');
   }
@@ -1240,8 +1292,21 @@ document.addEventListener('click', function(event){
       state.inspections=Array.isArray(data.inspections)?data.inspections:state.inspections;
       state.assignments=Array.isArray(data.assignments)?data.assignments:state.assignments;
       if(data.currentUser){state.user={...state.user,...data.currentUser};localStorage.setItem('ri_user',JSON.stringify(state.user));}
+      try{
+        localStorage.setItem('ri_history_cache',JSON.stringify(state.history||[]));
+        localStorage.setItem('ri_users_cache',JSON.stringify(state.users||[]));
+      }catch(e){}
       renderHistory();renderUsers();renderAssignments();renderDashboard();populateAdminSelects();detectCurrentAssignment();
-    }catch(err){console.warn('[V13.50] Datos complementarios:',err);}
+    }catch(err){console.warn('[V13.52] Datos complementarios:',err);}
+  }
+  function hydrateSecondaryCache(){
+    try{
+      const users=JSON.parse(localStorage.getItem('ri_users_cache')||'[]');
+      if(Array.isArray(users)&&users.length)state.users=users;
+      const history=JSON.parse(localStorage.getItem('ri_history_cache')||'[]');
+      if(Array.isArray(history)&&history.length)state.history=history;
+      renderUsers();renderHistory();renderDashboard();
+    }catch(e){}
   }
   window.autoSync=async function(force=false){
     if(syncRunning)return;
@@ -1249,23 +1314,114 @@ document.addEventListener('click', function(event){
     if(!state.scriptUrl){setSync('Falta configurar Apps Script','err');return;}
     syncRunning=true;
     try{
+      const cached=await hydrateCatalogCache();
+      hydrateSecondaryCache();
+      // Los datos pequeños se actualizan inmediatamente y no esperan a las 17 mil ubicaciones.
+      loadSecondaryData(state.user.token);
+      const cacheFresh=cached&&cached.age<CACHE_MAX_AGE;
+      if(cacheFresh&&!force){
+        setSync(`Catálogo listo · ${cached.count.toLocaleString('es-PE')} ubicaciones`,'ok');
+        return;
+      }
       setSync('Validando sesión…');
       const check=await getJsonp('sessionCheck',{token:state.user.token},20000);
       if(check?.ok===false)throw new Error(check.error||'Sesión inválida');
       await loadCatalogOnly(state.user.token);
-      loadSecondaryData(state.user.token);
     }catch(err){
-      console.error('[V13.50] Sincronización:',err);
+      console.error('[V13.52] Sincronización:',err);
       const msg=String(err?.message||err||'Error desconocido');
-      setSync('Error: '+msg,'err');
-      const info=document.getElementById('generalMapInfo');if(info)info.textContent='No se pudo sincronizar: '+msg;
+      if(state.catalog?.length){
+        setSync(`Datos guardados · ${state.catalog.length.toLocaleString('es-PE')} ubicaciones`,'ok');
+      }else{
+        setSync('Error: '+msg,'err');
+      }
+      const info=document.getElementById('generalMapInfo');
+      if(info&&!state.catalog?.length)info.textContent='No se pudo sincronizar: '+msg;
       window.__LAST_SYNC_ERROR__=msg;
     }finally{syncRunning=false;}
   };
   document.addEventListener('click',e=>{
-    if(e.target.closest('#gmReloadBtn')||e.target.closest('#syncBtn')){e.preventDefault();window.autoSync(true);}
+    if(e.target.closest('#gmReloadBtn')||e.target.closest('#syncBtn')){
+      e.preventDefault();
+      window.autoSync(true);
+    }
   },true);
-  window.addEventListener('load',()=>{if(state.user?.token)setTimeout(()=>window.autoSync(true),600);});
+  window.addEventListener('load',()=>{
+    hydrateSecondaryCache();
+    if(state.user?.token)setTimeout(()=>window.autoSync(false),350);
+  });
+})();
+</script>
+
+
+<style id="v1352-responsive-fixes">
+/* V13.52: navegación adaptable, planificador móvil y tarjetas legibles */
+#sidebarToggle{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid #dbe4ef;border-radius:11px;background:#fff;color:#0b355f;font-size:22px;font-weight:900;cursor:pointer;flex:0 0 auto}
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:#07182d88;z-index:1790}
+body.sidebar-collapsed .app{grid-template-columns:76px 1fr}
+body.sidebar-collapsed aside .brand span,body.sidebar-collapsed aside .nav button:not(.nav-order-btn){font-size:0}
+body.sidebar-collapsed aside .nav button{justify-content:center;padding-left:8px;padding-right:8px}
+body.sidebar-collapsed aside .brand{justify-content:center;margin-left:0;margin-right:0}
+body.sidebar-collapsed aside .nav-order-btn{font-size:0}
+body.sidebar-collapsed aside .nav-order-btn::first-letter{font-size:18px}
+.data-item,.user-meta-grid,.data-actions{min-width:0}
+.data-item b,.data-item small,.user-meta-grid span{overflow-wrap:anywhere;word-break:normal}
+@media(max-width:900px){
+  .app{display:block!important}.app>main{width:100%;min-width:0;padding-top:64px!important}
+  aside{position:fixed!important;left:0;top:0;bottom:0;width:min(82vw,300px)!important;height:100dvh!important;z-index:1800!important;transform:translateX(-105%);transition:transform .22s ease;overflow-y:auto!important;overflow-x:hidden!important;padding:18px 12px!important;background:linear-gradient(180deg,#061a33,#082543)!important}
+  body.sidebar-open aside{transform:translateX(0)}body.sidebar-open .sidebar-backdrop{display:block}
+  aside .brand{display:flex!important;margin:2px 8px 22px!important}.nav{display:grid!important;min-width:0!important;overflow:visible!important;white-space:normal!important}.nav button{width:100%;white-space:normal!important}
+  #sidebarToggle{position:fixed;left:10px;top:10px;z-index:1700;box-shadow:0 5px 18px #102a4330}
+  .topbar{padding-left:62px!important;min-height:58px!important;margin:0 0 12px!important;position:sticky!important;top:0!important}
+  .layout{display:flex!important;flex-direction:column!important;gap:12px!important}.left{order:1!important;width:100%!important;max-height:none!important;overflow:visible!important}.planner-side{width:100%!important;min-width:0!important}
+  #mapWrap{order:2!important;position:relative!important;top:auto!important;width:100%!important;height:48vh!important;min-height:330px!important;margin-top:4px!important;border-radius:14px!important}
+  .top-actions{width:100%;display:flex!important;flex-wrap:wrap!important;justify-content:flex-start!important}.top-actions>*{max-width:100%}
+  .data-item{grid-template-columns:1fr!important;padding:14px!important}.user-meta-grid{grid-template-columns:1fr 1fr!important;gap:8px!important}.data-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important}.data-actions .btn{width:100%!important;white-space:normal!important;min-height:42px}
+}
+@media(max-width:560px){
+  main>.topbar{padding:10px 10px 10px 58px!important;display:block!important}.topbar h1{font-size:22px!important;line-height:1.1;margin:0 0 8px!important}.top-actions{gap:6px!important}.top-actions .btn,.top-actions button{font-size:12px!important;padding:8px 9px!important}
+  .welcome-strip{padding:20px 18px!important}.welcome-strip h2{font-size:34px!important;line-height:1.12}.home-actions{display:grid!important;grid-template-columns:1fr 1fr!important;width:100%!important}.domain-pill{grid-column:1/3;width:max-content}
+  .enterprise-metrics{grid-template-columns:1fr 1fr!important}.enterprise-metric{min-width:0!important}
+  #mapWrap{height:42vh!important;min-height:300px!important}.user-meta-grid{grid-template-columns:1fr!important}.data-actions{grid-template-columns:1fr!important}
+  .collapse-btn{position:relative;z-index:5;touch-action:manipulation}
+}
+</style>
+<script id="v1352-fixes">
+(function(){
+  const $id=id=>document.getElementById(id);
+  function ensureSidebar(){
+    if(!$id('sidebarToggle')){const b=document.createElement('button');b.id='sidebarToggle';b.type='button';b.setAttribute('aria-label','Mostrar u ocultar menú');b.textContent='☰';document.body.appendChild(b)}
+    if(!document.querySelector('.sidebar-backdrop')){const d=document.createElement('div');d.className='sidebar-backdrop';document.body.appendChild(d);d.onclick=()=>document.body.classList.remove('sidebar-open')}
+    $id('sidebarToggle').onclick=()=>{if(innerWidth<=900)document.body.classList.toggle('sidebar-open');else document.body.classList.toggle('sidebar-collapsed')};
+    document.querySelectorAll('aside .nav button[data-view]').forEach(b=>b.addEventListener('click',()=>{if(innerWidth<=900)document.body.classList.remove('sidebar-open')}));
+  }
+  function toggleCard(cardId,buttonId,key){const card=$id(cardId),btn=$id(buttonId);if(!card||!btn)return;const collapsed=!card.classList.contains('is-collapsed');card.classList.toggle('is-collapsed',collapsed);btn.textContent=collapsed?'＋':'−';btn.setAttribute('aria-expanded',String(!collapsed));try{localStorage.setItem(key,collapsed?'1':'0')}catch{}setTimeout(()=>{window.map?.invalidateSize?.();window.generalMap?.invalidateSize?.()},80)}
+  document.addEventListener('click',e=>{const a=e.target.closest('#collapseLocationsBtn');if(a){e.preventDefault();e.stopImmediatePropagation();toggleCard('locationsCard','collapseLocationsBtn','ri_collapse_locations')}const b=e.target.closest('#collapseRouteBtn');if(b){e.preventDefault();e.stopImmediatePropagation();toggleCard('routeCard','collapseRouteBtn','ri_collapse_route')}},true);
+
+  const DB='RutasInspeccionDB',STORE='cache',KEY='catalog-v1',MAX_AGE=24*60*60*1000;
+  let running=false;
+  function dbOpen(){return new Promise((res,rej)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE)};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+  async function dbGet(){const db=await dbOpen();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly'),r=tx.objectStore(STORE).get(KEY);r.onsuccess=()=>res(r.result||null);r.onerror=()=>rej(r.error);tx.oncomplete=()=>db.close()})}
+  async function dbSet(v){const db=await dbOpen();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(v,KEY);tx.oncomplete=()=>{db.close();res()};tx.onerror=()=>{db.close();rej(tx.error)}})}
+  const norm=rows=>typeof normalizeRows==='function'?normalizeRows(rows):rows;
+  const redraw=()=>{try{renderCatalog();renderDashboard();renderGeneralMap()}catch(e){console.warn(e)}};
+  async function json(action,params={},timeout=35000){const q=new URLSearchParams({action,...params}).toString();return jsonp(state.scriptUrl+'?'+q,timeout)}
+  async function hydrate(){try{const c=await dbGet();if(c?.rows?.length){state.catalog=norm(c.rows);redraw();setSync(`Catálogo guardado · ${state.catalog.length.toLocaleString('es-PE')} ubicaciones`,'ok');return c}}catch(e){console.warn('[V13.52 cache]',e)}return null}
+  async function secondary(token){try{const d=await json('bootstrapLite',{token},30000);if(d?.ok===false)throw Error(d.error||'Error');state.history=Array.isArray(d.history)?d.history:state.history;state.users=Array.isArray(d.users)?d.users:state.users;state.inspections=Array.isArray(d.inspections)?d.inspections:state.inspections;state.assignments=Array.isArray(d.assignments)?d.assignments:state.assignments;if(d.currentUser){state.user={...state.user,...d.currentUser};localStorage.setItem('ri_user',JSON.stringify(state.user))}renderHistory();renderUsers();renderAssignments();renderDashboard();populateAdminSelects();detectCurrentAssignment()}catch(e){console.warn('[V13.52 secundarios]',e)}}
+  window.autoSync=async function(force=false){
+    if(running)return;if(!state.user?.token)return setSync('Inicia sesión para sincronizar','err');if(!state.scriptUrl)return setSync('Falta configurar Apps Script','err');running=true;
+    try{
+      let cached=await hydrate();secondary(state.user.token);
+      if(cached?.complete&&Date.now()-Number(cached.savedAt||0)<MAX_AGE&&!force){setSync(`Catálogo listo · ${cached.rows.length.toLocaleString('es-PE')} ubicaciones`,'ok');return}
+      const check=await json('sessionCheck',{token:state.user.token},20000);if(check?.ok===false)throw Error(check.error||'Sesión inválida');
+      let rows=force?[]:(Array.isArray(cached?.rows)?cached.rows:[]),offset=force?0:Number(cached?.nextOffset||rows.length||0);const seen=new Map(rows.map((x,i)=>[String(x.id||((x.feeder||'')+'|'+(x.substation||''))).toUpperCase(),i]));
+      while(true){setSync(`Actualizando ubicaciones… ${rows.length.toLocaleString('es-PE')}`);const p=await json('placesPage',{offset:String(offset),limit:'500',token:state.user.token},35000);if(p?.ok===false)throw Error(p.error||'Error al leer Subestaciones');const page=Array.isArray(p.places)?p.places:[];for(const x of page){const k=String(x.id||((x.feeder||'')+'|'+(x.substation||''))).toUpperCase();if(seen.has(k))rows[seen.get(k)]=x;else{seen.set(k,rows.length);rows.push(x)}}offset+=page.length;state.catalog=norm(rows);redraw();await dbSet({rows:state.catalog,nextOffset:offset,complete:!p.hasMore||page.length===0,savedAt:Date.now()});if(!p.hasMore||page.length===0)break;await new Promise(r=>setTimeout(r,30))}
+      setSync(`Sincronizado · ${state.catalog.length.toLocaleString('es-PE')} ubicaciones`,'ok');
+    }catch(e){console.error('[V13.52 sync]',e);if(state.catalog?.length)setSync(`Datos guardados · ${state.catalog.length.toLocaleString('es-PE')} ubicaciones`,'ok');else setSync('Error: '+(e.message||e),'err')}
+    finally{running=false}
+  };
+  function init(){ensureSidebar();hydrate();const l=localStorage.getItem('ri_collapse_locations')==='1',r=localStorage.getItem('ri_collapse_route')==='1';if(l){$id('locationsCard')?.classList.add('is-collapsed');if($id('collapseLocationsBtn'))$id('collapseLocationsBtn').textContent='＋'}if(r){$id('routeCard')?.classList.add('is-collapsed');if($id('collapseRouteBtn'))$id('collapseRouteBtn').textContent='＋'}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
 
