@@ -278,7 +278,7 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
     <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.57</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.58</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
     <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
@@ -1301,7 +1301,7 @@ document.addEventListener('click', function(event){
 
 
 <style id="v1355-mobile-fix">
-/* V13.57: interfaz móvil tipo app, sin escritorio comprimido */
+/* V13.58: interfaz móvil tipo app, sin escritorio comprimido */
 .mobile-menu-btn{display:none;border:0;background:#0b63d8;color:#fff;border-radius:10px;width:42px;height:42px;font-size:22px;align-items:center;justify-content:center;box-shadow:0 5px 15px #0b63d833}
 .mobile-backdrop{display:none}
 @media(max-width:900px){
@@ -1334,7 +1334,7 @@ document.addEventListener('click', function(event){
 @media(max-width:430px){.enterprise-metrics{grid-template-columns:1fr 1fr!important}.enterprise-metric small{font-size:10px!important}.enterprise-metric b{font-size:18px!important}.dashboard-map-preview{height:270px!important}}
 </style>
 <script id="v1355-runtime-fix">
-/* V13.57: caché persistente + sincronización con fallback + menú móvil */
+/* V13.58: caché persistente + sincronización con fallback + menú móvil */
 (function(){
  const DB='rutas-inspeccion-v13', STORE='cache', CATALOG='catalog-v1';
  function dbOpen(){return new Promise((ok,no)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE)};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})}
@@ -1376,7 +1376,7 @@ document.addEventListener('click', function(event){
 </script>
 
 <style id="v1356-functional-fix">
-/* V13.57: catálogo integrado al mapa general */
+/* V13.58: catálogo integrado al mapa general */
 .nav button[data-view="catalog"],#catalog{display:none!important}
 .map-popup-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important;margin-top:10px!important}
 .map-popup-actions .gm-status{grid-column:1/-1;background:#fff7ed!important;border-color:#fdba74!important;color:#9a3412!important;font-weight:800!important}
@@ -1423,7 +1423,7 @@ document.addEventListener('click', function(event){
  };
  const oldShow=window.showView||showView;
  window.showView=function(id,btn){if(id==='catalog'){id='generalmap';btn=document.querySelector('.nav button[data-view="generalmap"]')}return oldShow(id,btn)};
- window.filteredGeneralMap=function(){const q=norm(document.getElementById('gmSearch')?.value),date=document.getElementById('gmDate')?.value||'',feeder=norm(document.getElementById('gmFeeder')?.value),tech=norm(document.getElementById('gmTech')?.value);return (state.catalog||[]).filter(x=>validCoord(x)&&(!q||[x.feeder,x.substation,x.address,x.technician,x.id].some(v=>norm(v).includes(q)))&&(!date||catalogDate(x)===date)&&(!feeder||norm(x.feeder)===feeder)&&(!tech||norm(x.technician).includes(tech)))};
+ window.filteredGeneralMap=function(){const q=norm(document.getElementById('gmSearch')?.value),date=document.getElementById('gmDate')?.value||'',feeder=norm(document.getElementById('gmFeeder')?.value),tech=norm(document.getElementById('gmTech')?.value);return (state.catalog||[]).filter(x=>{if(!validCoord(x))return false;const sub=norm(x.substation),fed=norm(x.feeder),addr=norm(x.address),tec=norm(x.technician);const onlyNumber=q&&/^\d+$/.test(q);const queryOk=!q||(onlyNumber?sub.includes(q):[sub,fed,addr,tec].some(v=>v.includes(q)));return queryOk&&(!date||catalogDate(x)===date)&&(!feeder||fed===feeder)&&(!tech||tec.includes(tech))})};
  function bindSearch(){const input=document.getElementById('gmSearch'),btn=document.getElementById('gmFilterBtn');if(btn)btn.onclick=()=>{renderGeneralMap();const n=filteredGeneralMap().length;setInfo(n?`${n.toLocaleString('es-PE')} resultado(s) encontrados`:'No se encontraron subestaciones con esos datos.',n?'sync-ok':'sync-warn')};if(input){input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();btn?.click()}};input.oninput=()=>{clearTimeout(input.__t);input.__t=setTimeout(()=>btn?.click(),250)}}}
  const originalPopup=window.renderGeneralMap||renderGeneralMap;
  window.renderGeneralMap=function(){const out=originalPopup();setTimeout(()=>{document.querySelectorAll('.gm-status').forEach(b=>{b.textContent='✎ Cambiar estado';b.style.display='block'})},0);return out};
