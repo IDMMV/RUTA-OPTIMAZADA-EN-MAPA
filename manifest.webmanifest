@@ -1,18 +1,57 @@
 {
+  "name": "Rutas de Inspección",
+  "short_name": "Rutas SE",
+  "description": "Planificador, catálogo, mapa general e historial de rutas de inspección de subestaciones.",
   "id": "/RUTA-OPTIMAZADA-EN-MAPA/",
-  "name": "Rutas de Inspección MT",
-  "short_name": "Rutas MT",
-  "description": "Planificador, inspecciones y reportes de redes de media tensión.",
-  "start_url": "/RUTA-OPTIMAZADA-EN-MAPA/?source=pwa",
+  "start_url": "/RUTA-OPTIMAZADA-EN-MAPA/",
   "scope": "/RUTA-OPTIMAZADA-EN-MAPA/",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
   "background_color": "#f4f7fb",
   "theme_color": "#0b63d8",
-  "orientation": "portrait-primary",
+  "lang": "es-PE",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "categories": ["navigation", "productivity", "utilities"],
   "icons": [
-    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
-    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
-    {"src":"icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+    {
+      "src": "/RUTA-OPTIMAZADA-EN-MAPA/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/RUTA-OPTIMAZADA-EN-MAPA/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/RUTA-OPTIMAZADA-EN-MAPA/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nueva ruta",
+      "short_name": "Nueva ruta",
+      "url": "/RUTA-OPTIMAZADA-EN-MAPA/#home",
+      "icons": [{"src": "/RUTA-OPTIMAZADA-EN-MAPA/icon-192.png", "sizes": "192x192", "type": "image/png"}]
+    },
+    {
+      "name": "Subestaciones",
+      "short_name": "Subestaciones",
+      "url": "/RUTA-OPTIMAZADA-EN-MAPA/#catalog",
+      "icons": [{"src": "/RUTA-OPTIMAZADA-EN-MAPA/icon-192.png", "sizes": "192x192", "type": "image/png"}]
+    },
+    {
+      "name": "Mapa general",
+      "short_name": "Mapa",
+      "url": "/RUTA-OPTIMAZADA-EN-MAPA/#generalmap",
+      "icons": [{"src": "/RUTA-OPTIMAZADA-EN-MAPA/icon-192.png", "sizes": "192x192", "type": "image/png"}]
+    }
   ]
 }
