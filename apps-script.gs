@@ -16,7 +16,7 @@ const SCHEMA={
 };
 function doGet(e){
   try{
-    const p=e.parameter||{};const action=String(p.action||'all');let data={ok:true};if(action==='health')return out_({ok:true,service:'Rutas de Inspección',version:'13.47',bookReady:!!PropertiesService.getScriptProperties().getProperty('BOOK_ID')},p.callback);
+    const p=e.parameter||{};const action=String(p.action||'all');let data={ok:true};if(action==='health')return out_({ok:true,service:'Rutas de Inspección',version:'13.50',bookReady:!!PropertiesService.getScriptProperties().getProperty('BOOK_ID')},p.callback);
     if(action==='login')return out_(login_(p.username,p.pin),p.callback);
     if(action==='requestReset')return out_(requestReset_(p.username),p.callback);
     if(action==='confirmReset')return out_(confirmReset_(p.username,p.code,p.pin),p.callback);
@@ -25,6 +25,16 @@ function doGet(e){
     const session=validateSession_(p.token||'');
     if(!session)return out_({ok:false,error:'Sesión inválida o vencida.'},p.callback);
     const current=findUser_(session.username);const admin=isAdminRole_(current&&current.role);
+    if(action==='sessionCheck'){
+      return out_({ok:true,username:session.username,currentUser:safeUser_(current),expiresAt:session.expiresAt},p.callback);
+    }
+    if(action==='bootstrapLite'){
+      data.history=readSheet_(SHEETS.history).slice(-500);
+      data.assignments=admin?readSheet_(SHEETS.assignments):readSheet_(SHEETS.assignments).filter(x=>String(x.username)===String(session.username));
+      data.inspections=admin?readSheet_(SHEETS.inspections):readSheet_(SHEETS.inspections).filter(x=>String(x.username)===String(session.username));
+      data.users=admin?safeUsers_():[];data.currentUser=safeUser_(current);data.placesTotal=countSheetRows_(SHEETS.places);
+      return out_(data,p.callback);
+    }
     if(action==='bootstrap'){
       data.history=readSheet_(SHEETS.history);
       data.assignments=admin?readSheet_(SHEETS.assignments):readSheet_(SHEETS.assignments).filter(x=>String(x.username)===String(session.username));

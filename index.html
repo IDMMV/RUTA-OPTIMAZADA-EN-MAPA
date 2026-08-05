@@ -278,7 +278,7 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
     <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="catalog">⚡ Subestaciones</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.49</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.50</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
     <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
@@ -1163,7 +1163,7 @@ document.addEventListener('click', function(event){
 </style>
 
 <script>
-// V13.49: cierre de sesión independiente y resistente a errores de inicialización.
+// V13.50: cierre de sesión independiente y resistente a errores de inicialización.
 (function(){
   function logoutNow(event){
     if(event){ event.preventDefault(); event.stopImmediatePropagation(); }
@@ -1199,6 +1199,73 @@ document.addEventListener('click', function(event){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',armLogout,{once:true});
   else armLogout();
   window.logoutNow=logoutNow;
+})();
+</script>
+
+
+<script>
+// V13.50: sincronización resiliente. El mapa no depende de usuarios, historial o programación.
+(function(){
+  let syncRunning=false;
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  async function getJsonp(action,params={},timeout=30000){
+    const query=new URLSearchParams({action,...params}).toString();
+    return jsonp(state.scriptUrl+'?'+query,timeout);
+  }
+  async function loadCatalogOnly(token){
+    let offset=0, all=[];
+    const pageSize=500;
+    while(true){
+      setSync(`Cargando ubicaciones… ${all.length.toLocaleString('es-PE')}`);
+      const page=await getJsonp('placesPage',{offset:String(offset),limit:String(pageSize),token},30000);
+      if(page?.ok===false) throw new Error(page.error||'Error al leer Subestaciones');
+      const rows=Array.isArray(page.places)?page.places:[];
+      all.push(...rows);
+      if(!page.hasMore||rows.length===0) break;
+      offset+=rows.length;
+      await wait(40);
+    }
+    state.catalog=normalizeRows(all);
+    try{ if(state.catalog.length<=5000)localStorage.setItem('ri_catalog_cache',JSON.stringify(state.catalog)); }
+    catch(e){}
+    renderCatalog();renderDashboard();renderGeneralMap();
+    setSync(`Sincronizado · ${state.catalog.length.toLocaleString('es-PE')} ubicaciones`,'ok');
+  }
+  async function loadSecondaryData(token){
+    try{
+      const data=await getJsonp('bootstrapLite',{token},30000);
+      if(data?.ok===false) throw new Error(data.error||'Error de datos complementarios');
+      state.history=Array.isArray(data.history)?data.history:state.history;
+      state.users=Array.isArray(data.users)?data.users:state.users;
+      state.inspections=Array.isArray(data.inspections)?data.inspections:state.inspections;
+      state.assignments=Array.isArray(data.assignments)?data.assignments:state.assignments;
+      if(data.currentUser){state.user={...state.user,...data.currentUser};localStorage.setItem('ri_user',JSON.stringify(state.user));}
+      renderHistory();renderUsers();renderAssignments();renderDashboard();populateAdminSelects();detectCurrentAssignment();
+    }catch(err){console.warn('[V13.50] Datos complementarios:',err);}
+  }
+  window.autoSync=async function(force=false){
+    if(syncRunning)return;
+    if(!state.user?.token){setSync('Inicia sesión para sincronizar','err');return;}
+    if(!state.scriptUrl){setSync('Falta configurar Apps Script','err');return;}
+    syncRunning=true;
+    try{
+      setSync('Validando sesión…');
+      const check=await getJsonp('sessionCheck',{token:state.user.token},20000);
+      if(check?.ok===false)throw new Error(check.error||'Sesión inválida');
+      await loadCatalogOnly(state.user.token);
+      loadSecondaryData(state.user.token);
+    }catch(err){
+      console.error('[V13.50] Sincronización:',err);
+      const msg=String(err?.message||err||'Error desconocido');
+      setSync('Error: '+msg,'err');
+      const info=document.getElementById('generalMapInfo');if(info)info.textContent='No se pudo sincronizar: '+msg;
+      window.__LAST_SYNC_ERROR__=msg;
+    }finally{syncRunning=false;}
+  };
+  document.addEventListener('click',e=>{
+    if(e.target.closest('#gmReloadBtn')||e.target.closest('#syncBtn')){e.preventDefault();window.autoSync(true);}
+  },true);
+  window.addEventListener('load',()=>{if(state.user?.token)setTimeout(()=>window.autoSync(true),600);});
 })();
 </script>
 
