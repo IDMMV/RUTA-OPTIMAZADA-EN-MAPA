@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0f3d63">
+  <meta name="theme-color" content="#0b63d8">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Rutas SE">
-  <link rel="manifest" href="manifest.webmanifest?v=13.46">
+  <link rel="manifest" href="manifest.webmanifest?v=13.28">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Rutas SE">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <title>Rutas de Inspección · JH</title>
+  <title>Rutas de Inspección</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="config.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
@@ -41,15 +41,7 @@
     .searchgrid{display:grid;grid-template-columns:1fr auto;gap:8px}.results{max-height:260px;overflow:auto;margin-top:8px}.result{display:grid;grid-template-columns:1fr auto;gap:8px;padding:9px;border-bottom:1px solid #edf2f7}.result small{display:block;color:var(--muted)}
     .view{display:none}.view.active{display:block}.fullview{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px}
     .catalog-toolbar{display:grid;grid-template-columns:1.2fr .8fr .8fr .8fr .8fr;gap:8px;margin:10px 0}.catalog-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}.catalog-summary{font-size:13px;color:var(--muted);margin-left:auto}.catalog-row{display:grid;grid-template-columns:28px 110px 210px minmax(220px,1fr) auto;gap:10px;align-items:center;padding:10px 9px;border-bottom:1px solid #edf2f7}.catalog-row small{color:var(--muted)}.catalog-id{display:none}.catalog-row .address{min-width:0;overflow:hidden}.catalog-row .address-main{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.catalog-row .address-meta{display:block;margin-top:4px;white-space:normal;overflow-wrap:anywhere}.catalog-head{font-size:12px;font-weight:800;color:#475569;background:#f8fafc;position:sticky;top:0;z-index:2}.check{width:18px;height:18px}.tag-inroute{color:var(--green);font-weight:800;font-size:12px}.validation-badge{display:inline-block;margin-top:3px;padding:2px 6px;border-radius:999px;font-size:10px;font-weight:800}.validation-ok{background:#dcfce7;color:#166534}.validation-fixed{background:#dbeafe;color:#1d4ed8}.validation-review{background:#fef3c7;color:#92400e}.revalidate-state{font-size:12px;color:var(--muted);width:100%}.general-map-layout{display:grid;grid-template-rows:auto minmax(520px,calc(100vh - 210px));gap:10px}.general-map-toolbar{display:grid;grid-template-columns:minmax(220px,1.5fr) repeat(3,minmax(130px,.7fr)) auto auto;gap:8px}.general-map-shell{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#dbeafe;min-height:520px;height:calc(100vh - 235px)}.general-map{height:100%;width:100%}.general-map-controls{position:absolute;z-index:750;right:12px;top:12px;display:flex;flex-direction:column;gap:8px}.general-map-controls button{width:46px;height:46px;border:1px solid #dbe3ef;border-radius:12px;background:#fff;box-shadow:0 3px 12px #0002;font-size:24px;font-weight:800;cursor:pointer}.general-map-controls button:active{transform:scale(.96)}.general-map-info{position:absolute;z-index:700;left:12px;bottom:12px;background:#fff;padding:9px 11px;border-radius:10px;box-shadow:0 3px 12px #0002;font-size:13px}.map-popup-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.map-popup-actions .btn,.map-popup-actions .maps-link{flex:1 1 120px;padding:7px}.marker-se{width:26px;height:26px;border-radius:50%;background:#94a3b8;border:3px solid #fff;box-shadow:0 2px 6px #0005}.marker-se.selected{background:#0b63d8}.marker-se.inroute{background:#0b63d8}.marker-se.inspected{background:#16a05d}.marker-se.notinspected{background:#dc2626}.marker-se.rescheduled{background:#f59e0b}.marker-se.observed{background:#7c3aed}.status-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800}.status-pending{background:#e2e8f0;color:#475569}.status-inroute{background:#dbeafe;color:#1d4ed8}.status-inspected{background:#dcfce7;color:#166534}.status-notinspected{background:#fee2e2;color:#b91c1c}.status-rescheduled{background:#fef3c7;color:#92400e}.status-observed{background:#ede9fe;color:#6d28d9}.inspection-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;background:#dcfce7;color:#166534;font-size:11px;font-weight:800}.route-item.inspected .route-num,.stopIcon.inspected{background:#16a05d}.route-item.notinspected .route-num,.stopIcon.notinspected{background:#dc2626}.route-item.rescheduled .route-num,.stopIcon.rescheduled{background:#f59e0b}.route-item.observed .route-num,.stopIcon.observed{background:#7c3aed}.route-item.inspected{background:#f0fdf4;border-radius:10px}.route-item.notinspected{background:#fef2f2;border-radius:10px}.route-item.rescheduled{background:#fffbeb;border-radius:10px}.route-item.observed{background:#faf5ff;border-radius:10px}.btn.inspect{background:#0b63d8;color:#fff}.btn.inspect:disabled{background:#bfdbfe;color:#fff}.result-modal{position:fixed;inset:0;background:#0f172a99;z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px}.result-dialog{width:min(520px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;padding:20px;box-shadow:0 24px 70px #0005}.result-dialog h3{margin:0 0 8px}.result-grid{display:grid;gap:10px}.result-choice{display:grid;grid-template-columns:1fr;gap:6px}.result-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}.tablewrap{overflow:auto;max-height:70vh;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;min-width:1100px}th,td{border-bottom:1px solid #e8eef6;border-right:1px solid #edf2f7;padding:8px;text-align:left;font-size:13px;white-space:nowrap}th{position:sticky;top:0;background:#eef5ff;z-index:1}.filters{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:8px;margin:10px 0}.status{padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#e7f7ef;color:#087443}
-    .login{position:fixed;inset:0;background:#071426;z-index:2000;display:grid;place-items:center;padding:0;overflow:auto}.login.hidden{display:none}.login-shell{width:100%;min-height:100dvh;display:grid;grid-template-columns:minmax(420px,1.02fr) minmax(440px,.98fr);background:#08172c;color:#fff;box-shadow:0 0 0 1px #29496f inset}.login-visual{position:relative;min-height:100dvh;background:url('login-hero-jh.jpg') 68% center/cover no-repeat;overflow:hidden}.login-visual:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,18,38,.94) 0%,rgba(4,18,38,.88) 47%,rgba(4,18,38,.58) 78%,rgba(8,23,44,.94) 100%);pointer-events:none}.login-visual:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,20,38,.12),rgba(7,20,38,.55));pointer-events:none}.login-copy{position:relative;z-index:2;display:flex;min-height:100dvh;flex-direction:column;justify-content:center;padding:48px clamp(34px,6vw,86px);max-width:680px}.login-copy .jh-logo{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;background:#12325d;border:1px solid #31527b;border-radius:15px;padding:9px 12px;font-weight:900;color:#ffb300;box-shadow:0 10px 30px #0005}.login-copy h1{font-size:clamp(38px,4.2vw,62px);line-height:1.02;margin:28px 0 14px;letter-spacing:-1px}.login-copy h1 span{color:#ffb000}.login-copy>p{max-width:560px;color:#c8d3e2;font-size:17px;line-height:1.55}.login-points{display:grid;gap:18px;margin-top:34px;max-width:560px}.login-point{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start}.login-point i{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#0d2d58;color:#ffb000;font-style:normal;font-size:20px}.login-point b{display:block;margin-bottom:3px}.login-point small{color:#c1cddd;line-height:1.4}.login-panel{min-height:100dvh;display:grid;place-items:center;padding:24px clamp(24px,4vw,52px);background:radial-gradient(circle at 50% 0%,#102b4a 0,#08172c 42%,#061223 100%)}.loginbox{width:min(560px,100%);max-height:calc(100dvh - 32px);overflow:auto;background:linear-gradient(180deg,#0c1c32,#09172a);border:1px solid #314963;border-radius:20px;padding:28px 36px;box-shadow:0 28px 80px #0007;color:#fff}.login-brand{text-align:center;margin-bottom:18px}.login-brand .brand-icon{width:58px;height:58px;margin:0 auto 12px;border-radius:16px;display:grid;place-items:center;background:#142f53;border:1px solid #31527b;color:#ffb000;font-size:31px;position:relative}.login-brand .brand-icon:after{content:'JH';position:absolute;right:-8px;bottom:-6px;font-size:10px;color:#dbeafe;border:1px solid #42628a;border-radius:6px;background:#10233e;padding:2px 5px}.login-brand h2{margin:0;font-size:28px}.login-brand p{margin:5px 0 0;color:#b7c2d3}.login-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #334155;margin-bottom:18px}.login-tab{border:0;background:transparent;color:#aab7ca;padding:11px 8px;font-weight:800;border-bottom:3px solid transparent}.login-tab.active{color:#ffb000;border-bottom-color:#ffb000}.login-pane{display:none}.login-pane.active{display:block}.loginbox .label{color:#c9d4e3;margin-top:11px}.loginbox .input{background:#101f33;border-color:#334a65;color:#fff;padding:12px 46px 12px 15px}.loginbox .input::placeholder{color:#8290a5}.password-wrap{position:relative}.password-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;background:transparent;color:#b8c6d8;font-size:20px}.login-submit{width:100%;margin-top:14px;background:linear-gradient(90deg,#ff9d00,#ffbf00)!important;color:#071426!important;border:0!important;padding:13px!important;font-size:17px}.login-help{margin-top:14px;color:#aebbd0;text-align:center;font-size:12px;line-height:1.45}.login-help b{color:#ffb000}.recovery-grid{display:grid;gap:10px}.recovery-actions{display:flex;gap:10px;flex-wrap:wrap}.recovery-actions .btn{flex:1}.login-footer{text-align:center;color:#8493a9;font-size:11px;margin-top:16px}.feedback{font-size:13px;margin-top:8px;color:var(--muted)}.loginbox .feedback{color:#aebbd0}.feedback.err,.loginbox .feedback.err{color:#ff7676}.feedback.ok,.loginbox .feedback.ok{color:#61d39a}
-/* V13.43: acceso con Google + código de 6 dígitos */
-.google-auth-box{border:1px solid #29496f;background:#0d213a;border-radius:16px;padding:14px;margin:0 0 18px;display:grid;gap:10px}
-.google-auth-title{font-size:13px;color:#cdd9e8;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
-.google-auth-note{font-size:12px;color:#91a3bb;line-height:1.4}
-.google-auth-separator{display:flex;align-items:center;gap:12px;color:#91a3bb;font-size:12px;margin:12px 0}.google-auth-separator:before,.google-auth-separator:after{content:'';height:1px;background:#334a65;flex:1}
-.google-code-step{display:none;gap:10px;margin:12px 0}.google-code-step.active{display:grid}
-.google-login-fallback{border:1px solid #3b82f6;background:#102d52;color:#dbeafe;border-radius:12px;padding:12px;font-size:13px;display:none}.google-login-fallback.show{display:block}
-@media(max-width:980px){.login-shell{grid-template-columns:1fr}.login-visual{display:none}.login-panel{padding:14px;min-height:100dvh}.loginbox{max-height:none;padding:24px 20px;border-radius:16px}.login-brand h2{font-size:25px}.login-brand .brand-icon{width:56px;height:56px;font-size:30px}}
+    .login{position:fixed;inset:0;background:#0f172acc;z-index:2000;display:grid;place-items:center;padding:18px}.login.hidden{display:none}.loginbox{background:#fff;border-radius:18px;padding:20px;width:min(420px,100%)}.loginbox h2{margin-top:0}.feedback{font-size:13px;margin-top:8px;color:var(--muted)}.feedback.err{color:var(--red)}.feedback.ok{color:var(--green)}
     
     .import-panel{margin-top:12px;padding:12px;border:1px dashed #93c5fd;background:#f8fbff;border-radius:12px}.import-title{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.import-title b{font-size:14px}.import-help{font-size:12px;color:var(--muted);margin:5px 0 0}.import-preview{display:none;margin-top:10px}.import-preview.show{display:block}.import-summary{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px}.chip{padding:5px 8px;border-radius:999px;background:#eef5ff;color:#174ea6;font-size:12px;font-weight:700}.chip.bad{background:#fff1f2;color:#b42318}.preview-table{max-height:240px;max-width:100%;overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fff}.preview-table table{min-width:720px}.preview-table th,.preview-table td{font-size:12px}.row-error{background:#fff7f7}.file-label{display:inline-flex;align-items:center;gap:6px}.save-progress{font-size:12px;color:var(--muted);margin-top:7px}
     .toast-stack{position:fixed;z-index:5000;top:18px;right:18px;display:grid;gap:10px;width:min(420px,calc(100vw - 28px));pointer-events:none}.toast{background:#fff;border:1px solid #bbf7d0;border-left:6px solid #16a05d;border-radius:12px;box-shadow:0 12px 34px #0f172a30;padding:12px 42px 12px 14px;color:#0f172a;position:relative;animation:toastIn .22s ease-out}.toast.warn{border-color:#fde68a;border-left-color:#f59e0b}.toast.error{border-color:#fecaca;border-left-color:#dc2626}.toast b{display:block;margin-bottom:3px}.toast small{display:block;color:#64748b}.toast-close{position:absolute;right:9px;top:8px;border:0;background:transparent;font-size:20px;cursor:pointer;pointer-events:auto;color:#64748b}.catalog-row.just-added{background:#ecfdf5;transition:background 1.5s ease}.result.just-added{background:#ecfdf5;border-radius:10px}@keyframes toastIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
@@ -127,7 +119,7 @@
 @media(max-width:900px){#planner.route-ready-focus .planner-side{min-height:auto}#planner.route-ready-focus #startNavBtn{position:sticky;bottom:14px;z-index:30}}
 
 
-    /* V13.37: barra móvil sin superposición y rotación táctil restaurada */
+    /* V13.36: barra móvil sin superposición y rotación táctil restaurada */
     .nav-order-btn{flex:0 0 auto;white-space:nowrap}
     @media(max-width:900px){
       aside .nav{align-items:stretch;gap:4px;padding-right:0}
@@ -136,57 +128,11 @@
       aside .nav .nav-order-btn::before{content:'↕';font-size:22px;line-height:1}
     }
 
-    /* V13.37: los formularios, estados y reportes permanecen visibles dentro del mapa a pantalla completa */
+    /* V13.36: los formularios, estados y reportes permanecen visibles dentro del mapa a pantalla completa */
     #mapWrap:fullscreen .inspection-modal,#mapWrap.fullscreen-fallback .inspection-modal,
     #mapWrap:fullscreen .external-form-modal,#mapWrap.fullscreen-fallback .external-form-modal,
     #mapWrap:fullscreen .tab-order-modal,#mapWrap.fullscreen-fallback .tab-order-modal{position:absolute!important;inset:0!important;z-index:9000!important}
     #mapWrap:fullscreen .result-modal,#mapWrap.fullscreen-fallback .result-modal{position:absolute!important;inset:0!important;z-index:9000!important}
-
-.import-complete{width:100%;font-size:15px;color:#167a4c;margin-bottom:6px}.import-preview .btns{justify-content:flex-end}.import-preview .btns .btn{min-width:150px}
-
-    .share-app-btn{display:inline-flex;align-items:center;gap:6px}.user-registry-toolbar{display:grid;grid-template-columns:minmax(180px,1fr) 180px 180px auto;gap:8px;margin:10px 0}.user-meta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px 12px;margin-top:7px;font-size:12px;color:var(--muted)}.user-meta-grid b{color:var(--text)}.user-danger{border-color:#fecaca!important;color:#b91c1c!important}.user-protected{background:#fef3c7;color:#92400e}.user-deleted{opacity:.65;border-style:dashed}.section-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.section-tabs .btn.active{background:#0b63d8;color:#fff}.primary-note{background:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:9px;margin-bottom:10px;color:#9a3412;font-size:13px}
-    @media(max-width:700px){.user-registry-toolbar{grid-template-columns:1fr 1fr}.user-registry-toolbar input{grid-column:1/3}.user-meta-grid{grid-template-columns:1fr 1fr}.top-actions{gap:6px}.share-app-btn{font-size:12px;padding:7px 9px}}
-
-/* V13.43 · Interfaz comercial MiZona/JH */
-:root{--navy:#061a33;--navy2:#0a2748;--accent:#ffb000;--soft:#eef4fb;--success:#18a66a}
-body{background:#edf3f9}.app{grid-template-columns:240px 1fr}aside{background:linear-gradient(180deg,#061a33 0%,#082543 100%);border:0;color:#fff;padding:18px 12px}.brand{color:#fff;margin:2px 8px 26px;font-size:19px}.brand b{color:var(--accent)}.nav button{color:#d7e5f5;display:flex;align-items:center;gap:9px}.nav button:hover{background:#ffffff12;color:#fff}.nav button.active{background:#0f4f8f;color:#fff;box-shadow:inset 3px 0 var(--accent)}.nav-order-btn{color:#d7e5f5!important;background:#ffffff0c!important;border-color:#ffffff26!important;margin-left:0!important}.topbar{background:#fff;margin:-18px -18px 16px;padding:15px 20px;border-bottom:1px solid #dce6f1;position:sticky;top:0;z-index:1050}.topbar h1{color:#10233e}.install-btn{border:1px solid #dbe4ef;background:#fff}.enterprise-home{display:grid;gap:16px}.welcome-strip{background:linear-gradient(125deg,#071d38,#0b3562);color:#fff;border-radius:18px;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;box-shadow:0 14px 30px #09233f22}.welcome-strip h2{font-size:27px;margin:4px 0}.welcome-strip p{margin:0;color:#c9d9ec}.eyebrow{font-size:11px;letter-spacing:.13em;font-weight:900;color:var(--accent)}.home-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}.domain-pill{padding:9px 12px;border:1px solid #ffffff30;border-radius:999px;background:#ffffff12;color:#dbeafe;font-size:12px;font-weight:800}.enterprise-metrics{display:grid;grid-template-columns:repeat(5,minmax(140px,1fr));gap:12px}.enterprise-metric{background:#fff;border:1px solid #dae5f0;border-radius:15px;padding:15px;display:grid;grid-template-columns:44px 1fr;gap:11px;align-items:center;box-shadow:0 5px 18px #102a4320}.enterprise-metric i{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:#e8f2ff;color:#0b63d8;font-style:normal;font-size:21px}.enterprise-metric:nth-child(2) i{background:#f2eafe;color:#7c3aed}.enterprise-metric:nth-child(3) i{background:#dcf8ec;color:#138a55}.enterprise-metric:nth-child(4) i{background:#fff1dd;color:#d97706}.enterprise-metric:nth-child(5) i{background:#e7f8ee;color:#168f58}.enterprise-metric b{font-size:22px;display:block;color:#10233e}.enterprise-metric small{color:#64748b}.enterprise-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(310px,.8fr);gap:16px}.lower-grid{grid-template-columns:1fr 1fr}.enterprise-panel{background:#fff;border:1px solid #dbe6f1;border-radius:16px;padding:16px;box-shadow:0 5px 18px #102a4315;min-width:0}.panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.panel-title h3{margin:0;color:#10233e}.panel-title small{color:#718096}.dashboard-map-preview{height:330px;border-radius:13px;background:radial-gradient(circle at 70% 35%,#d9ecff,#edf5fb 45%,#d8e8f6);overflow:hidden;position:relative}.map-placeholder{height:100%;display:grid;place-content:center;text-align:center;padding:25px;color:#143a60}.map-placeholder span{font-size:45px;color:#0b63d8}.map-placeholder small{max-width:420px;margin-top:6px;color:#5c7187}.dashboard-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:11px;font-size:12px}.dashboard-legend span:before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:var(--dot)}.activity-list{display:grid;gap:2px}.activity-item{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;padding:11px 3px;border-bottom:1px solid #edf2f7}.activity-item:last-child{border:0}.activity-item i{width:36px;height:36px;border-radius:11px;background:#e8f2ff;display:grid;place-items:center;font-style:normal}.activity-item b{display:block;font-size:13px}.activity-item small{color:#64748b}.activity-time{font-size:11px;color:#94a3b8}.dashboard-hidden-compat{display:none!important}.audit-view{background:transparent;border:0;padding:0}.audit-header{background:linear-gradient(125deg,#071d38,#0b3562);color:#fff;border-radius:18px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:14px}.audit-header h2{margin:4px 0;font-size:26px}.audit-header p{margin:0;color:#cbd9e8}.audit-filters{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr)) auto;gap:9px;background:#fff;border:1px solid #dbe6f1;border-radius:15px;padding:14px;margin-bottom:13px}.audit-filters label{font-size:11px;font-weight:800;color:#536579}.audit-filters .input{margin-top:5px}.audit-filters button{align-self:end}.audit-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:13px}.audit-card{background:#fff;border:1px solid #dbe6f1;border-radius:14px;padding:14px}.audit-card b{font-size:23px;display:block}.audit-card small{color:#64748b}.audit-table-wrap{overflow:auto;background:#fff;border:1px solid #dbe6f1;border-radius:15px}.audit-table{width:100%;border-collapse:collapse;min-width:1040px}.audit-table th{background:#0a2748;color:#dbeafe;text-align:left;padding:12px;font-size:12px}.audit-table td{padding:11px 12px;border-bottom:1px solid #e8eef5;font-size:12px;vertical-align:top}.audit-badge{display:inline-block;padding:4px 7px;border-radius:6px;font-weight:800}.audit-create{background:#dcfce7;color:#166534}.audit-update{background:#fef3c7;color:#92400e}.audit-delete{background:#fee2e2;color:#991b1b}
-@media(max-width:1180px){.enterprise-metrics{grid-template-columns:repeat(3,1fr)}.audit-filters{grid-template-columns:repeat(3,1fr)}.enterprise-grid{grid-template-columns:1fr}}
-@media(max-width:900px){.app{grid-template-columns:1fr}aside{height:auto;position:sticky;padding:8px;overflow-x:auto}.brand{display:none}.nav{display:flex;gap:5px;min-width:max-content}.nav button{white-space:nowrap}.topbar{margin:-18px -18px 12px}.enterprise-metrics{grid-template-columns:repeat(2,1fr)}.welcome-strip{align-items:flex-start;flex-direction:column}.home-actions{justify-content:flex-start}.lower-grid{grid-template-columns:1fr}.audit-filters{grid-template-columns:1fr 1fr}.audit-metrics{grid-template-columns:1fr 1fr}}
-@media(max-width:540px){.enterprise-metrics{grid-template-columns:1fr 1fr}.enterprise-metric{grid-template-columns:36px 1fr;padding:11px}.enterprise-metric i{width:36px;height:36px}.enterprise-metric b{font-size:18px}.audit-filters{grid-template-columns:1fr}.audit-header{align-items:flex-start;flex-direction:column}.dashboard-map-preview{height:260px}.top-actions .share-app-btn,.top-actions #quickUsersBtn{display:none!important}}
-
-
-/* V13.47 · Diseño corporativo aprobado (Rutas de Inspección JH) */
-:root{
-  --blue:#1976e9;--blue-dark:#0b2f55;--blue-deep:#071f38;--blue-soft:#eaf3ff;
-  --green:#13b981;--purple:#7c4de8;--orange:#ff9940;--cyan:#20a9ce;
-  --red:#e34b5f;--ink:#122033;--muted:#6c7b90;--line:#dce5ef;--border:#dce5ef;
-  --bg:#f4f7fb;--card:#fff;--shadow:0 10px 30px rgba(25,53,82,.09)
-}
-html,body{background:#f4f7fb;color:var(--ink)}
-.app{grid-template-columns:244px minmax(0,1fr)}
-aside{background:linear-gradient(180deg,#092c50 0%,#061f39 100%);border-right:0;padding:22px 14px;color:#fff;box-shadow:10px 0 28px rgba(5,31,56,.08)}
-.brand{color:#fff;font-size:19px;line-height:1.15;margin:4px 10px 25px}.brand b{color:#40a6ff}.brand span{max-width:160px}
-.nav{gap:6px}.nav button{color:#d7e5f3;padding:12px 13px;border-radius:10px;font-weight:600;transition:.18s ease}.nav button:hover{background:rgba(255,255,255,.08);color:#fff;transform:translateX(2px)}.nav button.active{background:linear-gradient(90deg,#1976e9,#1167d0);color:#fff;font-weight:800;box-shadow:0 7px 18px rgba(0,105,230,.25)}
-.nav-order-btn{color:#d7e5f3!important;background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.1)!important}
-main{padding:0 22px 28px;background:linear-gradient(180deg,#fff 0,#f4f7fb 145px)}
-main>.topbar{min-height:80px;margin:0 -22px 22px;padding:0 22px;background:#fff;border-bottom:1px solid #e8eef5;position:sticky;top:0;z-index:1100;box-shadow:0 4px 16px rgba(15,45,75,.035)}
-main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.install-btn{background:#fff;border:1px solid #dce5ef;color:#1765c1;border-radius:11px;padding:9px 12px;font-weight:750;box-shadow:0 2px 7px rgba(30,70,110,.035)}.install-btn:hover{background:#f5f9ff;border-color:#bcd4ee}
-.fullview,.card,.dash-panel,.enterprise-panel,.audit-view{border-color:#e1e8f0!important;box-shadow:var(--shadow)!important}
-.fullview{background:#fff;border-radius:16px;padding:20px}.card{border-radius:15px}.btn{border-radius:10px;transition:.18s ease}.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 7px 16px rgba(15,50,85,.11)}.btn.primary{background:linear-gradient(135deg,#2586ef,#0966d7);border-color:#126dd7}.btn.green{background:linear-gradient(135deg,#22ba83,#0b9868);border-color:#0c9d6c}
-.input{border-color:#d6e0eb;background:#fff}.input:focus{outline:3px solid rgba(37,134,239,.13);border-color:#3b91eb}
-.enterprise-hero{background:linear-gradient(120deg,#0c3158 0%,#104875 67%,#126099 100%)!important;border:0!important;box-shadow:0 14px 35px rgba(8,48,84,.22)!important;position:relative;overflow:hidden}.enterprise-hero:after{content:'';position:absolute;width:340px;height:340px;border-radius:50%;right:-120px;top:-190px;background:rgba(74,171,255,.14)}
-.enterprise-hero .eyebrow{color:#72c3ff!important}.enterprise-hero h2,.enterprise-hero p{color:#fff!important}
-.enterprise-metrics{gap:13px!important}.enterprise-metric{border:1px solid #e1e8f0!important;border-radius:14px!important;box-shadow:0 8px 22px rgba(35,69,102,.07)!important;padding:17px!important;min-height:105px;position:relative;overflow:hidden}.enterprise-metric:before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--metric-color,#1976e9)}.enterprise-metric:nth-child(1){--metric-color:#2788ef}.enterprise-metric:nth-child(2){--metric-color:#8458e8}.enterprise-metric:nth-child(3){--metric-color:#17b983}.enterprise-metric:nth-child(4){--metric-color:#ff9940}.enterprise-metric:nth-child(5){--metric-color:#24a9c9}.enterprise-metric i{background:color-mix(in srgb,var(--metric-color) 13%,white)!important;color:var(--metric-color)!important;border-radius:12px!important;font-style:normal!important}.enterprise-metric b{font-size:25px!important;color:#10243b}.enterprise-metric small{color:#718096!important}
-.enterprise-panels{gap:16px!important}.enterprise-panel{border-radius:15px!important}.dashboard-map-shell{border-radius:13px!important;overflow:hidden}.activity-item{border-bottom:1px solid #edf1f5!important}.activity-item i{border-radius:10px!important}
-.general-map-layout{gap:13px}.general-map-toolbar{background:#f7f9fc;border:1px solid #e1e8f0;border-radius:13px;padding:11px}.general-map-shell{border:1px solid #dce5ef!important;border-radius:15px!important;box-shadow:0 10px 26px rgba(20,55,85,.08)}
-.general-map-info{background:rgba(7,37,64,.89)!important;color:#fff!important;border:0!important;backdrop-filter:blur(8px)}
-.toast{border-radius:14px!important;box-shadow:0 16px 38px rgba(10,40,70,.18)!important}
-.audit-header{background:linear-gradient(120deg,#0c3158,#155583)!important;border-radius:14px;padding:18px;color:#fff}.audit-header h2,.audit-header p{color:#fff!important}.audit-card{border-radius:13px!important;box-shadow:0 6px 18px rgba(20,55,85,.07)!important}
-@media(max-width:900px){
-  .app{display:block}aside{background:#082b4d!important;padding:7px 8px!important;box-shadow:0 5px 16px rgba(3,28,50,.2)}.brand{display:none}.nav button{color:#dbeafa}.nav button.active{background:#1976e9}.nav-order-btn{background:#103c64!important}.nav-order-btn::before{color:#fff}main{padding:8px 10px 24px}main>.topbar{margin:-8px -10px 10px;padding:8px 10px;position:sticky;top:58px;min-height:auto;background:#fff}.enterprise-metrics{grid-template-columns:1fr 1fr!important}.enterprise-panels{grid-template-columns:1fr!important}
-}
-@media(max-width:520px){.enterprise-metric{min-height:94px;padding:12px!important}.enterprise-metric b{font-size:21px!important}.enterprise-metric i{width:38px!important;height:38px!important}.fullview{padding:12px;border-radius:13px}.top-actions .install-btn{padding:8px 9px;font-size:12px}}
-
 </style>
 
 <style>
@@ -207,11 +153,6 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
 @media(max-width:520px){.catalog-toolbar-v2{grid-template-columns:1fr!important}.dash-filters{grid-template-columns:1fr!important}.date-field{width:100%}}
 
 </style>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-
-<style>
-.connection-help-btn{width:26px;height:26px;border-radius:50%;border:1px solid #cbd5e1;background:#fff;color:#0f4c81;font-weight:900;cursor:pointer;margin-left:6px}.connection-help-btn:hover{background:#eaf3fb}.connection-panel{position:fixed;right:18px;top:78px;z-index:99999;width:min(420px,calc(100vw - 36px));background:#fff;border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 18px 50px rgba(15,23,42,.22);padding:18px}.connection-panel h3{margin:0 0 10px;color:#0f2942}.connection-panel p{margin:7px 0;color:#475569;line-height:1.45}.connection-panel code{display:block;padding:10px;background:#f1f5f9;border-radius:10px;overflow:auto;font-size:12px}.connection-panel .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.registry-loading{padding:28px;text-align:center;color:#64748b}.sync.err{font-weight:800}.sync.ok{font-weight:800}
-</style>
 </head>
 <body><div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
 <div id="installHint" class="install-hint" role="dialog" aria-live="polite" aria-label="Instalar aplicación">
@@ -219,71 +160,18 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
   <b><img src="icon-192.png" alt="" class="pwa-icon-preview">Instalar Rutas de Inspección</b>
   <small id="installHintText">En Chrome, toca el menú ⋮ y elige “Instalar aplicación”. Si no aparece, selecciona “Añadir a pantalla principal”.</small>
 </div>
-<div id="login" class="login" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-  <div class="login-shell">
-    <section class="login-visual" aria-hidden="true">
-      <div class="login-copy">
-        <div class="jh-logo">⚡ <span>JH</span></div>
-        <h1>Rutas de<br><span>Inspección</span></h1>
-        <p>Gestión de inspecciones eléctricas</p>
-        <div class="login-points">
-          <div class="login-point"><i>⌘</i><div><b>Planifica rutas</b><small>Organiza y optimiza tus inspecciones en campo.</small></div></div>
-          <div class="login-point"><i>⚡</i><div><b>Inspecciones seguras</b><small>Supervisa subestaciones y activos eléctricos.</small></div></div>
-          <div class="login-point"><i>▥</i><div><b>Decisiones informadas</b><small>Accede a información confiable para una mejor gestión.</small></div></div>
-        </div>
-      </div>
-    </section>
-    <section class="login-panel">
-      <div class="loginbox">
-        <div class="login-brand"><div class="brand-icon">⚡</div><h2 id="loginTitle">Rutas de Inspección</h2><p>Gestión de inspecciones eléctricas</p></div>
-        <div class="login-tabs"><button id="loginTabBtn" class="login-tab active" type="button">Iniciar sesión</button><button id="recoverTabBtn" class="login-tab" type="button">Recuperar contraseña</button></div>
-        <form id="loginForm" class="login-pane active" novalidate>
-          <div class="google-auth-box">
-            <div class="google-auth-title">Acceso seguro recomendado</div>
-            <div id="googleSignInBtn"></div>
-            <div id="googleFallback" class="google-login-fallback">Para activar esta opción, configura <b>GOOGLE_CLIENT_ID</b> en <b>config.js</b> y registra el correo del usuario en el panel Usuarios.</div>
-            <div id="googleCodeStep" class="google-code-step">
-              <label class="label" for="googleCodeInput">CÓDIGO DE SEGURIDAD</label><input id="googleCodeInput" class="input" inputmode="numeric" maxlength="6" placeholder="Ingresa los 6 dígitos enviados a tu correo">
-              <button id="confirmGoogleCodeBtn" class="btn login-submit" type="button">Verificar código</button>
-            </div>
-            <div id="googleLoginFeedback" class="feedback" aria-live="polite"></div>
-            <div class="google-auth-note">Google valida tu cuenta y el sistema envía un código de 6 dígitos al correo autorizado antes de abrir la sesión.</div>
-          </div>
-          <div class="google-auth-separator"><span>o ingresa con usuario temporal</span></div>
-          <label class="label" for="loginName">USUARIO</label><input id="loginName" class="input" placeholder="Ingresa tu usuario" autocomplete="username" required>
-          <label class="label" for="loginPin">CONTRASEÑA</label><div class="password-wrap"><input id="loginPin" class="input" type="password" maxlength="24" placeholder="Ingresa tu contraseña" autocomplete="current-password" required><button id="toggleLoginPin" class="password-eye" type="button" aria-label="Mostrar contraseña">◉</button></div>
-          <button id="loginBtn" type="submit" class="btn login-submit">⚡ Entrar</button><div id="loginFeedback" class="feedback" aria-live="polite"></div>
-          <div class="login-help">Las cuentas son creadas por el Administrador.<br>Si no tienes acceso, contacta con el administrador del sistema.</div>
-        </form>
-        <div id="recoverPane" class="login-pane">
-          <div id="recoverRequestStep" class="recovery-grid">
-            <label class="label" for="recoverUsername">USUARIO</label><input id="recoverUsername" class="input" placeholder="Ingresa tu usuario" autocomplete="username">
-            <button id="requestRecoveryBtn" class="btn login-submit" type="button">✉ Enviar código</button>
-          </div>
-          <div id="recoverConfirmStep" class="recovery-grid" style="display:none">
-            <label class="label" for="recoverCode">CÓDIGO RECIBIDO</label><input id="recoverCode" class="input" inputmode="numeric" maxlength="6" placeholder="6 dígitos">
-            <label class="label" for="recoverNewPin">NUEVA CONTRASEÑA</label><div class="password-wrap"><input id="recoverNewPin" class="input" type="password" maxlength="24" placeholder="Nueva contraseña"><button id="toggleRecoverPin" class="password-eye" type="button" aria-label="Mostrar contraseña">◉</button></div>
-            <button id="confirmRecoveryBtn" class="btn login-submit" type="button">Cambiar contraseña</button>
-          </div>
-          <div id="recoveryFeedback" class="feedback" aria-live="polite"></div>
-          <div class="login-help">El código se enviará al correo registrado. Si tu cuenta no tiene correo, solicita al Administrador que restablezca tu contraseña.</div>
-        </div>
-        <div class="login-footer">Sistema de Gestión de Inspecciones Eléctricas · Creado por JH</div>
-      </div>
-    </section>
-  </div>
-</div>
+<div id="login" class="login" role="dialog" aria-modal="true" aria-labelledby="loginTitle"><form id="loginForm" class="loginbox" novalidate><h2 id="loginTitle">Rutas de Inspección</h2><p>Ingresa con la cuenta creada por el Administrador.</p><label class="label" for="loginName">Usuario</label><input id="loginName" class="input" placeholder="Ej. jhugo" autocomplete="username" required><label class="label" for="loginPin">PIN</label><input id="loginPin" class="input" type="password" inputmode="numeric" maxlength="12" placeholder="••••" autocomplete="current-password" required><button id="loginBtn" type="submit" class="btn primary" style="width:100%;margin-top:12px">Ingresar</button><div id="loginFeedback" class="feedback" aria-live="polite"></div><small class="feedback">Cuenta inicial: <b>admin</b> · PIN <b>1234</b>. Si una base antigua lo rechaza, ejecuta <b>resetAdminAccess</b> una vez en Apps Script.</small></form></div>
 <div class="app">
   <aside><div class="brand"><b>⌖</b><span>Rutas de Inspección</span></div><div class="nav">
-    <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="catalog">⚡ Subestaciones</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
+    <button class="active" data-view="planner">⌂ Mi ruta</button><button data-view="dashboard">▦ Dashboard</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="catalog">⚡ Subestaciones</button><button data-view="generalmap">◉ Mapa general</button><button data-view="history">↻ Historial</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.54</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
-    <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
+    <div class="topbar"><h1 id="pageTitle">Planificador de ruta</h1><div class="top-actions"><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.36</small><span id="syncState" class="sync">Sin sincronizar</span></span></div></div>
+    <section id="planner" class="view active"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
           <div id="locationsCard" class="card"><div class="card-head"><h2>Ubicaciones a visitar</h2><button id="collapseLocationsBtn" class="collapse-btn" type="button" aria-expanded="true" title="Contraer ubicaciones">−</button></div><div id="locationsBody" class="collapsible-body"><label class="label">Punto de partida</label><div class="btns"><button id="useGpsBtn" class="btn">◎ Usar mi ubicación</button><span id="gpsText" class="feedback">GPS pendiente</span></div><div id="locationRows"></div><button id="addRowBtn" class="btn" style="width:100%;margin-top:8px">＋ Agregar ubicación</button>
-          <div class="import-panel"><div class="import-title"><b>Carga masiva desde Excel</b><div class="btns" style="margin-top:0"><button id="templateBtn" class="btn">⬇ Plantilla Excel</button><label class="btn file-label" for="excelImportInput">⬆ Importar Excel</label><input id="excelImportInput" type="file" accept=".xlsx,.xls,.csv" hidden></div></div><p class="import-help">Columnas obligatorias: Alimentador, Subestación y Dirección / URL. Latitud y Longitud son opcionales.</p><div id="importPreview" class="import-preview"><div id="importSummary" class="import-summary"></div><div class="preview-table"><table><thead><tr><th>#</th><th>Alimentador</th><th>Subestación</th><th>Dirección / URL</th><th>Latitud</th><th>Longitud</th><th>Estado</th></tr></thead><tbody id="importPreviewBody"></tbody></table></div><div class="btns"><button id="cancelImportBtn" class="btn">Cerrar resumen</button></div></div></div>
+          <div class="import-panel"><div class="import-title"><b>Carga masiva desde Excel</b><div class="btns" style="margin-top:0"><button id="templateBtn" class="btn">⬇ Plantilla Excel</button><label class="btn file-label" for="excelImportInput">⬆ Importar Excel</label><input id="excelImportInput" type="file" accept=".xlsx,.xls,.csv" hidden></div></div><p class="import-help">Columnas obligatorias: Alimentador, Subestación y Dirección / URL. Latitud y Longitud son opcionales.</p><div id="importPreview" class="import-preview"><div id="importSummary" class="import-summary"></div><div class="preview-table"><table><thead><tr><th>#</th><th>Alimentador</th><th>Subestación</th><th>Dirección / URL</th><th>Latitud</th><th>Longitud</th><th>Estado</th></tr></thead><tbody id="importPreviewBody"></tbody></table></div><div class="btns"><button id="loadPreviewBtn" class="btn primary">Cargar filas válidas</button><button id="cancelImportBtn" class="btn">Cancelar</button></div></div></div>
           <div class="btns"><button id="saveLocationsBtn" class="btn green">Guardar ubicaciones</button><button id="optimizeBtn" class="btn primary">Optimizar ruta</button><button id="clearBtn" class="btn danger">Limpiar ubicaciones</button></div><div class="draft-note">Las ubicaciones permanecen guardadas al salir o usar la flecha Atrás. Solo se borran con “Limpiar ubicaciones”.</div><div id="saveProgress" class="save-progress"></div><div id="routeFeedback" class="feedback"></div></div></div>
           <div id="routeCard" class="card"><div class="card-head"><h2>Orden optimizado</h2><button id="collapseRouteBtn" class="collapse-btn" type="button" aria-expanded="true" title="Contraer orden optimizado">−</button></div><div id="routeBody" class="collapsible-body"><div id="routeList" class="route-list"><div class="feedback">Agrega puntos y optimiza.</div></div><div class="metrics"><div class="metric"><b id="totalTime">0 min</b><span>Tiempo</span></div><div class="metric"><b id="totalDistance">0 km</b><span>Distancia</span></div><div class="metric"><b id="totalStops">0</b><span>Paradas</span></div></div><div class="btns"><button id="startNavBtn" class="btn green" disabled>▶ Iniciar recorrido</button><button id="editRouteBtn" class="btn" type="button">✏️ Modificar / crear otra ruta</button><button id="prevBtn" class="btn" disabled>← Anterior</button><button id="nextBtn" class="btn" disabled>Siguiente →</button></div></div></div>
 
@@ -291,72 +179,29 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
         <div id="mapWrap"><div id="map"></div><div class="compass"><span id="northArrow">N▲</span></div><div class="map-tools"><button id="fullscreenBtn" title="Pantalla completa">⛶</button><button id="locateBtn" title="Mi ubicación">◎</button><button id="zoomInBtn">＋</button><button id="zoomOutBtn">−</button></div><div id="navHud" class="navhud"><div id="hudTitle" class="title"></div><div id="hudSub" class="sub"></div><div class="hudrow"><span id="hudDistance" class="pill">— km</span><span id="hudTime" class="pill">— min</span><span id="hudGps" class="pill">GPS —</span></div><div class="hudrow"><button id="formBtn" class="btn primary" disabled>🔒 Formulario al llegar</button><button id="inspectBtn" class="btn inspect" disabled>Registrar resultado</button><button id="hudNextBtn" class="btn green" style="display:none">Siguiente punto →</button><button id="manualFormBtn" class="btn" style="display:none">Habilitar manualmente</button><button id="stopNavBtn" class="btn danger">Finalizar</button></div></div></div>
       </div>
     </section>
-    <section id="dashboard" class="view active">
-      <div class="enterprise-home">
-        <div class="welcome-strip">
-          <div><span class="eyebrow">RUTAS DE INSPECCIÓN · JH</span><h2 id="welcomeName">Bienvenido</h2><p>Resumen general de inspecciones, rutas y actividad operativa.</p></div>
-          <div class="home-actions"><button class="btn primary" data-go="planner">＋ Crear ruta</button><button class="btn" data-go="generalmap">◉ Abrir mapa</button><span class="domain-pill">rutas.mizona.pe</span></div>
-        </div>
-        <div id="enterpriseMetrics" class="enterprise-metrics"></div>
-        <div class="enterprise-grid">
-          <div class="enterprise-panel map-preview-panel"><div class="panel-title"><div><h3>Mapa general</h3><small>Subestaciones, derivaciones y clientes registrados</small></div><button class="btn" data-go="generalmap">Ver mapa completo</button></div><div id="dashboardMapPreview" class="dashboard-map-preview"><div class="map-placeholder"><span>◉</span><b>Mapa conectado a tu catálogo</b><small>Los puntos se cargan por bloques para evitar que la aplicación se congele.</small></div></div><div id="dashboardLegend" class="dashboard-legend"></div></div>
-          <div class="enterprise-panel"><div class="panel-title"><div><h3>Actividad reciente</h3><small>Últimos movimientos del sistema</small></div><button class="btn admin-only" data-go="modifications">Ver todo</button></div><div id="recentActivity" class="activity-list"></div></div>
-        </div>
-        <div class="enterprise-grid lower-grid">
-          <div class="enterprise-panel"><div class="panel-title"><div><h3>Avance por alimentador</h3><small>Progreso de inspecciones</small></div></div><div id="feederProgress"></div></div>
-          <div class="enterprise-panel"><div class="panel-title"><div><h3>Distribución por estado</h3><small>Situación actual de los puntos</small></div></div><div id="statusDistribution" class="status-legend"></div></div>
-        </div>
-        <div class="dashboard-hidden-compat"><input id="dashFrom" type="date"><input id="dashTo" type="date"><select id="dashTech"><option value="">Todos</option></select><button id="dashApplyBtn"></button><div id="dashboardMetrics"></div><div id="techPerformance"></div><div id="dashboardAlerts"></div></div>
-      </div>
-    </section>
+    <section id="dashboard" class="view"><div class="fullview"><div class="topbar"><h2>Dashboard de inspecciones</h2><div class="dash-filters"><label class="date-field">Fecha inicial<input id="dashFrom" type="date" class="input" aria-label="Fecha inicial"></label><label class="date-field">Fecha final<input id="dashTo" type="date" class="input" aria-label="Fecha final"></label><select id="dashTech" class="input"><option value="">Todos los técnicos</option></select><button id="dashApplyBtn" class="btn primary">Actualizar</button></div></div><div id="dashboardMetrics" class="dashboard-grid"></div><div class="dash-panels"><div class="dash-panel"><h3>Avance por alimentador</h3><div id="feederProgress"></div></div><div class="dash-panel"><h3>Distribución por estado</h3><div id="statusDistribution" class="status-legend"></div></div></div><div class="dash-panels" style="margin-top:14px"><div class="dash-panel"><h3>Rendimiento por técnico</h3><div id="techPerformance"></div></div><div class="dash-panel"><h3>Alertas operativas</h3><div id="dashboardAlerts"></div></div></div></div></section>
     <section id="programming" class="view"><div class="fullview"><div class="topbar"><h2>Programación de rutas</h2><button id="refreshAssignmentsBtn" class="btn">Actualizar</button></div><div class="admin-grid"><div class="card"><h3>Nueva asignación</h3><div class="form-grid"><label>Fecha<input id="assignDate" type="date" class="input"></label><label>Técnico<select id="assignUser" class="input"></select></label><label>Alimentador<input id="assignFeeder" class="input" placeholder="Ej. CH01"></label><label>Prioridad<select id="assignPriority" class="input"><option>Normal</option><option>Alta</option><option>Crítica</option></select></label><label class="span2">Subestaciones (separadas por coma o una por línea)<textarea id="assignSubs" class="input" rows="5" placeholder="20898A, 20765A"></textarea></label><label class="span2">Observación<textarea id="assignNotes" class="input" rows="3"></textarea></label></div><button id="saveAssignmentBtn" class="btn primary" style="width:100%;margin-top:10px">Guardar programación</button><div id="assignmentFeedback" class="feedback"></div></div><div><div id="assignmentList" class="data-list"></div></div></div></div></section>
-    <section id="users" class="view"><div class="fullview"><div class="topbar"><div><h2>Gestión de usuarios</h2><small>El Administrador principal conserva acceso total y la información histórica nunca se elimina.</small></div><button id="refreshUsersBtn" class="btn">Actualizar</button></div><div id="primaryAdminNotice" class="primary-note">La cuenta marcada como <b>Administrador principal</b> está protegida: no puede ser bloqueada, eliminada ni degradada por otro usuario.</div><div class="section-tabs"><button id="showCreateUserBtn" class="btn active" type="button">Crear usuario</button><button id="showRegistryBtn" class="btn" type="button">Usuarios registrados</button></div><div id="userCreatePanel" class="admin-grid"><div class="card"><h3>Crear usuario</h3><div class="form-grid"><label>Usuario<input id="newUsername" class="input" placeholder="jhugo"></label><label>Nombre completo<input id="newFullName" class="input" placeholder="José Hugo"></label><label>Correo de recuperación<input id="newEmail" class="input" type="email" placeholder="usuario@correo.com"></label><label>PIN temporal<input id="newPin" class="input" type="password" inputmode="numeric" maxlength="12" placeholder="4 a 12 dígitos"></label><label>Rol<select id="newRole" class="input"><option>Inspector</option><option>Supervisor</option><option>Programador</option><option>Consulta</option><option>Administrador secundario</option></select></label><label class="span2">Técnico / identificador<input id="newTechnician" class="input" placeholder="José"></label></div><button id="createUserBtn" class="btn primary" style="width:100%;margin-top:10px">Crear usuario</button><div id="userFeedback" class="feedback"></div></div><div class="card"><h3>Reglas de acceso</h3><p>El enlace no crea cuentas ni concede permisos. Primero crea el usuario y después comparte la aplicación.</p><p>Las cuentas inactivas conservan inspecciones, reportes, fotos, rutas e historial visibles para el Administrador.</p></div></div><div id="userRegistryPanel" style="display:none"><div class="user-registry-toolbar"><input id="userSearch" class="input" placeholder="Buscar por nombre o usuario"><select id="userRoleFilter" class="input"><option value="">Todos los roles</option><option>Administrador principal</option><option>Administrador secundario</option><option>Supervisor</option><option>Programador</option><option>Inspector</option><option>Consulta</option></select><select id="userStatusFilter" class="input"><option value="">Todos los estados</option><option value="active">Activos</option><option value="blocked">Bloqueados</option><option value="inactive">Inactivos</option><option value="deleted">Eliminados lógicamente</option></select><button id="clearUserFiltersBtn" class="btn">Limpiar</button></div><div id="userList" class="data-list"></div></div></div></section>
+    <section id="users" class="view"><div class="fullview"><div class="topbar"><div><h2>Usuarios y accesos</h2><small>Solo el Administrador puede crear, bloquear o cambiar el PIN de una cuenta.</small></div><button id="refreshUsersBtn" class="btn">Actualizar</button></div><div class="admin-grid"><div class="card"><h3>Crear usuario</h3><div class="form-grid"><label>Usuario<input id="newUsername" class="input" placeholder="jhugo"></label><label>Nombre completo<input id="newFullName" class="input" placeholder="José Hugo"></label><label>PIN<input id="newPin" class="input" type="password" inputmode="numeric" maxlength="12" placeholder="4 a 12 dígitos"></label><label>Rol<select id="newRole" class="input"><option>Inspector</option><option>Consulta</option><option>Administrador</option></select></label><label class="span2">Técnico / identificador<input id="newTechnician" class="input" placeholder="José"></label></div><button id="createUserBtn" class="btn primary" style="width:100%;margin-top:10px">Crear usuario</button><div id="userFeedback" class="feedback"></div></div><div><div id="userList" class="data-list"></div></div></div></div></section>
     <section id="catalog" class="view"><div class="fullview"><h2>Catálogo de alimentadores y subestaciones</h2><div class="catalog-toolbar catalog-toolbar-v2"><input id="catalogSearch" class="input" placeholder="Buscar por subestación, dirección o alimentador"><label class="date-field">Fecha de registro<input id="catDate" type="date" class="input"></label><select id="catFeeder" class="input"><option value="">Todos los alimentadores</option></select><input id="catTech" class="input" placeholder="Técnico"></div><div class="catalog-actions"><button id="catalogSearchBtn" class="btn primary">Aplicar filtros</button><button id="catalogClearBtn" class="btn">Limpiar filtros</button><button id="addSelectedBtn" class="btn green">Añadir seleccionadas</button><button id="addAllFilteredBtn" class="btn">Añadir todos los resultados</button><button id="revalidateBtn" class="btn">Revalidar coordenadas</button><span id="catalogSummary" class="catalog-summary"></span><span id="revalidateState" class="revalidate-state"></span></div><div id="catalogResults" class="results" style="max-height:62vh"></div></div></section>
-    <section id="generalmap" class="view"><div class="fullview general-map-layout"><div><div class="topbar"><h2>Mapa general de subestaciones</h2><span id="generalMapCount" class="sync"></span></div><div class="general-map-toolbar"><input id="gmSearch" class="input" placeholder="Buscar alimentador, subestación, dirección o técnico"><select id="gmFeeder" class="input"><option value="">Todos los alimentadores</option></select><input id="gmTech" class="input" placeholder="Técnico"><input id="gmDate" type="date" class="input"><button id="gmFilterBtn" class="btn primary">Buscar</button><button id="gmAddAllBtn" class="btn green">Añadir resultados</button><button id="gmReloadBtn" class="btn">Recargar mapa</button></div><div id="gmSearchResults" class="gm-search-results" hidden></div></div><div class="general-map-shell"><div id="generalMap" class="general-map"></div><div class="general-map-controls" aria-label="Controles del mapa"><button id="gmZoomIn" type="button" title="Acercar">+</button><button id="gmZoomOut" type="button" title="Alejar">−</button><button id="gmFitAll" type="button" title="Ver todos los puntos">◎</button></div><div id="generalMapInfo" class="general-map-info">Cargando subestaciones…</div></div></div></section>
+    <section id="generalmap" class="view"><div class="fullview general-map-layout"><div><div class="topbar"><h2>Mapa general de subestaciones</h2><span id="generalMapCount" class="sync"></span></div><div class="general-map-toolbar"><input id="gmSearch" class="input" placeholder="Buscar alimentador, subestación, dirección o técnico"><select id="gmFeeder" class="input"><option value="">Todos los alimentadores</option></select><input id="gmTech" class="input" placeholder="Técnico"><input id="gmDate" type="date" class="input"><button id="gmFilterBtn" class="btn primary">Buscar</button><button id="gmAddAllBtn" class="btn green">Añadir resultados</button><button id="gmReloadBtn" class="btn">Recargar mapa</button></div></div><div class="general-map-shell"><div id="generalMap" class="general-map"></div><div class="general-map-controls" aria-label="Controles del mapa"><button id="gmZoomIn" type="button" title="Acercar">+</button><button id="gmZoomOut" type="button" title="Alejar">−</button><button id="gmFitAll" type="button" title="Ver todos los puntos">◎</button></div><div id="generalMapInfo" class="general-map-info">Cargando subestaciones…</div></div></div></section>
     <section id="history" class="view"><div class="fullview"><div class="topbar"><h2>Historial de recorridos</h2><div class="btns"><button id="excelBtn" class="btn green">Descargar Excel</button><button id="csvBtn" class="btn">CSV</button></div></div><div class="filters"><input id="fDate" type="date" class="input"><input id="fFeeder" class="input" placeholder="Alimentador"><input id="fSub" class="input" placeholder="Subestación"><select id="fStatus" class="input"><option value="">Todos los estados</option><option>Pendiente</option><option>En ruta</option><option>Inspeccionada</option><option>No inspeccionada</option><option>Reprogramada</option><option>Observada</option></select></div><div class="tablewrap"><table><thead><tr><th>Fecha</th><th>Usuario</th><th>Alimentador</th><th>Subestación</th><th>Dirección</th><th>Orden</th><th>Distancia</th><th>Tiempo</th><th>Estado</th><th>Motivo / observación</th><th>Reprogramada para</th><th>Latitud</th><th>Longitud</th></tr></thead><tbody id="historyBody"></tbody></table></div></div></section>
-    <section id="modifications" class="view"><div class="fullview audit-view">
-      <div class="audit-header"><div><span class="eyebrow">AUDITORÍA ADMINISTRATIVA</span><h2>Registro de modificaciones</h2><p>Consulta quién creó, actualizó o cambió información dentro del sistema.</p></div><div class="btns"><button id="auditExportBtn" class="btn green">⬇ Exportar CSV</button><button id="auditRefreshBtn" class="btn primary">↻ Actualizar</button></div></div>
-      <div class="audit-filters"><label>Fecha desde<input id="auditFrom" type="date" class="input"></label><label>Fecha hasta<input id="auditTo" type="date" class="input"></label><label>Módulo<select id="auditModule" class="input"><option value="">Todos los módulos</option><option>Inspecciones</option><option>Rutas</option><option>Subestaciones</option><option>Usuarios</option><option>Programación</option></select></label><label>Acción<select id="auditAction" class="input"><option value="">Todas las acciones</option><option>Creación</option><option>Actualización</option><option>Eliminación</option></select></label><label>Usuario<input id="auditUser" class="input" placeholder="Nombre o usuario"></label><button id="auditSearchBtn" class="btn primary">Buscar</button></div>
-      <div id="auditMetrics" class="audit-metrics"></div>
-      <div class="audit-table-wrap"><table class="audit-table"><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Módulo</th><th>Acción</th><th>Elemento</th><th>Descripción del cambio</th><th>Origen</th></tr></thead><tbody id="auditBody"></tbody></table></div>
-    </div></section>
     <section id="settings" class="view"><div class="fullview"><h2>Configuración</h2><label class="label">URL del Apps Script</label><input id="scriptUrlInput" class="input" placeholder="https://script.google.com/macros/s/.../exec"><div class="btns"><button id="saveConfigBtn" class="btn primary">Guardar y sincronizar</button><button id="syncBtn" class="btn">Sincronizar ahora</button></div><p class="feedback">La URL central está preconfigurada en <b>config.js</b>. Todos los dispositivos usarán automáticamente la misma base.</p></div></section>
   </main>
 </div>
 <script>
 'use strict';
 const FORM_URL='https://forms.office.com/pages/responsepage.aspx?id=3VEAHJZFGkuYSdBgc1BXae0SDjKHF5pIr8dsxZ1dYYVUQjBHNVRXRkJWNEJJRDM2NzFCQlJBSzdPRi4u&route=shorturl';
-const ARRIVAL_RADIUS_M=250; // tolerancia de campo por diferencias entre el pin y el acceso real
-const state={user:null,rows:[],catalog:[],history:[],users:[],inspections:[],assignments:[],currentAssignment:null,catalogSelected:new Set(),start:null,route:null,activeIndex:0,navigating:false,gps:null,bearing:0,mapRotation:0,arrivalHits:0,importRows:[],plannerUpdatedAt:'',plannerSaveTimer:null,scriptUrl:(window.APP_CONFIG?.SCRIPT_URL||'').trim()};
-let pendingGoogleEmail='';
-const GOOGLE_CLIENT_ID=(window.APP_CONFIG?.GOOGLE_CLIENT_ID||'').trim();
+const ARRIVAL_RADIUS_M=220; // tolerancia de campo por diferencias entre el pin y el acceso real
+const state={user:null,rows:[],catalog:[],history:[],users:[],assignments:[],currentAssignment:null,catalogSelected:new Set(),start:null,route:null,activeIndex:0,navigating:false,gps:null,bearing:0,mapRotation:0,arrivalHits:0,importRows:[],plannerUpdatedAt:'',plannerSaveTimer:null,scriptUrl:(window.APP_CONFIG?.SCRIPT_URL||'').trim()};
 let overlayReturnContext=null;
 let map,generalMap,generalMarkers=L.layerGroup(),markers=L.layerGroup(),routeGroup=L.layerGroup(),liveGroup=L.layerGroup(),vehicleMarker=null,gpsWatch=null,lastReroute=0,lastGps=null;
 const $=id=>document.getElementById(id); const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function setFb(id,msg,type=''){const n=$(id);n.textContent=msg;n.className='feedback '+type}
-function setSync(message,type=''){const n=$('syncState');if(!n)return;n.textContent=String(message||'');n.className='sync'+(type?' '+type:'')}
-function init(){
-  bindLogin();
-  // La navegación y los botones deben quedar activos aunque el mapa o la red fallen.
-  try{bind()}catch(e){console.error('Error al enlazar controles:',e)}
-  try{loadLocal()}catch(e){console.error('Error al cargar sesión local:',e)}
-  try{loadRouteDraft()}catch(e){console.error('Error al recuperar ruta:',e)}
-  try{initMap()}catch(e){console.error('Error al iniciar mapa principal:',e)}
-  ['renderRows','renderCatalog','renderHistory','renderDashboard','renderUsers','renderAssignments'].forEach(name=>{try{window[name]?.()}catch(e){console.error('Error en '+name+':',e)}});
-  try{startGpsWatch()}catch(e){console.error('Error GPS:',e)}
-  try{autoSync()}catch(e){console.error('Error sincronización:',e)}
-  try{if(state.user)loadUserPlannerCloud(false)}catch(e){console.error('Error planificador cloud:',e)}
-  setInterval(()=>{try{autoSync()}catch(e){console.error(e)}},60000);
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden){try{restoreRouteDraftIfNeeded()}catch{};try{autoSync()}catch{}}});
-  window.addEventListener('beforeunload',()=>{try{saveRouteDraft()}catch{}});
-  window.addEventListener('pagehide',()=>{try{saveRouteDraft()}catch{}});
-  window.addEventListener('pageshow',()=>{try{restoreRouteDraftIfNeeded()}catch{}});
-  window.addEventListener('popstate',()=>{try{handleNavigationBack()}catch{}});
-}
+function init(){bindLogin();try{initMap();bind();loadLocal();loadRouteDraft();renderRows();renderCatalog();renderHistory();renderDashboard();renderUsers();renderAssignments();startGpsWatch();autoSync();if(state.user)loadUserPlannerCloud(false);setInterval(autoSync,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){restoreRouteDraftIfNeeded();autoSync()}});window.addEventListener('beforeunload',saveRouteDraft);window.addEventListener('pagehide',saveRouteDraft);window.addEventListener('pageshow',restoreRouteDraftIfNeeded);window.addEventListener('popstate',handleNavigationBack)}catch(e){console.error('Error de inicio:',e);setFb('loginFeedback','La interfaz cargó parcialmente. Puedes ingresar; luego recarga la página si falta alguna función.','err')}}
 function loadLocal(){
   try{
     const savedUser=JSON.parse(localStorage.getItem('ri_user')||'null');
-    if(savedUser&&savedUser.username&&savedUser.token){
+    if(savedUser&&savedUser.username){
       state.user=savedUser;
       if($('loginName')) $('loginName').value=savedUser.username;
     }else{
@@ -371,7 +216,7 @@ function loadLocal(){
     const saved=(localStorage.getItem('ri_script')||'').trim();
     state.scriptUrl=(configured&&configured!=='PEGA_AQUI_TU_URL_EXEC')?configured:(saved||state.scriptUrl);
   }catch(e){console.warn('No se pudieron recuperar datos locales',e);state.user=null}
-  $('scriptUrlInput').value=state.scriptUrl;if($('temporaryAdminNote')&&localStorage.getItem('ri_migration_complete')==='1')$('temporaryAdminNote').style.display='none';
+  $('scriptUrlInput').value=state.scriptUrl;
   if(state.user){
     $('login').classList.add('hidden');
     $('login').style.display='none';
@@ -385,75 +230,20 @@ function loadLocal(){
   }
   applyRoleVisibility();
 }
-function normalizedRole(v){const r=String(v||'').trim().toLowerCase();if(r.includes('principal'))return 'Administrador principal';if(r.includes('administrador'))return 'Administrador secundario';if(r.includes('supervisor'))return 'Supervisor';if(r.includes('programador'))return 'Programador';if(r.includes('consulta'))return 'Consulta';return 'Inspector'}
-function isAdmin(){return ['Administrador principal','Administrador secundario'].includes(normalizedRole(state.user?.role))}
-function isPrimaryAdmin(){return normalizedRole(state.user?.role)==='Administrador principal'}
-function applyRoleVisibility(){const admin=isAdmin();document.querySelectorAll('.admin-only').forEach(el=>el.classList.toggle('allowed',admin));if(!admin&&['settings','users','programming','modifications'].some(id=>document.getElementById(id)?.classList.contains('active'))){const b=document.querySelector('.nav button[data-view="planner"]');showView('planner',b)}}
-function bindLogin(){const form=$('loginForm');if(form&&!form.dataset.bound){form.dataset.bound='1';form.addEventListener('submit',login)};const show=(pane)=>{const loginMode=pane==='login';$('loginForm')?.classList.toggle('active',loginMode);$('recoverPane')?.classList.toggle('active',!loginMode);$('loginTabBtn')?.classList.toggle('active',loginMode);$('recoverTabBtn')?.classList.toggle('active',!loginMode)};if($('loginTabBtn'))$('loginTabBtn').onclick=()=>show('login');if($('recoverTabBtn'))$('recoverTabBtn').onclick=()=>show('recover');if($('toggleLoginPin'))$('toggleLoginPin').onclick=()=>togglePassword('loginPin','toggleLoginPin');if($('toggleRecoverPin'))$('toggleRecoverPin').onclick=()=>togglePassword('recoverNewPin','toggleRecoverPin');if($('requestRecoveryBtn'))$('requestRecoveryBtn').onclick=requestPasswordRecovery;if($('confirmRecoveryBtn'))$('confirmRecoveryBtn').onclick=confirmPasswordRecovery;if($('confirmGoogleCodeBtn'))$('confirmGoogleCodeBtn').onclick=confirmGoogleLoginCode;initGoogleLoginButton()}function togglePassword(inputId,buttonId){const input=$(inputId);if(!input)return;input.type=input.type==='password'?'text':'password';const b=$(buttonId);if(b)b.textContent=input.type==='password'?'◉':'⊘'}async function requestPasswordRecovery(){const username=textValue($('recoverUsername')?.value).toLowerCase();if(!username)return setFb('recoveryFeedback','Ingresa tu usuario.','err');if(!state.scriptUrl)return setFb('recoveryFeedback','No está configurada la conexión con Apps Script.','err');try{$('requestRecoveryBtn').disabled=true;setFb('recoveryFeedback','Enviando código…');const data=await jsonp(state.scriptUrl+'?action=requestReset&username='+encodeURIComponent(username),12000);if(!data?.ok)throw Error(data?.error||'No se pudo enviar el código.');$('recoverRequestStep').style.display='none';$('recoverConfirmStep').style.display='grid';setFb('recoveryFeedback',data.message||'Código enviado al correo registrado.','ok')}catch(e){setFb('recoveryFeedback',e.message||'No se pudo enviar el código.','err')}finally{$('requestRecoveryBtn').disabled=false}}async function confirmPasswordRecovery(){const username=textValue($('recoverUsername')?.value).toLowerCase(),code=textValue($('recoverCode')?.value),pin=textValue($('recoverNewPin')?.value);if(!code||pin.length<4)return setFb('recoveryFeedback','Ingresa el código y una contraseña de al menos 4 caracteres.','err');try{$('confirmRecoveryBtn').disabled=true;setFb('recoveryFeedback','Actualizando contraseña…');const data=await jsonp(state.scriptUrl+'?action=confirmReset&username='+encodeURIComponent(username)+'&code='+encodeURIComponent(code)+'&pin='+encodeURIComponent(pin),12000);if(!data?.ok)throw Error(data?.error||'No se pudo cambiar la contraseña.');$('loginName').value=username;$('recoverConfirmStep').style.display='none';$('recoverRequestStep').style.display='grid';$('loginTabBtn').click();setFb('loginFeedback','Contraseña actualizada. Ya puedes ingresar.','ok')}catch(e){setFb('recoveryFeedback',e.message||'Código incorrecto o vencido.','err')}finally{$('confirmRecoveryBtn').disabled=false}}
+function normalizedRole(v){const r=String(v||'').trim().toLowerCase();if(r.includes('administrador'))return 'Administrador';if(r.includes('consulta'))return 'Consulta';return 'Inspector'}
+function isAdmin(){return normalizedRole(state.user?.role)==='Administrador'}
+function applyRoleVisibility(){const admin=isAdmin();document.querySelectorAll('.admin-only').forEach(el=>el.classList.toggle('allowed',admin));if(!admin&&['settings','users','programming'].some(id=>document.getElementById(id)?.classList.contains('active'))){const b=document.querySelector('.nav button[data-view="planner"]');showView('planner',b)}}
+function bindLogin(){const form=$('loginForm');const btn=$('loginBtn');if(form&&!form.dataset.bound){form.dataset.bound='1';form.addEventListener('submit',login);btn?.addEventListener('click',login);['loginName','loginPin'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();login(e)}}))}}
 function showToast(title,detail='',type='success'){const stack=$('toastStack');if(!stack)return;const t=document.createElement('div');t.className='toast '+(type==='warn'?'warn':type==='error'?'error':'');t.innerHTML=`<button class="toast-close" aria-label="Cerrar">×</button><b>${esc(title)}</b>${detail?`<small>${esc(detail)}</small>`:''}`;stack.appendChild(t);const close=()=>{t.style.opacity='0';t.style.transform='translateY(-8px)';setTimeout(()=>t.remove(),180)};t.querySelector('.toast-close').onclick=close;setTimeout(close,3300)}
 function loadRouteDraft(){restoreRouteDraftIfNeeded()}
 function tabOrderKey(){return 'ri_tab_order_'+(state.user?.username||'guest').toLowerCase()}
-function userPreferences(){try{return typeof state.user?.preferences==='string'?JSON.parse(state.user.preferences||'{}'):(state.user?.preferences||{})}catch{return {}}}
-function applySavedTabOrder(){let order=userPreferences().tabOrder||[];if(!order.length){try{order=JSON.parse(localStorage.getItem(tabOrderKey())||'[]')}catch{}}const nav=document.querySelector('.nav');if(!nav||!Array.isArray(order))return;const mapBtn=new Map(visibleNavButtons().map(b=>[b.dataset.view,b]));order.forEach(v=>{const b=mapBtn.get(v);if(b)nav.insertBefore(b,$('orderTabsBtn'))});visibleNavButtons().filter(b=>!order.includes(b.dataset.view)).forEach(b=>nav.insertBefore(b,$('orderTabsBtn')))}
-function saveTabOrder(order){localStorage.setItem(tabOrderKey(),JSON.stringify(order));const prefs={...userPreferences(),tabOrder:order};if(state.user){state.user.preferences=prefs;localStorage.setItem('ri_user',JSON.stringify(state.user));cloudWrite('preferences',{preferences:prefs})}applySavedTabOrder()}
-function openTabOrderModal(){document.querySelector('.tab-order-modal')?.remove();const buttons=visibleNavButtons().filter(b=>getComputedStyle(b).display!=='none');const modal=document.createElement('div');modal.className='tab-order-modal';modal.innerHTML=`<div class="tab-order-box"><div class="tab-order-head"><h3>Ordenar pestañas</h3><button data-close>×</button></div><div class="tab-order-list"></div><div class="tab-order-actions"><button class="btn" data-reset>Restablecer</button><button class="btn primary" data-save>Guardar orden</button></div></div>`;const list=modal.querySelector('.tab-order-list');buttons.forEach(b=>{const row=document.createElement('div');row.className='tab-order-row';row.dataset.view=b.dataset.view;row.innerHTML=`<span>${b.textContent.trim()}</span><button data-up aria-label="Subir">↑</button><button data-down aria-label="Bajar">↓</button>`;row.querySelector('[data-up]').onclick=()=>{const prev=row.previousElementSibling;if(prev)list.insertBefore(row,prev)};row.querySelector('[data-down]').onclick=()=>{const next=row.nextElementSibling;if(next)list.insertBefore(next,row)};list.appendChild(row)});modal.querySelector('[data-close]').onclick=()=>modal.remove();modal.querySelector('[data-reset]').onclick=()=>{localStorage.removeItem(tabOrderKey());const prefs={...userPreferences(),tabOrder:[]};if(state.user){state.user.preferences=prefs;localStorage.setItem('ri_user',JSON.stringify(state.user));cloudWrite('preferences',{preferences:prefs})}location.reload()};modal.querySelector('[data-save]').onclick=()=>{saveTabOrder([...list.children].map(x=>x.dataset.view));modal.remove();showToast('Orden guardado','Se conservará en todos tus dispositivos.','success')};modal.onclick=e=>{if(e.target===modal)modal.remove()};document.body.appendChild(modal)}
-function bind(){applySavedTabOrder();document.querySelectorAll('.nav button[data-view]').forEach(b=>b.onclick=()=>showView(b.dataset.view,b));bindLogin();$('addRowBtn').onclick=()=>addRow();$('templateBtn').onclick=downloadImportTemplate;$('excelImportInput').onchange=handleExcelImport;$('cancelImportBtn').onclick=clearImportPreview;$('saveLocationsBtn').onclick=saveLocations;$('optimizeBtn').onclick=optimize;$('clearBtn').onclick=()=>{if(!confirm('¿Limpiar todas las ubicaciones de la ruta actual? Esta es la única acción que las borrará.'))return;state.rows=[];state.route=null;state.activeIndex=0;setRouteReadyFocus(false);try{localStorage.removeItem(plannerStorageKey());localStorage.removeItem('ri_route_draft');cloudWrite('planner',{userKey:userKey(),userName:state.user?.name||'',role:state.user?.role||'',payload:JSON.stringify({version:3,rows:[],route:null,activeIndex:0,start:state.start,updatedAt:new Date().toISOString()}),updatedAt:new Date().toISOString()})}catch{}renderRows();drawAll();renderRoute();showToast('Ubicaciones limpiadas','La ruta actual se eliminó correctamente.','success')};$('useGpsBtn').onclick=()=>freshGps(true);$('locateBtn').onclick=()=>freshGps(true);$('zoomInBtn').onclick=()=>map.zoomIn();$('zoomOutBtn').onclick=()=>map.zoomOut();$('fullscreenBtn').onclick=toggleFullscreen;$('startNavBtn').onclick=startNavigation;if($('editRouteBtn'))$('editRouteBtn').onclick=()=>{setRouteReadyFocus(false);const card=$('locationsCard');if(card?.classList.contains('is-collapsed'))toggleCardCollapse('locationsCard','collapseLocationsBtn','ri_collapse_locations');setTimeout(()=>card?.scrollIntoView({behavior:'smooth',block:'start'}),80)};$('stopNavBtn').onclick=stopNavigation;$('nextBtn').onclick=()=>moveActive(1);$('prevBtn').onclick=()=>moveActive(-1);$('formBtn').onclick=openForm;$('inspectBtn').onclick=openResultDialog;$('hudNextBtn').onclick=()=>{if(state.activeIndex>=state.route.stops.length-1)stopNavigation();else moveActive(1)};$('manualFormBtn').onclick=()=>{state.arrivalHits=2;updateArrival(true);showToast('Llegada habilitada manualmente','Ahora registra el resultado sin salir de pantalla completa.','success');openResultDialog()};$('catalogSearchBtn').onclick=renderCatalog;$('catalogClearBtn').onclick=clearCatalogFilters;$('addSelectedBtn').onclick=addSelectedCatalog;$('addAllFilteredBtn').onclick=()=>addCatalogArray(filteredCatalog());$('revalidateBtn').onclick=()=>revalidateCatalog(false);['catalogSearch','catDate','catFeeder','catTech'].forEach(id=>$(id).oninput=renderCatalog);$('gmFilterBtn').onclick=renderGeneralMap;$('gmAddAllBtn').onclick=()=>addCatalogArray(filteredGeneralMap());$('gmReloadBtn').onclick=async()=>{setSync('Recargando ubicaciones…');try{await (window.autoSync?window.autoSync(true):autoSync(true))}finally{setTimeout(()=>{initGeneralMap();renderGeneralMap();generalMap?.invalidateSize()},250)}};$('gmZoomIn').onclick=()=>{initGeneralMap();generalMap?.zoomIn()};$('gmZoomOut').onclick=()=>{initGeneralMap();generalMap?.zoomOut()};$('gmFitAll').onclick=()=>{initGeneralMap();const arr=filteredGeneralMap();const pts=arr.filter(x=>Number.isFinite(+x.lat)&&Number.isFinite(+x.lon)).map(x=>[+x.lat,+x.lon]);if(pts.length)generalMap.fitBounds(pts,{padding:[35,35],maxZoom:16});else generalMap.setView([-12.0464,-77.0428],11)};['gmSearch','gmFeeder','gmTech','gmDate'].forEach(id=>$(id).oninput=renderGeneralMap);$('excelBtn').onclick=downloadExcel;$('csvBtn').onclick=downloadCsv;['fDate','fFeeder','fSub','fStatus'].forEach(id=>$(id).oninput=renderHistory);$('saveConfigBtn').onclick=()=>{const entered=$('scriptUrlInput').value.trim();const configured=(window.APP_CONFIG?.SCRIPT_URL||'').trim();state.scriptUrl=(configured&&configured!=='PEGA_AQUI_TU_URL_EXEC')?configured:entered;if(!configured||configured==='PEGA_AQUI_TU_URL_EXEC')localStorage.setItem('ri_script',state.scriptUrl);$('scriptUrlInput').value=state.scriptUrl;if($('temporaryAdminNote')&&localStorage.getItem('ri_migration_complete')==='1')$('temporaryAdminNote').style.display='none';autoSync(true)};$('syncBtn').onclick=()=>autoSync(true);if($('logoutBtn'))$('logoutBtn').onclick=()=>{saveRouteDraft();localStorage.removeItem('ri_user');state.user=null;$('loginPin').value='';$('login').classList.remove('hidden');$('login').style.display='grid';$('logoutBtn').style.display='none';$('userBadge').textContent='Sesión no iniciada';applyRoleVisibility()};$('collapseLocationsBtn').onclick=()=>toggleCardCollapse('locationsCard','collapseLocationsBtn','ri_collapse_locations');$('collapseRouteBtn').onclick=()=>toggleCardCollapse('routeCard','collapseRouteBtn','ri_collapse_route');$('dashApplyBtn').onclick=renderDashboard;$('createUserBtn').onclick=createUser;$('refreshUsersBtn').onclick=()=>autoSync(true);$('saveAssignmentBtn').onclick=saveAssignment;$('refreshAssignmentsBtn').onclick=()=>autoSync(true);$('loadAssignmentBtn').onclick=loadCurrentAssignment;$('dismissAssignmentBtn').onclick=()=>$('assignmentBanner').classList.remove('show');$('assignDate').value=new Date().toISOString().slice(0,10);if($('quickUsersBtn'))$('quickUsersBtn').onclick=()=>showView('users',document.querySelector('.nav button[data-view="users"]'));if($('shareAppBtn'))$('shareAppBtn').onclick=shareApplication;bindUserRegistry();restoreCollapseStates();if($('orderTabsBtn'))$('orderTabsBtn').onclick=openTabOrderModal}
-function showView(id,btn){const admin=isAdmin();if(['settings','users','programming','modifications'].includes(id)&&!admin){showToast('Acceso restringido','Solo el Administrador puede abrir este módulo.','warn');return}document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');$('pageTitle').textContent={planner:'Mi planificador',dashboard:'Panel principal',programming:'Programación',users:'Usuarios',catalog:'Subestaciones',generalmap:'Mapa general',history:'Historial',modifications:'Registro de modificaciones',settings:'Configuración'}[id]||'';if(id==='dashboard')renderEnterpriseDashboard();if(id==='modifications')renderAuditLog();if(id==='users')renderUsers();if(id==='programming')renderAssignments();if(id==='generalmap'){const startMap=()=>{initGeneralMap(false);renderGeneralMap();generalMap?.invalidateSize(true);setTimeout(()=>generalMap?.invalidateSize(true),180);setTimeout(()=>generalMap?.invalidateSize(true),700)};requestAnimationFrame(()=>requestAnimationFrame(startMap))}else setTimeout(()=>map?.invalidateSize?.(),120)}
-
-function initGoogleLoginButton(){
-  const container=$('googleSignInBtn');
-  if(!container||container.dataset.ready==='1')return;
-  container.dataset.ready='1';
-  if(!GOOGLE_CLIENT_ID){$('googleFallback')?.classList.add('show');return;}
-  const render=()=>{
-    try{
-      google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false,cancel_on_tap_outside:true});
-      google.accounts.id.renderButton(container,{theme:'outline',size:'large',shape:'pill',text:'continue_with',width:Math.min(380,container.clientWidth||360)});
-    }catch(e){$('googleFallback')?.classList.add('show');setFb('googleLoginFeedback','No se pudo cargar Google Identity Services.','err')}
-  };
-  if(window.google?.accounts?.id)render();else setTimeout(render,900);
-}
-async function handleGoogleCredential(resp){
-  if(!resp?.credential)return setFb('googleLoginFeedback','Google no entregó credencial. Intenta nuevamente.','err');
-  if(!state.scriptUrl)return setFb('googleLoginFeedback','No está configurada la conexión con Apps Script.','err');
-  try{
-    setFb('googleLoginFeedback','Validando cuenta Google y enviando código…');
-    const data=await jsonp(state.scriptUrl+'?action=requestGoogleLoginCode&idToken='+encodeURIComponent(resp.credential),15000);
-    if(!data?.ok)throw Error(data?.error||'No se pudo enviar el código.');
-    pendingGoogleEmail=data.email||'';
-    $('googleCodeStep')?.classList.add('active');
-    setFb('googleLoginFeedback',data.message||'Código enviado al correo autorizado.','ok');
-  }catch(e){setFb('googleLoginFeedback',e.message||'No se pudo validar la cuenta Google.','err')}
-}
-async function confirmGoogleLoginCode(){
-  const code=textValue($('googleCodeInput')?.value);
-  if(!pendingGoogleEmail)return setFb('googleLoginFeedback','Primero inicia con Google para recibir el código.','err');
-  if(!/^\d{6}$/.test(code))return setFb('googleLoginFeedback','Ingresa el código de 6 dígitos.','err');
-  try{
-    $('confirmGoogleCodeBtn').disabled=true;
-    setFb('googleLoginFeedback','Verificando código…');
-    const data=await jsonp(state.scriptUrl+'?action=confirmGoogleLoginCode&email='+encodeURIComponent(pendingGoogleEmail)+'&code='+encodeURIComponent(code),15000);
-    if(!data?.ok||!data.user)throw Error(data?.error||'Código incorrecto o vencido.');
-    await finishLoginWithUser(data.user);
-    showToast('Bienvenido',data.user.name||data.user.email,'success');
-  }catch(e){setFb('googleLoginFeedback',e.message||'No se pudo completar el acceso.','err')}
-  finally{$('confirmGoogleCodeBtn').disabled=false}
-}
-async function finishLoginWithUser(user){
-  state.user=user;
-  if(normalizedRole(state.user.role)==='Administrador principal'&&state.user.username!=='admin')localStorage.setItem('ri_migration_complete','1');
-  localStorage.setItem('ri_user',JSON.stringify(state.user));
-  $('login').classList.add('hidden');$('login').style.display='none';
-  $('userBadge').textContent=(state.user.name||state.user.email||state.user.username)+' ('+state.user.role+')';
-  $('logoutBtn').style.display='inline-flex';
-  applyRoleVisibility();
-  await autoSync(true);
-  await loadUserPlannerCloud(true);
-  showView('dashboard',document.querySelector('.nav button[data-view="dashboard"]'));
-  renderEnterpriseDashboard();
-}
-
-let loginInProgress=false;async function login(event){event?.preventDefault?.();event?.stopPropagation?.();if(loginInProgress)return false;const username=textValue($('loginName')?.value).toLowerCase();const pin=textValue($('loginPin')?.value);if(!username||!pin){setFb('loginFeedback','Ingresa usuario y PIN.','err');return false}if(!state.scriptUrl){setFb('loginFeedback','La URL de Apps Script no está configurada.','err');return false}try{loginInProgress=true;$('loginBtn').disabled=true;setFb('loginFeedback','Verificando cuenta…');const data=await jsonp(state.scriptUrl+'?action=login&username='+encodeURIComponent(username)+'&pin='+encodeURIComponent(pin),12000);if(!data?.ok||!data.user)throw Error(data?.error||'Usuario o PIN incorrecto.');await finishLoginWithUser(data.user);showToast('Bienvenido',data.user.name,'success')}catch(e){setFb('loginFeedback',e.message||'No se pudo iniciar sesión.','err')}finally{loginInProgress=false;$('loginBtn').disabled=false}return false}
+function visibleNavButtons(){return [...document.querySelectorAll('.nav button[data-view]')]}
+function applySavedTabOrder(){let order=[];try{order=JSON.parse(localStorage.getItem(tabOrderKey())||'[]')}catch{};const nav=document.querySelector('.nav');if(!nav||!Array.isArray(order))return;const mapBtn=new Map(visibleNavButtons().map(b=>[b.dataset.view,b]));order.forEach(v=>{const b=mapBtn.get(v);if(b)nav.insertBefore(b,$('orderTabsBtn'))});visibleNavButtons().filter(b=>!order.includes(b.dataset.view)).forEach(b=>nav.insertBefore(b,$('orderTabsBtn')))}
+function saveTabOrder(order){localStorage.setItem(tabOrderKey(),JSON.stringify(order));applySavedTabOrder()}
+function openTabOrderModal(){document.querySelector('.tab-order-modal')?.remove();const buttons=visibleNavButtons().filter(b=>getComputedStyle(b).display!=='none');const modal=document.createElement('div');modal.className='tab-order-modal';modal.innerHTML=`<div class="tab-order-box"><div class="tab-order-head"><div><h3 style="margin:0">Ordenar pestañas</h3><div class="nav-order-note">Este orden se guarda solo para tu usuario.</div></div><button class="collapse-btn" data-close>×</button></div><div class="tab-order-list"></div><div class="btns" style="margin-top:14px"><button class="btn" data-reset>Restablecer</button><button class="btn primary" data-save>Guardar orden</button></div></div>`;const list=modal.querySelector('.tab-order-list');buttons.forEach((b,i)=>{const row=document.createElement('div');row.className='tab-order-item';row.dataset.view=b.dataset.view;row.innerHTML=`<b>${b.textContent.trim()}</b><button data-up aria-label="Subir">↑</button><button data-down aria-label="Bajar">↓</button>`;row.querySelector('[data-up]').onclick=()=>{const prev=row.previousElementSibling;if(prev)list.insertBefore(row,prev)};row.querySelector('[data-down]').onclick=()=>{const next=row.nextElementSibling;if(next)list.insertBefore(next,row)};list.appendChild(row)});modal.querySelector('[data-close]').onclick=()=>modal.remove();modal.querySelector('[data-reset]').onclick=()=>{localStorage.removeItem(tabOrderKey());location.reload()};modal.querySelector('[data-save]').onclick=()=>{saveTabOrder([...list.children].map(x=>x.dataset.view));modal.remove();showToast('Orden guardado','Las pestañas quedaron organizadas para tu usuario.','success')};modal.onclick=e=>{if(e.target===modal)modal.remove()};document.body.appendChild(modal)}
+function bind(){applySavedTabOrder();document.querySelectorAll('.nav button[data-view]').forEach(b=>b.onclick=()=>showView(b.dataset.view,b));bindLogin();$('addRowBtn').onclick=()=>addRow();$('templateBtn').onclick=downloadImportTemplate;$('excelImportInput').onchange=handleExcelImport;$('loadPreviewBtn').onclick=loadValidImportRows;$('cancelImportBtn').onclick=clearImportPreview;$('saveLocationsBtn').onclick=saveLocations;$('optimizeBtn').onclick=optimize;$('clearBtn').onclick=()=>{if(!confirm('¿Limpiar todas las ubicaciones de la ruta actual? Esta es la única acción que las borrará.'))return;state.rows=[];state.route=null;state.activeIndex=0;setRouteReadyFocus(false);try{localStorage.removeItem(plannerStorageKey());localStorage.removeItem('ri_route_draft');cloudWrite('planner',{userKey:userKey(),userName:state.user?.name||'',role:state.user?.role||'',payload:JSON.stringify({version:3,rows:[],route:null,activeIndex:0,start:state.start,updatedAt:new Date().toISOString()}),updatedAt:new Date().toISOString()})}catch{}renderRows();drawAll();renderRoute();showToast('Ubicaciones limpiadas','La ruta actual se eliminó correctamente.','success')};$('useGpsBtn').onclick=()=>freshGps(true);$('locateBtn').onclick=()=>freshGps(true);$('zoomInBtn').onclick=()=>map.zoomIn();$('zoomOutBtn').onclick=()=>map.zoomOut();$('fullscreenBtn').onclick=toggleFullscreen;$('startNavBtn').onclick=startNavigation;if($('editRouteBtn'))$('editRouteBtn').onclick=()=>{setRouteReadyFocus(false);const card=$('locationsCard');if(card?.classList.contains('is-collapsed'))toggleCardCollapse('locationsCard','collapseLocationsBtn','ri_collapse_locations');setTimeout(()=>card?.scrollIntoView({behavior:'smooth',block:'start'}),80)};$('stopNavBtn').onclick=stopNavigation;$('nextBtn').onclick=()=>moveActive(1);$('prevBtn').onclick=()=>moveActive(-1);$('formBtn').onclick=openForm;$('inspectBtn').onclick=openResultDialog;$('hudNextBtn').onclick=()=>{if(state.activeIndex>=state.route.stops.length-1)stopNavigation();else moveActive(1)};$('manualFormBtn').onclick=()=>{state.arrivalHits=2;updateArrival(true);showToast('Llegada habilitada manualmente','Ahora registra el resultado sin salir de pantalla completa.','success');openResultDialog()};$('catalogSearchBtn').onclick=renderCatalog;$('catalogClearBtn').onclick=clearCatalogFilters;$('addSelectedBtn').onclick=addSelectedCatalog;$('addAllFilteredBtn').onclick=()=>addCatalogArray(filteredCatalog());$('revalidateBtn').onclick=()=>revalidateCatalog(false);['catalogSearch','catDate','catFeeder','catTech'].forEach(id=>$(id).oninput=renderCatalog);$('gmFilterBtn').onclick=renderGeneralMap;$('gmAddAllBtn').onclick=()=>addCatalogArray(filteredGeneralMap());$('gmReloadBtn').onclick=()=>{autoSync(true);setTimeout(()=>{initGeneralMap();renderGeneralMap();generalMap?.invalidateSize()},500)};$('gmZoomIn').onclick=()=>{initGeneralMap();generalMap?.zoomIn()};$('gmZoomOut').onclick=()=>{initGeneralMap();generalMap?.zoomOut()};$('gmFitAll').onclick=()=>{initGeneralMap();const arr=filteredGeneralMap();const pts=arr.filter(x=>Number.isFinite(+x.lat)&&Number.isFinite(+x.lon)).map(x=>[+x.lat,+x.lon]);if(pts.length)generalMap.fitBounds(pts,{padding:[35,35],maxZoom:16});else generalMap.setView([-12.0464,-77.0428],11)};['gmSearch','gmFeeder','gmTech','gmDate'].forEach(id=>$(id).oninput=renderGeneralMap);$('excelBtn').onclick=downloadExcel;$('csvBtn').onclick=downloadCsv;['fDate','fFeeder','fSub','fStatus'].forEach(id=>$(id).oninput=renderHistory);$('saveConfigBtn').onclick=()=>{const entered=$('scriptUrlInput').value.trim();const configured=(window.APP_CONFIG?.SCRIPT_URL||'').trim();state.scriptUrl=(configured&&configured!=='PEGA_AQUI_TU_URL_EXEC')?configured:entered;if(!configured||configured==='PEGA_AQUI_TU_URL_EXEC')localStorage.setItem('ri_script',state.scriptUrl);$('scriptUrlInput').value=state.scriptUrl;autoSync(true)};$('syncBtn').onclick=()=>autoSync(true);if($('logoutBtn'))$('logoutBtn').onclick=()=>{saveRouteDraft();localStorage.removeItem('ri_user');state.user=null;$('loginPin').value='';$('login').classList.remove('hidden');$('login').style.display='grid';$('logoutBtn').style.display='none';$('userBadge').textContent='Sesión no iniciada';applyRoleVisibility()};$('collapseLocationsBtn').onclick=()=>toggleCardCollapse('locationsCard','collapseLocationsBtn','ri_collapse_locations');$('collapseRouteBtn').onclick=()=>toggleCardCollapse('routeCard','collapseRouteBtn','ri_collapse_route');$('dashApplyBtn').onclick=renderDashboard;$('createUserBtn').onclick=createUser;$('refreshUsersBtn').onclick=()=>autoSync(true);$('saveAssignmentBtn').onclick=saveAssignment;$('refreshAssignmentsBtn').onclick=()=>autoSync(true);$('loadAssignmentBtn').onclick=loadCurrentAssignment;$('dismissAssignmentBtn').onclick=()=>$('assignmentBanner').classList.remove('show');$('assignDate').value=new Date().toISOString().slice(0,10);if($('quickUsersBtn'))$('quickUsersBtn').onclick=()=>showView('users',document.querySelector('.nav button[data-view="users"]'));restoreCollapseStates();if($('orderTabsBtn'))$('orderTabsBtn').onclick=openTabOrderModal}
+function showView(id,btn){const admin=isAdmin();if(['settings','users','programming'].includes(id)&&!admin){showToast('Acceso restringido','Solo el Administrador puede abrir este módulo.','warn');return}document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');$('pageTitle').textContent={planner:'Mi planificador',dashboard:'Dashboard de inspecciones',programming:'Programación',users:'Usuarios',catalog:'Subestaciones',generalmap:'Mapa general',history:'Historial',settings:'Configuración'}[id]||'';if(id==='dashboard')renderDashboard();if(id==='users')renderUsers();if(id==='programming')renderAssignments();if(id==='generalmap'){const startMap=()=>{initGeneralMap(false);renderGeneralMap();generalMap?.invalidateSize(true);setTimeout(()=>generalMap?.invalidateSize(true),180);setTimeout(()=>generalMap?.invalidateSize(true),700)};requestAnimationFrame(()=>requestAnimationFrame(startMap))}else setTimeout(()=>map?.invalidateSize?.(),120)}
+async function login(event){event?.preventDefault?.();event?.stopPropagation?.();const username=textValue($('loginName')?.value).toLowerCase();const pin=textValue($('loginPin')?.value);if(!username||!pin){setFb('loginFeedback','Ingresa usuario y PIN.','err');return false}if(!state.scriptUrl){setFb('loginFeedback','La URL de Apps Script no está configurada.','err');return false}try{$('loginBtn').disabled=true;setFb('loginFeedback','Verificando cuenta…');const data=await jsonp(state.scriptUrl+'?action=login&username='+encodeURIComponent(username)+'&pin='+encodeURIComponent(pin));if(!data?.ok||!data.user)throw Error(data?.error||'Usuario o PIN incorrecto.');state.user=data.user;localStorage.setItem('ri_user',JSON.stringify(state.user));$('login').classList.add('hidden');$('login').style.display='none';$('userBadge').textContent=state.user.name+' ('+state.user.role+')';$('logoutBtn').style.display='inline-flex';applyRoleVisibility();await autoSync(true);await loadUserPlannerCloud(true);showToast('Bienvenido',state.user.name,'success')}catch(e){setFb('loginFeedback',e.message||'No se pudo iniciar sesión.','err')}finally{$('loginBtn').disabled=false}return false}
 function initMap(){map=L.map('map',{zoomControl:false,rotate:true,bearing:0,touchRotate:true,shiftKeyRotate:true,rotateControl:false}).setView([-12.0464,-77.0428],11);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'© OpenStreetMap'}).addTo(map);markers.addTo(map);routeGroup.addTo(map);liveGroup.addTo(map);map.on('dragstart',()=>{});map.on('rotate',()=>{state.mapRotation=typeof map.getBearing==='function'?map.getBearing():0;updateCompass();updateVehicle()})}
 function textValue(v){return v===null||v===undefined?'':String(v).trim()}
 function normalizeStatus(v){const x=textValue(v).trim().toLowerCase();if(['inspeccionado','inspeccionada'].includes(x))return 'Inspeccionada';if(['no inspeccionado','no inspeccionada','no se pudo inspeccionar'].includes(x))return 'No inspeccionada';if(x==='reprogramado'||x==='reprogramada')return 'Reprogramada';if(x==='observado'||x==='observada')return 'Observada';if(x==='en ruta')return 'En ruta';return 'Pendiente'}
@@ -472,94 +262,10 @@ function normalizeHeader(v){return String(v??'').trim().toLowerCase().normalize(
 function pickField(row,aliases){const entries=Object.entries(row||{});for(const a of aliases){const hit=entries.find(([k])=>normalizeHeader(k)===a);if(hit&&String(hit[1]??'').trim()!=='')return hit[1]}return ''}
 function numOrNull(v){if(v===null||v===undefined||v==='')return null;const n=Number(String(v).replace(',','.'));return Number.isFinite(n)?n:null}
 function downloadImportTemplate(){const sample=[{'Alimentador':'ALM-12','Subestación':'SE-0453','Dirección / URL':'https://maps.google.com/...','Latitud':'','Longitud':''},{'Alimentador':'ALM-08','Subestación':'SE-1024','Dirección / URL':'-12.17853, -77.00297','Latitud':-12.17853,'Longitud':-77.00297}];const ws=XLSX.utils.json_to_sheet(sample);ws['!cols']=[{wch:18},{wch:20},{wch:52},{wch:15},{wch:15}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Subestaciones');XLSX.writeFile(wb,'plantilla-subestaciones.xlsx')}
-async function handleExcelImport(e){
-  const file=e.target.files?.[0];
-  if(!file)return;
-  const scrollY=window.scrollY;
-  const panel=$('importPreview');
-  try{
-    setFb('routeFeedback','Leyendo y validando archivo Excel…');
-    const data=await file.arrayBuffer();
-    const wb=XLSX.read(data,{type:'array'});
-    const ws=wb.Sheets[wb.SheetNames[0]];
-    const raw=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});
-    if(!raw.length)throw Error('El archivo no contiene filas.');
-    const seen=new Set();
-    state.importRows=raw.map((row,i)=>{
-      const feeder=String(pickField(row,['alimentador','feeder'])).trim();
-      const substation=String(pickField(row,['subestacion','sub estacion','se','substation'])).trim();
-      const address=String(pickField(row,['direccion url','direccion','url','direccion o url','direccion coordenadas','address'])).trim();
-      const lat=numOrNull(pickField(row,['latitud','latitude','lat']));
-      const lon=numOrNull(pickField(row,['longitud','longitude','lon','lng']));
-      const key=(feeder+'|'+substation).toUpperCase();
-      const errors=[];
-      if(!feeder)errors.push('Falta alimentador');
-      if(!substation)errors.push('Falta subestación');
-      if(!address&&!(Number.isFinite(lat)&&Number.isFinite(lon)))errors.push('Falta dirección/URL o coordenadas');
-      if((lat!==null||lon!==null)&&!(Number.isFinite(lat)&&Number.isFinite(lon)))errors.push('Coordenadas incompletas');
-      if(key!=='|'&&seen.has(key))errors.push('Duplicado en archivo');
-      seen.add(key);
-      const exists=state.catalog.some(x=>(x.feeder+'|'+x.substation).toUpperCase()===key);
-      return {row:i+2,feeder,substation,address:address||(Number.isFinite(lat)&&Number.isFinite(lon)?`${lat}, ${lon}`:''),lat,lon,errors,exists};
-    });
-    const result=applyValidImportRows();
-    renderImportPreview(result);
-    setFb('routeFeedback',`Importación completada: ${result.loaded} fila(s) cargada(s), ${result.updated} actualizada(s), ${result.invalid} con error.` ,result.invalid?'err':'ok');
-    requestAnimationFrame(()=>{
-      window.scrollTo({top:scrollY,behavior:'instant'});
-      panel?.scrollIntoView({behavior:'smooth',block:'nearest'});
-    });
-  }catch(err){
-    state.importRows=[];
-    renderImportPreview();
-    setFb('routeFeedback',err.message,'err');
-    requestAnimationFrame(()=>window.scrollTo({top:scrollY,behavior:'instant'}));
-  }finally{e.target.value=''}
-}
-
-function applyValidImportRows(){
-  const valid=state.importRows.filter(r=>!r.errors.length);
-  const invalid=state.importRows.length-valid.length;
-  let loaded=0,updated=0;
-  const byKey=new Map();
-  state.rows.filter(r=>r.feeder||r.substation||r.address).forEach((r,i)=>byKey.set(((r.feeder||'')+'|'+(r.substation||'')).toUpperCase(),i));
-  valid.forEach(r=>{
-    const key=(r.feeder+'|'+r.substation).toUpperCase();
-    const item={feeder:r.feeder,substation:r.substation,address:r.address,lat:r.lat,lon:r.lon,status:'Pendiente'};
-    if(byKey.has(key)){
-      state.rows[byKey.get(key)]={...state.rows[byKey.get(key)],...item};
-      updated++;
-    }else{
-      if(state.rows.length===1&&!state.rows[0].feeder&&!state.rows[0].substation&&!state.rows[0].address){state.rows=[]}
-      state.rows.push(item);
-      byKey.set(key,state.rows.length-1);
-      loaded++;
-    }
-  });
-  saveRouteDraft();
-  renderRows();
-  drawAll();
-  return {read:state.importRows.length,loaded,updated,invalid,valid:valid.length};
-}
-function renderImportPreview(result=null){
-  const box=$('importPreview'),body=$('importPreviewBody'),sum=$('importSummary');
-  if(!state.importRows.length){box.classList.remove('show');body.innerHTML='';sum.innerHTML='';return}
-  const valid=state.importRows.filter(r=>!r.errors.length);
-  const invalid=state.importRows.length-valid.length;
-  const existing=valid.filter(r=>r.exists).length;
-  const r=result||{read:state.importRows.length,loaded:valid.length-existing,updated:existing,invalid};
-  sum.innerHTML=`<div class="import-complete"><b>Importación completada</b></div><span class="chip">${r.read} leídas</span><span class="chip">${r.loaded} nuevas cargadas</span><span class="chip">${r.updated} actualizadas</span><span class="chip ${r.invalid?'bad':''}">${r.invalid} con error</span>`;
-  body.innerHTML='';
-  state.importRows.slice(0,200).forEach(row=>{
-    const tr=document.createElement('tr');
-    if(row.errors.length)tr.className='row-error';
-    tr.innerHTML=`<td>${row.row}</td><td>${esc(row.feeder)}</td><td>${esc(row.substation)}</td><td>${esc(row.address)}</td><td>${row.lat??''}</td><td>${row.lon??''}</td><td>${row.errors.length?esc(row.errors.join('; ')):(row.exists?'Actualizada':'Cargada')}</td>`;
-    body.appendChild(tr)
-  });
-  box.classList.add('show')
-}
+async function handleExcelImport(e){const file=e.target.files?.[0];if(!file)return;try{setFb('routeFeedback','Leyendo archivo Excel…');const data=await file.arrayBuffer();const wb=XLSX.read(data,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const raw=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});if(!raw.length)throw Error('El archivo no contiene filas.');const seen=new Set();state.importRows=raw.map((row,i)=>{const feeder=String(pickField(row,['alimentador','feeder'])).trim();const substation=String(pickField(row,['subestacion','sub estacion','se','substation'])).trim();const address=String(pickField(row,['direccion url','direccion','url','direccion o url','direccion coordenadas','address'])).trim();const lat=numOrNull(pickField(row,['latitud','latitude','lat']));const lon=numOrNull(pickField(row,['longitud','longitude','lon','lng']));const key=(feeder+'|'+substation).toUpperCase();const errors=[];if(!feeder)errors.push('Falta alimentador');if(!substation)errors.push('Falta subestación');if(!address&&!(Number.isFinite(lat)&&Number.isFinite(lon)))errors.push('Falta dirección/URL o coordenadas');if((lat!==null||lon!==null)&&!(Number.isFinite(lat)&&Number.isFinite(lon)))errors.push('Coordenadas incompletas');if(key!=='|'&&seen.has(key))errors.push('Duplicado en archivo');seen.add(key);const exists=state.catalog.some(x=>(x.feeder+'|'+x.substation).toUpperCase()===key);return {row:i+2,feeder,substation,address:address||(Number.isFinite(lat)&&Number.isFinite(lon)?`${lat}, ${lon}`:''),lat,lon,errors,exists}});renderImportPreview();setFb('routeFeedback',`Archivo leído: ${state.importRows.length} filas.`,'ok')}catch(err){state.importRows=[];renderImportPreview();setFb('routeFeedback',err.message,'err')}finally{e.target.value=''}}
+function renderImportPreview(){const box=$('importPreview'),body=$('importPreviewBody'),sum=$('importSummary');if(!state.importRows.length){box.classList.remove('show');body.innerHTML='';sum.innerHTML='';return}const valid=state.importRows.filter(r=>!r.errors.length);const invalid=state.importRows.length-valid.length;const existing=valid.filter(r=>r.exists).length;sum.innerHTML=`<span class="chip">${state.importRows.length} filas</span><span class="chip">${valid.length} válidas</span><span class="chip">${existing} actualizarán existentes</span>${invalid?`<span class="chip bad">${invalid} con observaciones</span>`:''}`;body.innerHTML='';state.importRows.slice(0,200).forEach(r=>{const tr=document.createElement('tr');if(r.errors.length)tr.className='row-error';tr.innerHTML=`<td>${r.row}</td><td>${esc(r.feeder)}</td><td>${esc(r.substation)}</td><td>${esc(r.address)}</td><td>${r.lat??''}</td><td>${r.lon??''}</td><td>${r.errors.length?esc(r.errors.join('; ')):(r.exists?'Actualizar':'Nueva')}</td>`;body.appendChild(tr)});box.classList.add('show')}
 function clearImportPreview(){state.importRows=[];renderImportPreview()}
-
+function loadValidImportRows(){const valid=state.importRows.filter(r=>!r.errors.length);if(!valid.length)return setFb('routeFeedback','No hay filas válidas para cargar.','err');state.rows=valid.map(r=>({feeder:r.feeder,substation:r.substation,address:r.address,lat:r.lat,lon:r.lon}));renderRows();setFb('routeFeedback',`${valid.length} filas cargadas. Revisa y presiona Guardar ubicaciones.`,'ok');clearImportPreview()}
 async function saveLocations(){const valid=state.rows.map(normalizePlace).filter(r=>r.feeder&&r.substation&&r.address);if(!valid.length)return setFb('routeFeedback','Completa Alimentador, Subestación y Dirección / URL.','err');$('saveLocationsBtn').disabled=true;let ok=0,fail=0;try{for(let i=0;i<valid.length;i++){const r=valid[i];$('saveProgress').textContent=`Procesando ${i+1} de ${valid.length}…`;try{if(!Number.isFinite(r.lat)||!Number.isFinite(r.lon)){const loc=await resolvePlace(r.address);r.lat=loc.lat;r.lon=loc.lon;r.address=loc.label||r.address}await upsertCatalog(r);ok++}catch(e){fail++;console.warn('No se pudo guardar',r,e)}}$('saveProgress').textContent='';setFb('routeFeedback',`${ok} ubicación(es) guardadas${fail?`; ${fail} no pudieron ubicarse`:''}.`,fail?'err':'ok');if(ok)autoSync(true)}finally{$('saveLocationsBtn').disabled=false}}
 
 function setRouteReadyFocus(enabled){const planner=$('planner');if(!planner)return;const ready=!!enabled&&!!state.route&&Array.isArray(state.route.stops)&&state.route.stops.length>0;planner.classList.toggle('route-ready-focus',ready);if($('startNavBtn'))$('startNavBtn').disabled=!ready}
@@ -658,18 +364,10 @@ function renderDashboard(){const box=$('dashboardMetrics');if(!box)return;const 
  const alerts=[];if(counts.Observada)alerts.push(`${counts.Observada} inspección(es) observada(s) requieren seguimiento.`);if(counts.Reprogramada)alerts.push(`${counts.Reprogramada} trabajo(s) reprogramado(s).`);if(counts['No inspeccionada'])alerts.push(`${counts['No inspeccionada']} punto(s) no pudieron inspeccionarse.`);$('dashboardAlerts').innerHTML=alerts.map(x=>`<div class="data-item"><div>${esc(x)}</div></div>`).join('')||'<div class="empty-state">Sin alertas pendientes.</div>';populateDashboardTechs()}
 function populateDashboardTechs(){const sel=$('dashTech');if(!sel)return;const cur=sel.value;const vals=[...new Set(state.catalog.map(x=>textValue(x.technician)).filter(Boolean))].sort();sel.innerHTML='<option value="">Todos los técnicos</option>'+vals.map(v=>`<option>${esc(v)}</option>`).join('');sel.value=cur}
 function populateAdminSelects(){const sel=$('assignUser');if(!sel)return;const cur=sel.value;const active=state.users.filter(u=>String(u.active)!=='false'&&u.role==='Inspector');sel.innerHTML=active.map(u=>`<option value="${esc(u.username)}">${esc(u.name)} (${esc(u.username)})</option>`).join('');if(cur)sel.value=cur}
-function userStatus(u){if(String(u.deleted).toLowerCase()==='true')return 'deleted';if(String(u.active).toLowerCase()==='false'&&String(u.blocked).toLowerCase()==='true')return 'blocked';if(String(u.active).toLowerCase()==='false')return 'inactive';return 'active'}
-function userStats(username){const key=textValue(username).toLowerCase();const inspections=state.inspections.filter(x=>textValue(x.username).toLowerCase()===key).length;const history=state.history.filter(x=>textValue(x.username||x.user).toLowerCase()===key).length;return {inspections,history}}
-function filteredUsers(){const q=textValue($('userSearch')?.value).toLowerCase(),role=$('userRoleFilter')?.value||'',status=$('userStatusFilter')?.value||'';return state.users.filter(u=>(!q||[u.username,u.name,u.technician].some(v=>textValue(v).toLowerCase().includes(q)))&&(!role||normalizedRole(u.role)===role)&&(!status||userStatus(u)===status))}
-function renderUsers(){const box=$('userList');if(!box)return;box.innerHTML=filteredUsers().map(u=>{const st=userStatus(u),stats=userStats(u.username),protectedUser=String(u.protected).toLowerCase()==='true'||normalizedRole(u.role)==='Administrador principal';const badge=st==='active'?'Activo':st==='blocked'?'Bloqueado':st==='inactive'?'Inactivo':'Eliminado lógicamente';return `<div class="data-item ${st!=='active'?'inactive ':''}${st==='deleted'?'user-deleted':''}"><div><b>${esc(u.name||u.username)}</b> <span class="role-chip ${protectedUser?'user-protected':''}">${esc(normalizedRole(u.role))}</span><small>@${esc(u.username)} · ${esc(badge)} · Técnico: ${esc(u.technician||'—')}</small><div class="user-meta-grid"><span>Creado: <b>${u.createdAt?new Date(u.createdAt).toLocaleDateString('es-PE'):'—'}</b></span><span>Último acceso: <b>${u.lastAccess?new Date(u.lastAccess).toLocaleString('es-PE'):'—'}</b></span><span>Creado por: <b>${esc(u.createdBy||'Sistema')}</b></span><span>Inspecciones: <b>${stats.inspections}</b></span><span>Registros: <b>${stats.history}</b></span><span>Última actividad: <b>${esc(u.lastActivity?new Date(u.lastActivity).toLocaleString('es-PE'):(u.lastAccess?new Date(u.lastAccess).toLocaleString('es-PE'):'—'))}</b></span></div></div><div class="data-actions">${protectedUser?'<span class="role-chip user-protected">Protegido</span>':`${isPrimaryAdmin()&&normalizedRole(u.role)==='Administrador secundario'?`<button class="btn user-primary" data-user="${esc(u.username)}">Hacer principal</button>`:''}<button class="btn user-edit" data-user="${esc(u.username)}">Editar</button><button class="btn user-pin" data-user="${esc(u.username)}">Resetear PIN</button><button class="btn user-toggle" data-user="${esc(u.username)}">${st==='blocked'?'Desbloquear':'Bloquear'}</button><button class="btn user-disable" data-user="${esc(u.username)}">${st==='inactive'?'Reactivar':'Desactivar'}</button><button class="btn user-danger user-delete" data-user="${esc(u.username)}">Eliminar</button>`}</div></div>`}).join('')||'<div class="empty-state">No hay usuarios para estos filtros.</div>';box.querySelectorAll('.user-toggle').forEach(b=>b.onclick=()=>setUserState(b.dataset.user,'blocked'));box.querySelectorAll('.user-disable').forEach(b=>b.onclick=()=>setUserState(b.dataset.user,'inactive'));box.querySelectorAll('.user-delete').forEach(b=>b.onclick=()=>deleteUserLogical(b.dataset.user));box.querySelectorAll('.user-pin').forEach(b=>b.onclick=()=>resetUserPin(b.dataset.user));box.querySelectorAll('.user-edit').forEach(b=>b.onclick=()=>editUser(b.dataset.user));box.querySelectorAll('.user-primary').forEach(b=>b.onclick=()=>transferPrimaryAdmin(b.dataset.user))}
-function bindUserRegistry(){if(!$('showCreateUserBtn'))return;$('showCreateUserBtn').onclick=()=>{$('userCreatePanel').style.display='grid';$('userRegistryPanel').style.display='none';$('showCreateUserBtn').classList.add('active');$('showRegistryBtn').classList.remove('active')};$('showRegistryBtn').onclick=()=>{$('userCreatePanel').style.display='none';$('userRegistryPanel').style.display='block';$('showRegistryBtn').classList.add('active');$('showCreateUserBtn').classList.remove('active');renderUsers()};['userSearch','userRoleFilter','userStatusFilter'].forEach(id=>$(id).oninput=renderUsers);$('clearUserFiltersBtn').onclick=()=>{$('userSearch').value='';$('userRoleFilter').value='';$('userStatusFilter').value='';renderUsers()}}
-async function createUser(){const payload={username:textValue($('newUsername').value).toLowerCase(),name:textValue($('newFullName').value),pin:textValue($('newPin').value),role:$('newRole').value,email:textValue($('newEmail')?.value),technician:textValue($('newTechnician').value),mustChangePin:true,active:true,blocked:false,deleted:false,protected:false,createdBy:state.user?.username||'',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};if(!payload.username||!payload.name||payload.pin.length<4)return setFb('userFeedback','Completa usuario, nombre y un PIN de al menos 4 dígitos.','err');cloudWrite('adminUser',payload);setFb('userFeedback','Usuario creado. Aparecerá en Usuarios registrados.','ok');['newUsername','newFullName','newEmail','newPin','newTechnician'].forEach(id=>$(id).value='');setTimeout(()=>{autoSync(true);$('showRegistryBtn')?.click()},1200)}
-function setUserState(username,mode){const u=state.users.find(x=>x.username===username);if(!u)return;if(String(u.protected).toLowerCase()==='true'||normalizedRole(u.role)==='Administrador principal')return showToast('Cuenta protegida','No puede modificarse desde esta acción.','warn');const next={...u,updatedAt:new Date().toISOString()};if(mode==='blocked'){const block=userStatus(u)!=='blocked';next.active=!block;next.blocked=block;next.deleted=false}else{const deactivate=userStatus(u)!=='inactive';next.active=!deactivate;next.blocked=false;next.deleted=false}cloudWrite('adminUser',next);setTimeout(()=>autoSync(true),900)}
-function deleteUserLogical(username){const u=state.users.find(x=>x.username===username);if(!u)return;if(String(u.protected).toLowerCase()==='true'||normalizedRole(u.role)==='Administrador principal')return showToast('Cuenta protegida','No se puede eliminar al Administrador principal.','warn');if(!confirm(`¿Eliminar lógicamente a ${u.name||username}? Su información histórica seguirá visible.`))return;cloudWrite('adminUser',{...u,active:false,blocked:false,deleted:true,deletedAt:new Date().toISOString(),deletedBy:state.user?.username||'',updatedAt:new Date().toISOString()});setTimeout(()=>autoSync(true),900)}
-function resetUserPin(username){const pin=prompt('Nuevo PIN temporal para '+username+':');if(!pin||pin.length<4)return;const u=state.users.find(x=>x.username===username);cloudWrite('adminUser',{...u,pin,mustChangePin:true,updatedAt:new Date().toISOString()});showToast('PIN restablecido','El usuario deberá usar el PIN temporal.','success')}
-function editUser(username){const u=state.users.find(x=>x.username===username);if(!u)return;const name=prompt('Nombre completo:',u.name||'');if(name===null)return;const role=prompt('Rol (Inspector, Supervisor, Programador, Consulta, Administrador secundario):',normalizedRole(u.role));if(role===null)return;const allowed=['Inspector','Supervisor','Programador','Consulta','Administrador secundario'];if(!allowed.includes(role))return showToast('Rol inválido','Selecciona un rol permitido.','warn');cloudWrite('adminUser',{...u,name:textValue(name),role,updatedAt:new Date().toISOString()});setTimeout(()=>autoSync(true),900)}
-function transferPrimaryAdmin(username){const u=state.users.find(x=>x.username===username);if(!u||!isPrimaryAdmin())return;if(!confirm(`¿Convertir a ${u.name||username} en Administrador principal? Tu cuenta actual pasará a Administrador secundario.`))return;cloudWrite('transferPrimary',{targetUsername:username});localStorage.setItem('ri_migration_complete','1');showToast('Transferencia enviada','Cierra sesión e ingresa con la nueva cuenta principal.','success');setTimeout(()=>autoSync(true),1200)}
-function shareApplication(){const url=location.origin+location.pathname;const text='Rutas de Inspección. Solicita al Administrador tu usuario y PIN para ingresar.';if(navigator.share)navigator.share({title:'Rutas de Inspección',text,url}).catch(()=>{});else navigator.clipboard?.writeText(url).then(()=>showToast('Enlace copiado','Crea primero la cuenta del usuario y luego comparte el enlace.','success')).catch(()=>prompt('Copia este enlace:',url))}
+function renderUsers(){const box=$('userList');if(!box)return;box.innerHTML=state.users.map(u=>`<div class="data-item ${String(u.active)==='false'?'inactive':''}"><div><b>${esc(u.name||u.username)}</b> <span class="role-chip">${esc(u.role)}</span><small>@${esc(u.username)} · Técnico: ${esc(u.technician||'—')} · Último acceso: ${u.lastAccess?new Date(u.lastAccess).toLocaleString('es-PE'):'—'}</small></div><div class="data-actions"><button class="btn user-toggle" data-user="${esc(u.username)}">${String(u.active)==='false'?'Activar':'Bloquear'}</button><button class="btn user-pin" data-user="${esc(u.username)}">Cambiar PIN</button></div></div>`).join('')||'<div class="empty-state">No hay usuarios.</div>';box.querySelectorAll('.user-toggle').forEach(b=>b.onclick=()=>toggleUser(b.dataset.user));box.querySelectorAll('.user-pin').forEach(b=>b.onclick=()=>resetUserPin(b.dataset.user))}
+async function createUser(){const payload={username:textValue($('newUsername').value).toLowerCase(),name:textValue($('newFullName').value),pin:textValue($('newPin').value),role:$('newRole').value,technician:textValue($('newTechnician').value),active:true,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};if(!payload.username||!payload.name||payload.pin.length<4)return setFb('userFeedback','Completa usuario, nombre y un PIN de al menos 4 dígitos.','err');cloudWrite('adminUser',payload);setFb('userFeedback','Usuario enviado. Pulsa Actualizar en unos segundos.','ok');['newUsername','newFullName','newPin','newTechnician'].forEach(id=>$(id).value='');setTimeout(()=>autoSync(true),1200)}
+function toggleUser(username){const u=state.users.find(x=>x.username===username);if(!u)return;cloudWrite('adminUser',{...u,active:String(u.active)==='false',updatedAt:new Date().toISOString()});setTimeout(()=>autoSync(true),900)}
+function resetUserPin(username){const pin=prompt('Nuevo PIN para '+username+':');if(!pin||pin.length<4)return;const u=state.users.find(x=>x.username===username);cloudWrite('adminUser',{...u,pin,updatedAt:new Date().toISOString()});showToast('PIN actualizado','El cambio se guardará en la base.','success')}
 function assignmentStatus(a){return textValue(a.status)||'Programada'}
 function renderAssignments(){const box=$('assignmentList');if(!box)return;box.innerHTML=state.assignments.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(a=>`<div class="data-item"><div><b>${esc(a.date)} · ${esc(a.userName||a.username)}</b><small>${esc(a.feeder||'Varios')} · ${esc(a.priority||'Normal')} · ${String(a.substations||'').split(/[,\n]/).filter(Boolean).length} subestación(es)</small><small>${esc(a.notes||'')}</small></div><div class="data-actions"><span class="role-chip">${esc(assignmentStatus(a))}</span><button class="btn assign-load" data-id="${esc(a.id)}">Ver/Cargar</button></div></div>`).join('')||'<div class="empty-state">No hay programaciones.</div>';box.querySelectorAll('.assign-load').forEach(b=>b.onclick=()=>{state.currentAssignment=state.assignments.find(a=>a.id===b.dataset.id);showToast('Programación seleccionada',state.currentAssignment?.userName||'','success')})}
 function saveAssignment(){const username=$('assignUser').value,u=state.users.find(x=>x.username===username);const payload={id:crypto.randomUUID?.()||String(Date.now()),date:$('assignDate').value,username,userName:u?.name||username,technician:u?.technician||u?.name||'',feeder:textValue($('assignFeeder').value),priority:$('assignPriority').value,substations:textValue($('assignSubs').value),notes:textValue($('assignNotes').value),status:'Programada',createdBy:state.user?.username||state.user?.name||'',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};if(!payload.date||!payload.username||!payload.substations)return setFb('assignmentFeedback','Completa fecha, técnico y subestaciones.','err');cloudWrite('assignment',payload);setFb('assignmentFeedback','Programación guardada.','ok');$('assignSubs').value='';$('assignNotes').value='';setTimeout(()=>autoSync(true),1000)}
@@ -680,9 +378,9 @@ function renderHistory(){const b=$('historyBody');if(!b)return;b.innerHTML='';fi
 function exportRows(){return filteredHistory().map(h=>({'Fecha':new Date(h.date).toLocaleString('es-PE'),'Usuario':h.user,'Alimentador':h.feeder,'Subestación':h.substation,'Dirección':h.address,'Orden':h.order,'Distancia km':+(h.distance/1000).toFixed(2),'Tiempo min':Math.round(h.duration/60),'Estado':h.status,'Motivo / observación':h.resultReason||h.resultNote||'','Reprogramada para':h.rescheduledFor||'','Latitud':h.lat,'Longitud':h.lon}))}
 function downloadExcel(){const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(exportRows()),'Historial');XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(state.catalog),'Subestaciones');XLSX.writeFile(wb,'historial-rutas-inspeccion.xlsx')}
 function downloadCsv(){const rows=exportRows();if(!rows.length)return;const keys=Object.keys(rows[0]);const csv=[keys.join(','),...rows.map(r=>keys.map(k=>'"'+String(r[k]??'').replaceAll('"','""')+'"').join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv'}));a.download='historial-rutas.csv';a.click()}
-async function autoSync(force=false){renderCatalog();renderHistory();renderGeneralMap();renderDashboard();renderUsers();renderAssignments();if(!state.scriptUrl){setFb('loginFeedback','No se encontró config.js. Sube config.js junto con index.html.','err');return setSync('Sin URL de Apps Script','err')}try{setSync('Sincronizando…');const data=await jsonp(state.scriptUrl+'?action=all&token='+encodeURIComponent(state.user?.token||''),8000);if(data?.ok===false)throw Error(data.error||'Respuesta inválida');state.catalog=Array.isArray(data.places)?normalizeRows(data.places):normalizeRows(state.catalog);state.history=Array.isArray(data.history)?data.history:state.history;state.users=Array.isArray(data.users)?data.users:state.users;state.inspections=Array.isArray(data.inspections)?data.inspections:state.inspections;state.assignments=Array.isArray(data.assignments)?data.assignments:state.assignments;if(data.currentUser&&state.user){state.user={...state.user,...data.currentUser};localStorage.setItem('ri_user',JSON.stringify(state.user));applySavedTabOrder()}try{localStorage.setItem('ri_catalog_cache',JSON.stringify(state.catalog));localStorage.setItem('ri_history_cache',JSON.stringify(state.history))}catch{}const report=await revalidateCatalog(true);renderCatalog();renderHistory();renderGeneralMap();renderDashboard();renderUsers();renderAssignments();populateAdminSelects();detectCurrentAssignment();loadUserPlannerCloud(false).catch(()=>{});setSync(report.corrected?`Sincronizado · ${report.corrected} coordenada(s) corregida(s)`:'Sincronizado','ok')}catch(e){renderCatalog();renderHistory();renderGeneralMap();setSync(navigator.onLine?'No se pudo conectar · datos guardados':'Sin internet · datos guardados','err');if($('generalMapInfo'))$('generalMapInfo').textContent=state.catalog.length?'No se pudo sincronizar. Se muestran los puntos guardados en este dispositivo.':'Mapa disponible. Aún no hay subestaciones guardadas en este dispositivo.'}}
+async function autoSync(force=false){renderCatalog();renderHistory();renderGeneralMap();renderDashboard();renderUsers();renderAssignments();if(!state.scriptUrl){setFb('loginFeedback','No se encontró config.js. Sube config.js junto con index.html.','err');return setSync('Sin URL de Apps Script','err')}try{setSync('Sincronizando…');const data=await jsonp(state.scriptUrl+'?action=all',8000);if(data?.ok===false)throw Error(data.error||'Respuesta inválida');state.catalog=Array.isArray(data.places)?normalizeRows(data.places):normalizeRows(state.catalog);state.history=Array.isArray(data.history)?data.history:state.history;state.users=Array.isArray(data.users)?data.users:state.users;state.assignments=Array.isArray(data.assignments)?data.assignments:state.assignments;try{localStorage.setItem('ri_catalog_cache',JSON.stringify(state.catalog));localStorage.setItem('ri_history_cache',JSON.stringify(state.history))}catch{}const report=await revalidateCatalog(true);renderCatalog();renderHistory();renderGeneralMap();renderDashboard();renderUsers();renderAssignments();populateAdminSelects();detectCurrentAssignment();loadUserPlannerCloud(false).catch(()=>{});setSync(report.corrected?`Sincronizado · ${report.corrected} coordenada(s) corregida(s)`:'Sincronizado','ok')}catch(e){renderCatalog();renderHistory();renderGeneralMap();setSync(navigator.onLine?'No se pudo conectar · datos guardados':'Sin internet · datos guardados','err');if($('generalMapInfo'))$('generalMapInfo').textContent=state.catalog.length?'No se pudo sincronizar. Se muestran los puntos guardados en este dispositivo.':'Mapa disponible. Aún no hay subestaciones guardadas en este dispositivo.'}}
 function jsonp(url,timeoutMs=10000){return new Promise((res,rej)=>{const cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const s=document.createElement('script');const timer=setTimeout(()=>{delete window[cb];s.remove();rej(Error('Tiempo agotado'))},timeoutMs);window[cb]=d=>{clearTimeout(timer);delete window[cb];s.remove();res(d)};s.onerror=()=>{clearTimeout(timer);delete window[cb];s.remove();rej(Error('Error de red'))};s.src=url+(url.includes('?')?'&':'?')+'callback='+cb;document.head.appendChild(s)})}
-function cloudWrite(type,payload){if(!state.scriptUrl)return;fetch(state.scriptUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:type,payload,token:state.user?.token||'',actor:state.user?.username||''})}).catch(()=>{})}
+function cloudWrite(type,payload){if(!state.scriptUrl)return;fetch(state.scriptUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:type,payload})}).catch(()=>{})}
 function toggleFullscreen(force=false){const w=$('mapWrap');if(force||(!document.fullscreenElement&&!w.classList.contains('fullscreen-fallback'))){if(w.requestFullscreen)w.requestFullscreen().catch(()=>w.classList.add('fullscreen-fallback'));else w.classList.add('fullscreen-fallback')}else{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});w.classList.remove('fullscreen-fallback')}setTimeout(()=>{map.invalidateSize();updateCompass()},300)}
 function rotateMap(){if(typeof map.setBearing!=='function'){setFb('routeFeedback','La rotación no cargó. Recarga la página.','err');return}const next=((map.getBearing?.()||0)+30)%360;map.setBearing(next);state.mapRotation=next;updateCompass();setTimeout(()=>map.invalidateSize(),80)}
 function updateCompass(){const b=typeof map?.getBearing==='function'?map.getBearing():state.mapRotation||0;state.mapRotation=b;$('northArrow').style.transform=`rotate(${-b}deg)`}
@@ -694,7 +392,7 @@ function short(s){s=String(s);return s.length>55?s.slice(0,52)+'…':s} function
 function distanceM(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat*Math.PI/180,dp=(b.lat-a.lat)*Math.PI/180,dl=(b.lon-a.lon)*Math.PI/180;const x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
 function bearing(a,b){const y=Math.sin((b.lon-a.lon)*Math.PI/180)*Math.cos(b.lat*Math.PI/180),x=Math.cos(a.lat*Math.PI/180)*Math.sin(b.lat*Math.PI/180)-Math.sin(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.cos((b.lon-a.lon)*Math.PI/180);return (Math.atan2(y,x)*180/Math.PI+360)%360}
 window.addEventListener('online',()=>{setSync('Conexión recuperada · sincronizando…');autoSync(true)});window.addEventListener('offline',()=>setSync('Sin internet · datos guardados','err'));window.addEventListener('resize',()=>setTimeout(()=>{map?.invalidateSize?.(true);generalMap?.invalidateSize?.(true)},120));
-/* Inicio reemplazado por V13.41 estable al final del documento. */
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init,{once:true})}else{init()}
 
 try{localStorage.removeItem('inspection-compact-map')}catch{}
 </script>
@@ -739,7 +437,7 @@ try{localStorage.removeItem('inspection-compact-map')}catch{}
       return;
     }
     try {
-      const registration = await navigator.serviceWorker.register(new URL('service-worker.js?v=13.46', document.baseURI).href, {scope: './', updateViaCache: 'none'});
+      const registration = await navigator.serviceWorker.register(new URL('service-worker.js?v=13.31', document.baseURI).href, {scope: './', updateViaCache: 'none'});
       await registration.update().catch(() => {});
       await navigator.serviceWorker.ready;
       swReady = true;
@@ -869,7 +567,7 @@ async function compressImage(file){return new Promise((resolve,reject)=>{const r
 async function addPhotoFiles(files){for(const f of files){if(inspectionCtx.photos.length>=20){showToast('Límite alcanzado','Máximo 20 fotografías por inspección.','warn');break}try{const p=await compressImage(f);inspectionCtx.photos.push({...p,id:crypto.randomUUID?.()||String(Date.now()+Math.random()),category:PHOTO_CATEGORIES[inspectionCtx.category][0],order:inspectionCtx.photos.length+1,createdAt:new Date().toISOString()})}catch{showToast('Foto no válida',f.name||'No se pudo procesar la imagen.','error')}}paintPhotos()}
 function paintPhotos(){const m=document.querySelector('.inspection-modal');if(!m)return;const [title,hint]=PHOTO_CATEGORIES[inspectionCtx.category];m.querySelector('#guideTitle').textContent=(inspectionCtx.category+1)+'. '+title;m.querySelector('#guideHint').textContent=hint;m.querySelector('#photoCount').textContent=inspectionCtx.photos.length+'/20 fotos';m.querySelector('#photoBar').style.width=(inspectionCtx.photos.length/20*100)+'%';m.querySelector('#categoryList').innerHTML=PHOTO_CATEGORIES.map((c,i)=>{const n=inspectionCtx.photos.filter(p=>p.category===c[0]).length;return `<div class="category-item ${i===inspectionCtx.category?'active':''}" data-i="${i}"><span>${i+1}.</span><b>${c[0]}</b><span>${n?`${n} foto${n>1?'s':''} ✓`:'—'}</span></div>`}).join('');m.querySelectorAll('.category-item').forEach(el=>el.onclick=()=>{inspectionCtx.category=+el.dataset.i;paintPhotos()});m.querySelector('#photoStrip').innerHTML=inspectionCtx.photos.map(p=>`<div class="photo-thumb"><img src="${p.dataUrl}"><button data-id="${p.id}">×</button></div>`).join('')||'<small>Aún no hay fotografías.</small>';m.querySelectorAll('.photo-thumb button').forEach(b=>b.onclick=()=>{inspectionCtx.photos=inspectionCtx.photos.filter(p=>p.id!==b.dataset.id);paintPhotos()})}
 function paintReview(){const m=document.querySelector('.inspection-modal'),x=inspectionCtx.asset,a=inspectionCtx.answers;const grouped={};inspectionCtx.photos.forEach(p=>(grouped[p.category]??=[]).push(p));m.querySelector('#inspectionReview').innerHTML=`<div class="report-card"><div class="report-card-head"><div><b>${esc(x.feeder)} · ${esc(x.substation)} · ${esc(x.voltageLevel||x.voltage||'Tensión no definida')}</b><div>${new Date().toLocaleString()}</div></div><span class="status-badge status-inspected">Inspeccionada</span></div><div class="report-summary"><b>Resumen automático</b><br>Acceso para brazo: ${esc(a.access||'—')} · Pendiente: ${esc(a.slope||'—')}<br>Brazo: ${esc(a.armType||'—')} · Personal: ${esc(a.staffCount||'—')}<br>Día: ${esc(a.workDay||'—')} · Horario: ${esc(a.workTime||'—')}<br>Actividades: ${esc((a.activities||[]).join(', ')||'Sin actividades seleccionadas')}<br>Observación: ${esc(a.note||'Sin observación')}</div><h4>Evidencia fotográfica (${inspectionCtx.photos.length})</h4>${Object.entries(grouped).map(([cat,ps])=>`<div><b>${esc(cat)}</b><div class="report-gallery">${ps.map(p=>`<img src="${p.dataUrl}" alt="${esc(cat)}">`).join('')}</div></div>`).join('')||'<p>No se adjuntaron fotos.</p>'}</div>`}
-async function saveInspection(){collectQuick();if(!inspectionCtx||inspectionCtx.photos.length<2){showToast('Faltan evidencias','Debes registrar por lo menos 2 fotografías para cerrar la inspección.','warn');inspectionCtx.step=2;paintStep();return}const x=inspectionCtx.asset;const rec={id:inspectionCtx.id,assetKey:inspectionKey(x),feeder:x.feeder,substation:x.substation,voltageLevel:x.voltageLevel||x.voltage||'',address:x.address||'',lat:x.lat,lon:x.lon,inspector:state.user?.name||'',username:state.user?.username||'',date:new Date().toISOString(),status:'Inspeccionada',answers:inspectionCtx.answers,photoCount:inspectionCtx.photos.length,photos:inspectionCtx.photos};state.inspections.unshift(rec);saveLocalInspections();const meta={...rec,answers:JSON.stringify(rec.answers),photos:undefined};cloudWrite('inspection',meta);inspectionCtx.photos.forEach((p,i)=>cloudWrite('inspectionPhoto',{inspectionId:rec.id,assetKey:rec.assetKey,category:p.category,photoOrder:i+1,fileName:`${rec.substation}-${i+1}.jpg`,dataUrl:p.dataUrl,createdAt:p.createdAt}));applyManualStatus(x,'Inspeccionada','Informe de inspección registrado','',new Date().toISOString().slice(0,10),new Date().toTimeString().slice(0,5));const savedModal=document.querySelector('.inspection-modal');inspectionCtx=null;closeOverlayModal(savedModal);showToast('Inspección guardada',`${rec.feeder} · ${rec.substation}: ${rec.photoCount} fotografías.`,'success')}
+async function saveInspection(){collectQuick();const x=inspectionCtx.asset;const rec={id:inspectionCtx.id,assetKey:inspectionKey(x),feeder:x.feeder,substation:x.substation,voltageLevel:x.voltageLevel||x.voltage||'',address:x.address||'',lat:x.lat,lon:x.lon,inspector:state.user?.name||'',username:state.user?.username||'',date:new Date().toISOString(),status:'Inspeccionada',answers:inspectionCtx.answers,photoCount:inspectionCtx.photos.length,photos:inspectionCtx.photos};state.inspections.unshift(rec);saveLocalInspections();const meta={...rec,answers:JSON.stringify(rec.answers),photos:undefined};cloudWrite('inspection',meta);inspectionCtx.photos.forEach((p,i)=>cloudWrite('inspectionPhoto',{inspectionId:rec.id,assetKey:rec.assetKey,category:p.category,photoOrder:i+1,fileName:`${rec.substation}-${i+1}.jpg`,dataUrl:p.dataUrl,createdAt:p.createdAt}));applyManualStatus(x,'Inspeccionada','Informe de inspección registrado','',new Date().toISOString().slice(0,10),new Date().toTimeString().slice(0,5));const savedModal=document.querySelector('.inspection-modal');inspectionCtx=null;closeOverlayModal(savedModal);showToast('Inspección guardada',`${rec.feeder} · ${rec.substation}: ${rec.photoCount} fotografías.`,'success')}
 window.openInspectionReports=async function(x){let local=state.inspections.filter(r=>r.assetKey===inspectionKey(x));if(state.scriptUrl){try{const d=await jsonp(state.scriptUrl+'?action=inspections&assetKey='+encodeURIComponent(inspectionKey(x)));if(Array.isArray(d.inspections)&&d.inspections.length)local=d.inspections.map(r=>({...r,answers:typeof r.answers==='string'?JSON.parse(r.answers||'{}'):r.answers,photos:Array.isArray(r.photos)?r.photos:[]}))}catch(e){console.warn(e)}}renderReportsModal(x,local)};
 function renderReportsModal(x,reports){document.querySelector('.inspection-modal')?.remove();const modal=document.createElement('div');modal.className='inspection-modal';modal.innerHTML=`<div class="inspection-shell"><div class="inspection-head"><button class="report-modal-close">←</button><h3>Reportes de inspección</h3><button class="report-modal-close">×</button></div><div class="inspection-body"><div class="asset-card"><div class="tower">⚡</div><div class="asset-meta"><b>Alimentador:</b><span>${esc(x.feeder)}</span><b>Subestación:</b><span>${esc(x.substation)}</span><b>Nivel de tensión:</b><span>${esc(x.voltageLevel||x.voltage||'Tensión no definida')}</span><b>Reportes:</b><span>${reports.length}</span></div></div><div class="report-list">${reports.length?reports.map((r,idx)=>reportCard(r,idx)).join(''):'<div class="report-card">Aún no hay informes guardados para este punto.</div>'}</div></div></div>`;mountOverlay(modal);modal.querySelectorAll('.report-modal-close').forEach(b=>b.onclick=()=>closeOverlayModal(modal));modal.querySelectorAll('.toggle-report').forEach(b=>b.onclick=()=>{const d=modal.querySelector('#report-'+b.dataset.i);d.classList.toggle('step-hidden');b.textContent=d.classList.contains('step-hidden')?'Ver reporte':'Ocultar reporte'})}
 function reportCard(r,i){const a=typeof r.answers==='string'?JSON.parse(r.answers||'{}'):(r.answers||{});const photos=r.photos||[];return `<div class="report-card"><div class="report-card-head"><div><b>${esc(r.id||'Reporte')}</b><div>${esc(new Date(r.date||Date.now()).toLocaleString())} · ${esc(r.inspector||'')}</div></div><button class="btn toggle-report" data-i="${i}">Ver reporte</button></div><div id="report-${i}" class="step-hidden"><div class="report-summary"><b>Acceso:</b> ${esc(a.access||'—')} · <b>Pendiente:</b> ${esc(a.slope||'—')}<br><b>Brazo:</b> ${esc(a.armType||'—')} · <b>Personal:</b> ${esc(a.staffCount||'—')}<br><b>Día/Horario:</b> ${esc(a.workDay||'—')} · ${esc(a.workTime||'—')}<br><b>Actividades:</b> ${esc((a.activities||[]).join(', ')||'—')}<br><b>Observación:</b> ${esc(a.note||'—')}</div><div class="report-gallery">${photos.map(p=>`<img src="${p.dataUrl||p.url||''}" alt="${esc(p.category||'Foto')}">`).join('')}</div></div></div>`}
@@ -879,444 +577,4 @@ function reportCard(r,i){const a=typeof r.answers==='string'?JSON.parse(r.answer
 const originalRenderRoute=window.renderRoute;if(typeof originalRenderRoute==='function')window.renderRoute=function(){originalRenderRoute();document.querySelectorAll('.route-item').forEach((el,i)=>{const x=state.route?.stops?.[i];if(x&&!el.querySelector('.voltage-chip')){const main=el.querySelector('.route-main');main?.insertAdjacentHTML('beforeend',`<span class="voltage-chip">⚡ ${esc(x.voltageLevel||x.voltage||'Tensión no definida')}</span>`)}})};
 })();
 </script>
-
-<script>
-/* V13.41 · Estabilidad para catálogos masivos y despliegue comercial Google */
-(() => {
-  const LARGE_DATASET_LIMIT = 2500;
-  const CATALOG_RENDER_LIMIT = 300;
-  let booted = false;
-  let loadingCatalog = false;
-  let generalCanvasRenderer = null;
-
-  function safeRun(label, fn){
-    try { return fn(); }
-    catch (error) { console.error('[V13.43] '+label, error); return null; }
-  }
-
-  function activeViewId(){ return document.querySelector('.view.active')?.id || 'planner'; }
-
-  async function loadPlacesPaged(token){
-    if (loadingCatalog || !state.scriptUrl || !token) return;
-    loadingCatalog = true;
-    const pageSize = 1000;
-    let offset = 0;
-    let all = [];
-    try {
-      while (true) {
-        setSync(`Cargando ubicaciones… ${all.length.toLocaleString('es-PE')}`);
-        const page = await jsonp(`${state.scriptUrl}?action=placesPage&offset=${offset}&limit=${pageSize}&token=${encodeURIComponent(token)}`, 18000);
-        if (page?.ok === false) throw Error(page.error || 'No se pudo cargar el catálogo.');
-        const rows = Array.isArray(page.places) ? page.places : [];
-        all.push(...rows);
-        if (!page.hasMore || rows.length === 0) break;
-        offset += rows.length;
-        await new Promise(resolve => setTimeout(resolve, 20));
-      }
-      state.catalog = normalizeRows(all);
-      try {
-        const compact = state.catalog.length <= 5000 ? JSON.stringify(state.catalog) : '';
-        if (compact) localStorage.setItem('ri_catalog_cache', compact);
-        else localStorage.removeItem('ri_catalog_cache');
-      } catch {}
-      renderCatalog();
-      renderDashboard();
-      if (activeViewId() === 'generalmap') renderGeneralMap();
-      setSync(`Sincronizado · ${state.catalog.length.toLocaleString('es-PE')} ubicaciones`, 'ok');
-    } finally {
-      loadingCatalog = false;
-    }
-  }
-
-  window.autoSync = async function(force=false){
-    if (!state.user?.token) {
-      setSync('Inicia sesión para sincronizar');
-      return;
-    }
-    if (!state.scriptUrl) {
-      setSync('Falta configurar Apps Script', 'err');
-      return;
-    }
-    try {
-      setSync('Sincronizando…');
-      const data = await jsonp(state.scriptUrl+'?action=bootstrap&token='+encodeURIComponent(state.user.token), 15000);
-      if (data?.ok === false) throw Error(data.error || 'Respuesta inválida');
-      state.history = Array.isArray(data.history) ? data.history : state.history;
-      state.users = Array.isArray(data.users) ? data.users : state.users;
-      state.inspections = Array.isArray(data.inspections) ? data.inspections : state.inspections;
-      state.assignments = Array.isArray(data.assignments) ? data.assignments : state.assignments;
-      if (data.currentUser) {
-        state.user = {...state.user, ...data.currentUser};
-        localStorage.setItem('ri_user', JSON.stringify(state.user));
-        applySavedTabOrder();
-      }
-      renderHistory(); renderUsers(); renderAssignments(); renderDashboard();
-      populateAdminSelects(); detectCurrentAssignment();
-      loadUserPlannerCloud(false).catch(()=>{});
-      await loadPlacesPaged(state.user.token);
-    } catch (error) {
-      console.error('[V13.43] sync', error);
-      setSync(navigator.onLine ? 'No se pudo sincronizar · reintenta' : 'Sin internet · datos locales', 'err');
-    }
-  };
-
-  const oldFilteredCatalog = window.filteredCatalog;
-  window.renderCatalog = function(){
-    updateFeederOptions();
-    const arr = oldFilteredCatalog ? oldFilteredCatalog() : filteredCatalog();
-    const box = $('catalogResults'); if (!box) return;
-    box.innerHTML = '';
-    const head = document.createElement('div');
-    head.className = 'catalog-row catalog-head';
-    head.innerHTML = '<span></span><span>Fecha</span><span>Alimentador · Subestación</span><span>Ubicación / técnico</span><span>Acciones</span>';
-    box.appendChild(head);
-    arr.slice(0, CATALOG_RENDER_LIMIT).forEach(x => {
-      const d = document.createElement('div'); d.className='catalog-row';
-      const added=inRoute(x), tech=x.technician?`Técnico: ${esc(x.technician)}`:'Técnico: —';
-      d.innerHTML=`<input class="check" type="checkbox" ${state.catalogSelected.has(x.id)?'checked':''}><span class="c-date"><small>${esc(catalogDate(x)||'—')}</small></span><span class="catalog-code"><span class="code-part"><span class="code-label">Alimentador</span><span class="code-value">${esc(x.feeder)}</span></span><span class="code-divider">·</span><span class="code-part"><span class="code-label">Subestación</span><span class="code-value">${esc(x.substation)}</span></span></span><span class="catalog-location"><span class="coords">${esc(locationLabel(x))}</span><span class="tech">${tech}</span><span class="voltage-chip">⚡ ${esc(x.voltageLevel||x.voltage||'Tensión no definida')}</span>${validationBadge(x)}${statusBadge(x)}</span><span class="catalog-action">${added?'<span class="tag-inroute">✓ En la ruta</span>':'<button class="btn add-route" type="button">Añadir a ruta</button>'}<button class="btn existing-form-open existing-form" type="button">📄 Formulario existente</button><button class="btn inspection-open mt-inspection" type="button">📷 Inspección MT</button><button class="btn report-open mt-report" type="button">📑 Ver reportes</button><button class="btn change-status" type="button">✎ Cambiar estado</button></span>`;
-      d.querySelector('.check').onchange=e=>toggleCatalogSelect(x.id,e.target.checked);
-      d.querySelector('.add-route')?.addEventListener('click',()=>addCatalogArray([x]));
-      d.querySelector('.existing-form-open').onclick=()=>openFormFor(x);
-      d.querySelector('.inspection-open').onclick=()=>openInspectionModule(x);
-      d.querySelector('.report-open').onclick=()=>openInspectionReports(x);
-      d.querySelector('.change-status').onclick=()=>openManualStatusDialog(x);
-      box.appendChild(d);
-    });
-    const hidden = Math.max(0, arr.length-CATALOG_RENDER_LIMIT);
-    $('catalogSummary').textContent=`Resultados: ${arr.length.toLocaleString('es-PE')} · Mostrando: ${Math.min(arr.length,CATALOG_RENDER_LIMIT)}${hidden?` · Filtra para ver ${hidden.toLocaleString('es-PE')} restantes`:''}`;
-  };
-
-  window.initMap = function(){
-    if (map || !document.getElementById('map') || typeof L === 'undefined') return map;
-    const options={zoomControl:false};
-    if (L.Map?.addInitHook && typeof L.Map.prototype.setBearing === 'function') Object.assign(options,{rotate:true,bearing:0,touchRotate:true,shiftKeyRotate:true,rotateControl:false});
-    map=L.map('map',options).setView([-12.0464,-77.0428],11);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'© OpenStreetMap'}).addTo(map);
-    markers.addTo(map); routeGroup.addTo(map); liveGroup.addTo(map);
-    if (typeof map.on === 'function') map.on('rotate',()=>{state.mapRotation=typeof map.getBearing==='function'?map.getBearing():0;updateCompass();updateVehicle()});
-    return map;
-  };
-
-  window.renderGeneralMap = function(){
-    if (!$('generalMap') || activeViewId() !== 'generalmap') return;
-    const gm=initGeneralMap(); if(!gm) return;
-    if (!generalCanvasRenderer) generalCanvasRenderer=L.canvas({padding:.35});
-    try{generalMarkers.clearLayers()}catch{return}
-    let arr=filteredGeneralMap().filter(x=>Number.isFinite(+x.lat)&&Number.isFinite(+x.lon));
-    const total=arr.length;
-    if (gm.getZoom() >= 12) {
-      const bounds=gm.getBounds().pad(.2);
-      const visible=arr.filter(x=>bounds.contains([+x.lat,+x.lon]));
-      if (visible.length) arr=visible;
-    }
-    const displayed=arr.slice(0,LARGE_DATASET_LIMIT);
-    displayed.forEach(x=>{
-      const actual=statusKey(x.status), status=(actual==='pending'&&inRoute(x))?'inroute':actual;
-      const colors={pending:'#94a3b8',inroute:'#2563eb',inspected:'#16a34a',notinspected:'#dc2626',rescheduled:'#f59e0b',observed:'#7c3aed'};
-      const m=L.circleMarker([+x.lat,+x.lon],{renderer:generalCanvasRenderer,radius:7,weight:2,color:'#fff',fillColor:colors[status]||colors.pending,fillOpacity:.95}).addTo(generalMarkers);
-      m.bindPopup(`<div class="popup-card"><b>${esc(x.feeder)} · ${esc(x.substation)}</b><div class="popup-address">${esc(locationLabel(x))}</div><span class="voltage-chip">⚡ ${esc(x.voltageLevel||x.voltage||'Tensión no definida')}</span>${statusBadge(x)}<div class="map-popup-actions"><button class="btn gm-form" type="button">📄 Formulario</button><button class="btn gm-inspection" type="button">📷 Inspección MT</button><button class="btn gm-report" type="button">📑 Reportes</button><button class="btn gm-add" type="button">${inRoute(x)?'✓ En ruta':'Añadir a ruta'}</button><a class="maps-link" href="${mapsUrl(x)}" target="_blank" rel="noopener">Maps</a></div></div>`);
-      m.on('popupopen',e=>{const el=e.popup.getElement();el?.querySelector('.gm-form')?.addEventListener('click',()=>openFormFor(x));el?.querySelector('.gm-inspection')?.addEventListener('click',()=>openInspectionModule(x));el?.querySelector('.gm-report')?.addEventListener('click',()=>openInspectionReports(x));const add=el?.querySelector('.gm-add');if(add&&!inRoute(x))add.onclick=()=>{addCatalogArray([x]);m.closePopup()}});
-    });
-    $('generalMapCount').textContent=`${total.toLocaleString('es-PE')} resultado(s)`;
-    $('generalMapInfo').textContent=total>displayed.length?`Mostrando ${displayed.length.toLocaleString('es-PE')} de ${total.toLocaleString('es-PE')}. Acerca el mapa o aplica filtros para ver más.`:`${displayed.length.toLocaleString('es-PE')} puntos visibles.`;
-    requestAnimationFrame(()=>gm.invalidateSize(true));
-  };
-
-
-  function enterpriseStats(){
-    const catalog=Array.isArray(state.catalog)?state.catalog:[];
-    const history=Array.isArray(state.history)?state.history:[];
-    const inspections=Array.isArray(state.inspections)?state.inspections:[];
-    const users=Array.isArray(state.users)?state.users:[];
-    const routes=new Set(history.map(x=>x.routeId||x.route_id||x.date||x.createdAt).filter(Boolean)).size;
-    const inspected=catalog.filter(x=>statusKey(x.status)==='inspected').length;
-    return {catalog:catalog.length,routes,inspections:inspections.length||inspected,users:users.filter(u=>u.active!==false&&!u.deleted).length,pending:catalog.filter(x=>statusKey(x.status)==='pending').length};
-  }
-  window.renderEnterpriseDashboard=function(){
-    const box=$('enterpriseMetrics');if(!box)return;
-    const n=enterpriseStats();
-    const fmt=v=>(+v||0).toLocaleString('es-PE');
-    box.innerHTML=[['⚡','Ubicaciones',fmt(n.catalog),'Registradas'],['⌖','Rutas',fmt(n.routes),'Creadas'],['✓','Inspecciones',fmt(n.inspections),'Registradas'],['👥','Usuarios',fmt(n.users),'Activos'],['◷','Pendientes',fmt(n.pending),'Por atender']].map(x=>`<div class="enterprise-metric"><i>${x[0]}</i><div><small>${x[1]}</small><b>${x[2]}</b><small>${x[3]}</small></div></div>`).join('');
-    if($('welcomeName'))$('welcomeName').textContent='Bienvenido, '+(state.user?.name||'Administrador');
-    const types={SED:0,'Derivación MT':0,'Cliente MT':0};(state.catalog||[]).forEach(x=>{const t=(x.type||x.assetType||'').toLowerCase();if(t.includes('deriv'))types['Derivación MT']++;else if(t.includes('cliente'))types['Cliente MT']++;else types.SED++});
-    if($('dashboardLegend'))$('dashboardLegend').innerHTML=`<span style="--dot:#2563eb">SED: ${fmt(types.SED)}</span><span style="--dot:#f59e0b">Derivación MT: ${fmt(types['Derivación MT'])}</span><span style="--dot:#16a34a">Cliente MT: ${fmt(types['Cliente MT'])}</span>`;
-    const events=buildAuditRows().slice(0,7);if($('recentActivity'))$('recentActivity').innerHTML=events.length?events.map(e=>`<div class="activity-item"><i>${e.icon}</i><div><b>${esc(e.title)}</b><small>${esc(e.detail)}</small></div><span class="activity-time">${esc(e.when)}</span></div>`).join(''):'<div class="feedback">Aún no hay actividad sincronizada.</div>';
-    try{renderDashboard()}catch(e){console.warn('dashboard compat',e)}
-    document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const id=b.dataset.go;showView(id,document.querySelector(`.nav button[data-view="${id}"]`))});
-  };
-  function buildAuditRows(){
-    const rows=[];const now=Date.now();
-    (state.inspections||[]).forEach((x,i)=>rows.push({date:x.updatedAt||x.createdAt||x.date||new Date(now-i*60000).toISOString(),user:x.inspector||x.technician||'Inspector',module:'Inspecciones',action:'Actualización',element:x.substation||x.assetKey||'Inspección',description:`Estado: ${x.status||'Inspeccionada'}${x.result?' · Resultado: '+x.result:''}`,origin:'Aplicación móvil',icon:'✓',title:'Inspección registrada',detail:`${x.feeder||''} ${x.substation||''}`.trim()}));
-    (state.history||[]).forEach((x,i)=>rows.push({date:x.updatedAt||x.createdAt||x.date||new Date(now-(i+20)*60000).toISOString(),user:x.user||x.technician||'Usuario',module:'Rutas',action:'Actualización',element:x.substation||x.routeId||'Recorrido',description:`${x.feeder||''} · ${x.status||'Registro de ruta'}`,origin:'Navegador',icon:'⌖',title:'Ruta actualizada',detail:`${x.feeder||''} ${x.substation||''}`.trim()}));
-    (state.users||[]).slice(0,20).forEach((x,i)=>rows.push({date:x.updatedAt||x.createdAt||new Date(now-(i+50)*3600000).toISOString(),user:state.user?.name||'Administrador',module:'Usuarios',action:'Creación',element:x.username||x.name||'Usuario',description:`Usuario registrado con rol ${x.role||'sin definir'}`,origin:'Panel administrador',icon:'👥',title:'Usuario registrado',detail:x.name||x.username||''}));
-    return rows.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(x=>({...x,when:relativeTime(x.date)}));
-  }
-  function relativeTime(d){const t=new Date(d).getTime();if(!Number.isFinite(t))return '—';const m=Math.max(0,Math.round((Date.now()-t)/60000));if(m<1)return 'Ahora';if(m<60)return `Hace ${m} min`;const h=Math.round(m/60);if(h<24)return `Hace ${h} h`;return new Date(t).toLocaleDateString('es-PE')}
-  window.renderAuditLog=function(){
-    const body=$('auditBody');if(!body)return;let rows=buildAuditRows();
-    const from=$('auditFrom')?.value,to=$('auditTo')?.value,mod=$('auditModule')?.value,act=$('auditAction')?.value,user=($('auditUser')?.value||'').toLowerCase();
-    rows=rows.filter(x=>(!from||String(x.date).slice(0,10)>=from)&&(!to||String(x.date).slice(0,10)<=to)&&(!mod||x.module===mod)&&(!act||x.action===act)&&(!user||String(x.user).toLowerCase().includes(user)));
-    const counts={all:rows.length,create:rows.filter(x=>x.action==='Creación').length,update:rows.filter(x=>x.action==='Actualización').length,delete:rows.filter(x=>x.action==='Eliminación').length};
-    if($('auditMetrics'))$('auditMetrics').innerHTML=[['Total',counts.all],['Creaciones',counts.create],['Actualizaciones',counts.update],['Eliminaciones',counts.delete]].map(x=>`<div class="audit-card"><small>${x[0]}</small><b>${x[1].toLocaleString('es-PE')}</b></div>`).join('');
-    body.innerHTML=rows.slice(0,500).map(x=>`<tr><td>${new Date(x.date).toLocaleString('es-PE')}</td><td><b>${esc(x.user)}</b></td><td>${esc(x.module)}</td><td><span class="audit-badge ${x.action==='Creación'?'audit-create':x.action==='Eliminación'?'audit-delete':'audit-update'}">${esc(x.action)}</span></td><td><b>${esc(x.element)}</b></td><td>${esc(x.description)}</td><td>${esc(x.origin)}</td></tr>`).join('')||'<tr><td colspan="7">No se encontraron modificaciones con esos filtros.</td></tr>';
-  };
-  function exportAuditCsv(){const rows=buildAuditRows();const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='Fecha,Usuario,Módulo,Acción,Elemento,Descripción,Origen\n'+rows.map(x=>[x.date,x.user,x.module,x.action,x.element,x.description,x.origin].map(q).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='registro-modificaciones.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-  document.addEventListener('click',e=>{if(e.target.closest('#auditSearchBtn,#auditRefreshBtn'))renderAuditLog();if(e.target.closest('#auditExportBtn'))exportAuditCsv();const go=e.target.closest('[data-go]');if(go){const id=go.dataset.go;showView(id,document.querySelector(`.nav button[data-view="${id}"]`))}});
-
-  function stableInit(){
-    if (booted) return; booted=true;
-    safeRun('bindLogin',()=>bindLogin());
-    safeRun('bind',()=>bind());
-    safeRun('loadLocal',()=>loadLocal());
-    safeRun('loadRouteDraft',()=>loadRouteDraft());
-    safeRun('renderRows',()=>renderRows());
-    safeRun('renderCatalog',()=>renderCatalog());
-    safeRun('renderHistory',()=>renderHistory());
-    safeRun('renderDashboard',()=>renderDashboard());safeRun('renderEnterpriseDashboard',()=>renderEnterpriseDashboard());
-    safeRun('renderUsers',()=>renderUsers());
-    safeRun('renderAssignments',()=>renderAssignments());
-    if (state.user) {
-      safeRun('initMap',()=>initMap());
-      safeRun('gps',()=>startGpsWatch());
-      (window.autoSync||autoSync)(true);
-    }
-    setInterval(()=>{if(state.user&&!document.hidden)(window.autoSync||autoSync)()},180000);
-    document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.user){restoreRouteDraftIfNeeded();(window.autoSync||autoSync)()}});
-    window.addEventListener('beforeunload',saveRouteDraft);
-    window.addEventListener('pagehide',saveRouteDraft);
-  }
-
-  document.addEventListener('click',e=>{
-    const tab=e.target.closest('.nav button[data-view="generalmap"]');
-    if(tab) setTimeout(()=>{initGeneralMap();renderGeneralMap()},100);
-  });
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',stableInit,{once:true});
-  else stableInit();
-})();
-</script>
-
-
-<script>
-// V13.48: diagnóstico de conexión y acceso robusto al registro de usuarios.
-(function(){
-  function byId(id){return document.getElementById(id)}
-  function openConnectionPanel(){
-    document.querySelector('.connection-panel')?.remove();
-    const panel=document.createElement('div');panel.className='connection-panel';
-    const url=(window.APP_CONFIG?.SCRIPT_URL||localStorage.getItem('ri_script')||'').trim();
-    const token=JSON.parse(localStorage.getItem('ri_user')||'null')?.token||'';
-    panel.innerHTML=`<h3>Estado de conexión</h3><p><b>Apps Script:</b> ${url?'Configurado':'No configurado'}</p><p><b>Sesión:</b> ${token?'Token encontrado':'No iniciada o vencida'}</p><code>${url||'Ve a Configuración y pega la URL terminada en /exec.'}</code><div class="btns"><button class="btn primary" data-test>Comprobar ahora</button><button class="btn" data-settings>Ir a Configuración</button><button class="btn" data-close>Cerrar</button></div>`;
-    panel.querySelector('[data-close]').onclick=()=>panel.remove();
-    panel.querySelector('[data-settings]').onclick=()=>{panel.remove();const b=document.querySelector('.nav button[data-view="settings"]');window.showView?.('settings',b)};
-    panel.querySelector('[data-test]').onclick=async()=>{panel.remove();if(window.autoSync)await window.autoSync(true)};
-    document.body.appendChild(panel);
-  }
-  async function openRegistry(){
-    const create=byId('userCreatePanel'),reg=byId('userRegistryPanel'),a=byId('showCreateUserBtn'),b=byId('showRegistryBtn'),list=byId('userList');
-    if(!create||!reg)return;create.style.display='none';reg.style.display='block';a?.classList.remove('active');b?.classList.add('active');
-    if(list&&!Array.isArray(window.state?.users)&&!list.children.length)list.innerHTML='<div class="registry-loading">Cargando usuarios…</div>';
-    try{ if(window.renderUsers)window.renderUsers(); if(window.autoSync)await window.autoSync(true); if(window.renderUsers)window.renderUsers(); }catch(e){console.error('Registro usuarios',e);if(list)list.innerHTML='<div class="registry-loading">No se pudo cargar. Comprueba Apps Script y vuelve a iniciar sesión.</div>'}
-  }
-  document.addEventListener('click',function(e){
-    if(e.target.closest('#connectionHelpBtn')){e.preventDefault();openConnectionPanel()}
-    if(e.target.closest('#showRegistryBtn')){e.preventDefault();openRegistry()}
-    if(e.target.closest('#showCreateUserBtn')){e.preventDefault();const c=byId('userCreatePanel'),r=byId('userRegistryPanel');if(c)c.style.display='grid';if(r)r.style.display='none';byId('showCreateUserBtn')?.classList.add('active');byId('showRegistryBtn')?.classList.remove('active')}
-    if(e.target.closest('#refreshUsersBtn')){e.preventDefault();openRegistry()}
-  });
-  window.addEventListener('load',()=>{const url=(window.APP_CONFIG?.SCRIPT_URL||localStorage.getItem('ri_script')||'').trim();if(!url){const s=byId('syncState');if(s){s.textContent='Falta URL de Apps Script';s.classList.add('err')}}});
-})();
-</script>
-
-<script>
-// V13.45: respaldo de navegación. Evita que un fallo aislado desactive toda la interfaz.
-document.addEventListener('click', function(event){
-  const nav = event.target.closest('[data-view]');
-  if(nav){
-    event.preventDefault();
-    try{ showView(nav.dataset.view, nav); }catch(error){ console.error('Navegación:', error); }
-    return;
-  }
-  const go = event.target.closest('[data-go]');
-  if(go){
-    event.preventDefault();
-    const target = go.dataset.go;
-    const btn = document.querySelector('.nav button[data-view="'+target+'"]');
-    try{ showView(target, btn); }catch(error){ console.error('Acceso rápido:', error); }
-  }
-});
-</script>
-<style>
-/* V13.45 · ajuste visual del panel */
-:root{--panel-radius:18px;--soft-shadow:0 10px 28px rgba(15,45,80,.08)}
-.enterprise-hero{box-shadow:0 14px 35px rgba(4,38,76,.16);border:1px solid rgba(255,255,255,.08)}
-.enterprise-metrics>div,.enterprise-panel{box-shadow:var(--soft-shadow);border:1px solid #dbe6f1}
-.enterprise-metrics>div{transition:transform .18s ease,box-shadow .18s ease}
-.enterprise-metrics>div:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(15,45,80,.12)}
-.nav button{transition:background .18s ease,transform .18s ease,border-color .18s ease}
-.nav button:hover{transform:translateX(3px);background:rgba(255,255,255,.09)}
-.topbar{backdrop-filter:blur(8px)}
-.btn,.install-btn{transition:transform .15s ease,box-shadow .15s ease}
-.btn:hover,.install-btn:hover{transform:translateY(-1px)}
-@media(max-width:900px){.enterprise-hero{padding:22px}.home-actions{width:100%;justify-content:flex-start}.enterprise-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.enterprise-metrics{grid-template-columns:1fr}.enterprise-hero h2{font-size:28px}.topbar h1{font-size:22px}}
-</style>
-
-<script>
-// V13.50: cierre de sesión independiente y resistente a errores de inicialización.
-(function(){
-  function logoutNow(event){
-    if(event){ event.preventDefault(); event.stopImmediatePropagation(); }
-    try{ if(typeof saveRouteDraft==='function') saveRouteDraft(); }catch(error){ console.warn('No se pudo guardar el borrador antes de salir', error); }
-    try{
-      const saved=JSON.parse(localStorage.getItem('ri_user')||'null');
-      const url=(window.APP_CONFIG&&window.APP_CONFIG.SCRIPT_URL)||localStorage.getItem('ri_script')||'';
-      if(saved&&saved.token&&url){
-        fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'logout',token:saved.token,actor:saved.username||''})}).catch(()=>{});
-      }
-    }catch(error){}
-    try{
-      localStorage.removeItem('ri_user');
-      sessionStorage.removeItem('ri_user');
-      sessionStorage.removeItem('ri_token');
-      localStorage.removeItem('ri_google_pending');
-      localStorage.removeItem('ri_login_pending');
-    }catch(error){}
-    try{ if(window.google&&google.accounts&&google.accounts.id) google.accounts.id.disableAutoSelect(); }catch(error){}
-    window.location.replace(window.location.origin + window.location.pathname + '?logout=' + Date.now());
-  }
-  function armLogout(){
-    const button=document.getElementById('logoutBtn');
-    if(!button)return;
-    button.type='button';
-    button.addEventListener('click',logoutNow,true);
-    button.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){logoutNow(e)}},true);
-  }
-  document.addEventListener('click',function(e){
-    const button=e.target.closest&&e.target.closest('#logoutBtn');
-    if(button) logoutNow(e);
-  },true);
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',armLogout,{once:true});
-  else armLogout();
-  window.logoutNow=logoutNow;
-})();
-</script>
-
-
-<script>
-// V13.50: sincronización resiliente. El mapa no depende de usuarios, historial o programación.
-(function(){
-  let syncRunning=false;
-  const wait=ms=>new Promise(r=>setTimeout(r,ms));
-  async function getJsonp(action,params={},timeout=30000){
-    const query=new URLSearchParams({action,...params}).toString();
-    return jsonp(state.scriptUrl+'?'+query,timeout);
-  }
-  async function loadCatalogOnly(token){
-    let offset=0, all=[];
-    const pageSize=500;
-    while(true){
-      setSync(`Cargando ubicaciones… ${all.length.toLocaleString('es-PE')}`);
-      const page=await getJsonp('placesPage',{offset:String(offset),limit:String(pageSize),token},30000);
-      if(page?.ok===false) throw new Error(page.error||'Error al leer Subestaciones');
-      const rows=Array.isArray(page.places)?page.places:[];
-      all.push(...rows);
-      if(!page.hasMore||rows.length===0) break;
-      offset+=rows.length;
-      await wait(40);
-    }
-    state.catalog=normalizeRows(all);
-    try{ if(state.catalog.length<=5000)localStorage.setItem('ri_catalog_cache',JSON.stringify(state.catalog)); }
-    catch(e){}
-    renderCatalog();renderDashboard();renderGeneralMap();
-    setSync(`Sincronizado · ${state.catalog.length.toLocaleString('es-PE')} ubicaciones`,'ok');
-  }
-  async function loadSecondaryData(token){
-    try{
-      const data=await getJsonp('bootstrapLite',{token},30000);
-      if(data?.ok===false) throw new Error(data.error||'Error de datos complementarios');
-      state.history=Array.isArray(data.history)?data.history:state.history;
-      state.users=Array.isArray(data.users)?data.users:state.users;
-      state.inspections=Array.isArray(data.inspections)?data.inspections:state.inspections;
-      state.assignments=Array.isArray(data.assignments)?data.assignments:state.assignments;
-      if(data.currentUser){state.user={...state.user,...data.currentUser};localStorage.setItem('ri_user',JSON.stringify(state.user));}
-      renderHistory();renderUsers();renderAssignments();renderDashboard();populateAdminSelects();detectCurrentAssignment();
-    }catch(err){console.warn('[V13.50] Datos complementarios:',err);}
-  }
-  window.autoSync=async function(force=false){
-    if(syncRunning)return;
-    if(!state.user?.token){setSync('Inicia sesión para sincronizar','err');return;}
-    if(!state.scriptUrl){setSync('Falta configurar Apps Script','err');return;}
-    syncRunning=true;
-    try{
-      setSync('Validando sesión…');
-      const check=await getJsonp('sessionCheck',{token:state.user.token},20000);
-      if(check?.ok===false)throw new Error(check.error||'Sesión inválida');
-      await loadCatalogOnly(state.user.token);
-      loadSecondaryData(state.user.token);
-    }catch(err){
-      console.error('[V13.50] Sincronización:',err);
-      const msg=String(err?.message||err||'Error desconocido');
-      setSync('Error: '+msg,'err');
-      const info=document.getElementById('generalMapInfo');if(info)info.textContent='No se pudo sincronizar: '+msg;
-      window.__LAST_SYNC_ERROR__=msg;
-    }finally{syncRunning=false;}
-  };
-  document.addEventListener('click',e=>{
-    if(e.target.closest('#gmReloadBtn')||e.target.closest('#syncBtn')){e.preventDefault();window.autoSync(true);}
-  },true);
-  window.addEventListener('load',()=>{if(state.user?.token)setTimeout(()=>window.autoSync(true),600);});
-})();
-</script>
-
-<style>
-/* V13.54 · caché persistente, buscador real y ajustes móviles */
-.gm-search-results{margin-top:8px;border:1px solid #d8e3ef;border-radius:12px;background:#fff;box-shadow:0 10px 28px #102a4318;max-height:250px;overflow:auto;padding:5px}
-.gm-search-item{width:100%;border:0;border-bottom:1px solid #edf2f7;background:#fff;text-align:left;padding:10px 11px;display:grid;grid-template-columns:1fr auto;gap:8px;cursor:pointer;border-radius:8px}
-.gm-search-item:last-child{border-bottom:0}.gm-search-item:hover{background:#eef6ff}.gm-search-item b{color:#10233e}.gm-search-item small{display:block;color:#64748b;margin-top:3px}.gm-search-item span{font-size:11px;font-weight:800;color:#0b63d8;align-self:center}
-.cache-note{font-weight:700;color:#166534}
-@media(max-width:900px){.general-map-toolbar{position:sticky;top:0;z-index:850;background:#fff;padding:8px;border-radius:12px;box-shadow:0 5px 15px #102a4315}.gm-search-results{position:relative;z-index:900}}
-</style>
-<script>
-// V13.54: restauración inmediata del catálogo, búsqueda que centra el punto y persistencia del mapa.
-(function(){
-  const DB_NAME='rutas-inspeccion-v1354', STORE='cache', CATALOG_KEY='catalog';
-  let gmSearchTimer=null, gmForceFit=false, gmSelectedKey='', cacheRestored=false;
-  function openDb(){return new Promise((resolve,reject)=>{const r=indexedDB.open(DB_NAME,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE)};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
-  async function cacheSet(key,value){try{const db=await openDb();await new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(value,key);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});db.close()}catch(e){console.warn('Caché IndexedDB:',e)}}
-  async function cacheGet(key){try{const db=await openDb();const value=await new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readonly');const r=tx.objectStore(STORE).get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});db.close();return value}catch(e){return null}}
-  function assetKey54(x){return String(x?.id||((x?.feeder||'')+'|'+(x?.substation||''))).toUpperCase()}
-  function cleanHistoryText(v){return String(v||'').replace(/https?:\/\/\S+/gi,'').replace(/www\.\S+/gi,'').trim()}
-  function saveMapState(){try{if(!window.generalMap)return;const c=generalMap.getCenter();localStorage.setItem('ri_general_map_state',JSON.stringify({lat:c.lat,lon:c.lng,zoom:generalMap.getZoom(),search:document.getElementById('gmSearch')?.value||'',feeder:document.getElementById('gmFeeder')?.value||'',tech:document.getElementById('gmTech')?.value||'',date:document.getElementById('gmDate')?.value||''}))}catch(e){}}
-  function restoreMapFilters(){try{const x=JSON.parse(localStorage.getItem('ri_general_map_state')||'null');if(!x)return null;[['gmSearch','search'],['gmFeeder','feeder'],['gmTech','tech'],['gmDate','date']].forEach(([id,k])=>{const el=document.getElementById(id);if(el&&x[k]!=null)el.value=x[k]});return x}catch(e){return null}}
-  function drawSearchResults(){const box=document.getElementById('gmSearchResults'),q=(document.getElementById('gmSearch')?.value||'').trim().toLowerCase();if(!box)return;if(q.length<2){box.hidden=true;box.innerHTML='';return}const matches=(window.filteredGeneralMap?.()||[]).slice(0,12);box.innerHTML=matches.map(x=>`<button class="gm-search-item" type="button" data-key="${esc(assetKey54(x))}"><div><b>${esc(x.feeder)} · ${esc(x.substation)}</b><small>${esc(locationLabel(x))}</small></div><span>Ver punto</span></button>`).join('')||'<div class="feedback">No se encontraron coincidencias.</div>';box.hidden=false;box.querySelectorAll('[data-key]').forEach(b=>b.onclick=()=>{const x=(window.filteredGeneralMap?.()||[]).find(v=>assetKey54(v)===b.dataset.key);if(!x)return;gmSelectedKey=assetKey54(x);gmForceFit=true;box.hidden=true;window.renderGeneralMap?.();setTimeout(()=>{try{generalMap.setView([+x.lat,+x.lon],17,{animate:true});generalMarkers.eachLayer(layer=>{const ll=layer.getLatLng?.();if(ll&&Math.abs(ll.lat-(+x.lat))<1e-7&&Math.abs(ll.lng-(+x.lon))<1e-7)layer.openPopup?.()})}catch(e){}},120)})}
-  const originalHistory=window.renderHistory;
-  window.renderHistory=function(){const body=document.getElementById('historyBody');if(!body)return;body.innerHTML='';const rows=typeof filteredHistory==='function'?filteredHistory():[];rows.forEach(h=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${new Date(h.date).toLocaleString('es-PE')}</td><td>${esc(h.user)}</td><td>${esc(h.feeder)}</td><td>${esc(h.substation)}</td><td>${esc(cleanHistoryText(h.address))}</td><td>${Number(h.order)||0}</td><td>${((Number(h.distance)||0)/1000).toFixed(2)} km</td><td>${fmtTime(Number(h.duration)||0)}</td><td>${statusBadge(h)}</td><td>${esc(cleanHistoryText(h.resultReason||h.resultNote||''))}</td><td>${esc(h.rescheduledFor||'')}</td><td>${Number.isFinite(+h.lat)?Number(h.lat).toFixed(6):''}</td><td>${Number.isFinite(+h.lon)?Number(h.lon).toFixed(6):''}</td>`;body.appendChild(tr)});body.querySelectorAll('a').forEach(a=>a.replaceWith(document.createTextNode(a.textContent||'')))};
-  const previousRender=window.renderGeneralMap;
-  window.renderGeneralMap=function(){
-    if(!document.getElementById('generalMap')||activeViewId()!=='generalmap')return;
-    const gm=initGeneralMap();if(!gm)return;
-    if(!window.generalCanvasRenderer)window.generalCanvasRenderer=L.canvas({padding:.35});
-    try{generalMarkers.clearLayers()}catch(e){return}
-    const all=(filteredGeneralMap()||[]).filter(x=>Number.isFinite(+x.lat)&&Number.isFinite(+x.lon));
-    let displayed=all;
-    const hasSearch=(document.getElementById('gmSearch')?.value||'').trim().length>0||document.getElementById('gmFeeder')?.value||document.getElementById('gmTech')?.value||document.getElementById('gmDate')?.value;
-    if(!hasSearch&&gm.getZoom()>=12){const bounds=gm.getBounds().pad(.2),visible=all.filter(x=>bounds.contains([+x.lat,+x.lon]));if(visible.length)displayed=visible}
-    displayed=displayed.slice(0,1200);
-    displayed.forEach(x=>{const actual=statusKey(x.status),status=(actual==='pending'&&inRoute(x))?'inroute':actual,colors={pending:'#94a3b8',inroute:'#2563eb',inspected:'#16a34a',notinspected:'#dc2626',rescheduled:'#f59e0b',observed:'#7c3aed'};const selected=assetKey54(x)===gmSelectedKey;const m=L.circleMarker([+x.lat,+x.lon],{renderer:window.generalCanvasRenderer,radius:selected?11:7,weight:selected?4:2,color:selected?'#fbbf24':'#fff',fillColor:colors[status]||colors.pending,fillOpacity:.95}).addTo(generalMarkers);m.bindPopup(`<div class="popup-card"><b>${esc(x.feeder)} · ${esc(x.substation)}</b><div class="popup-address">${esc(locationLabel(x))}</div><span class="voltage-chip">⚡ ${esc(x.voltageLevel||x.voltage||'Tensión no definida')}</span>${statusBadge(x)}<div class="map-popup-actions"><button class="btn gm-form" type="button">📄 Formulario</button><button class="btn gm-inspection" type="button">📷 Inspección MT</button><button class="btn gm-report" type="button">📑 Reportes y fotos</button><button class="btn gm-add" type="button">${inRoute(x)?'✓ En ruta':'Añadir a ruta'}</button><button class="btn gm-share" type="button">Compartir ubicación</button><button class="btn gm-status" type="button">Cambiar estado</button></div></div>`);m.on('popupopen',e=>{const el=e.popup.getElement();el?.querySelector('.gm-form')?.addEventListener('click',()=>openFormFor(x));el?.querySelector('.gm-inspection')?.addEventListener('click',()=>openInspectionModule(x));el?.querySelector('.gm-report')?.addEventListener('click',()=>openInspectionReports(x));el?.querySelector('.gm-share')?.addEventListener('click',()=>shareLocation(x));el?.querySelector('.gm-status')?.addEventListener('click',()=>openManualStatusDialog(x));const add=el?.querySelector('.gm-add');if(add&&!inRoute(x))add.onclick=()=>{addCatalogArray([x]);m.closePopup();window.renderGeneralMap()}})});
-    document.getElementById('generalMapCount').textContent=`${all.length.toLocaleString('es-PE')} resultado(s)`;
-    document.getElementById('generalMapInfo').textContent=all.length>displayed.length?`Mostrando ${displayed.length.toLocaleString('es-PE')} de ${all.length.toLocaleString('es-PE')}. Usa el buscador o acerca el mapa.`:`${displayed.length.toLocaleString('es-PE')} puntos visibles.`;
-    if(gmForceFit&&all.length){gm.fitBounds(all.map(x=>[+x.lat,+x.lon]),{padding:[35,35],maxZoom:all.length===1?17:16});gmForceFit=false}
-    requestAnimationFrame(()=>gm.invalidateSize(true));saveMapState();
-  };
-  async function restoreCatalog(){if(cacheRestored)return;cacheRestored=true;const cached=await cacheGet(CATALOG_KEY);if(Array.isArray(cached)&&cached.length){state.catalog=normalizeRows(cached);renderCatalog();renderDashboard();const info=document.getElementById('generalMapInfo');if(info)info.innerHTML='<span class="cache-note">Mapa recuperado del dispositivo.</span> Sincronizando cambios…';if(activeViewId()==='generalmap')window.renderGeneralMap()}}
-  const observer=new MutationObserver(()=>{if(Array.isArray(state.catalog)&&state.catalog.length)cacheSet(CATALOG_KEY,state.catalog)});observer.observe(document.documentElement,{subtree:true,childList:true});
-  document.addEventListener('DOMContentLoaded',async()=>{const saved=restoreMapFilters();await restoreCatalog();setTimeout(()=>{try{initGeneralMap();if(saved&&Number.isFinite(+saved.lat)&&Number.isFinite(+saved.lon))generalMap.setView([+saved.lat,+saved.lon],+saved.zoom||12);window.renderGeneralMap()}catch(e){}},250);const search=document.getElementById('gmSearch');if(search)search.addEventListener('input',()=>{clearTimeout(gmSearchTimer);gmSearchTimer=setTimeout(()=>{gmForceFit=true;drawSearchResults();window.renderGeneralMap()},220)},true);['gmFeeder','gmTech','gmDate'].forEach(id=>document.getElementById(id)?.addEventListener('change',()=>{gmForceFit=true;window.renderGeneralMap()},true));document.getElementById('gmFilterBtn')?.addEventListener('click',e=>{e.preventDefault();gmForceFit=true;drawSearchResults();window.renderGeneralMap()},true);document.getElementById('gmFitAll')?.addEventListener('click',()=>{gmForceFit=true;window.renderGeneralMap()},true)}, {once:true});
-  window.addEventListener('beforeunload',saveMapState);
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveMapState()});
-  const oldAutoSync=window.autoSync;
-  setTimeout(()=>{if(typeof window.autoSync==='function'){const current=window.autoSync;window.autoSync=async function(force=false){await restoreCatalog();const result=await current(force);if(Array.isArray(state.catalog)&&state.catalog.length)await cacheSet(CATALOG_KEY,state.catalog);return result}}},0);
-})();
-</script>
-
 </body></html>
