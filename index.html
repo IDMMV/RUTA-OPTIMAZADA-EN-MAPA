@@ -278,7 +278,7 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
     <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="catalog">⚡ Subestaciones</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.48</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.49</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
     <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
@@ -1161,4 +1161,45 @@ document.addEventListener('click', function(event){
 @media(max-width:900px){.enterprise-hero{padding:22px}.home-actions{width:100%;justify-content:flex-start}.enterprise-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.enterprise-metrics{grid-template-columns:1fr}.enterprise-hero h2{font-size:28px}.topbar h1{font-size:22px}}
 </style>
+
+<script>
+// V13.49: cierre de sesión independiente y resistente a errores de inicialización.
+(function(){
+  function logoutNow(event){
+    if(event){ event.preventDefault(); event.stopImmediatePropagation(); }
+    try{ if(typeof saveRouteDraft==='function') saveRouteDraft(); }catch(error){ console.warn('No se pudo guardar el borrador antes de salir', error); }
+    try{
+      const saved=JSON.parse(localStorage.getItem('ri_user')||'null');
+      const url=(window.APP_CONFIG&&window.APP_CONFIG.SCRIPT_URL)||localStorage.getItem('ri_script')||'';
+      if(saved&&saved.token&&url){
+        fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'logout',token:saved.token,actor:saved.username||''})}).catch(()=>{});
+      }
+    }catch(error){}
+    try{
+      localStorage.removeItem('ri_user');
+      sessionStorage.removeItem('ri_user');
+      sessionStorage.removeItem('ri_token');
+      localStorage.removeItem('ri_google_pending');
+      localStorage.removeItem('ri_login_pending');
+    }catch(error){}
+    try{ if(window.google&&google.accounts&&google.accounts.id) google.accounts.id.disableAutoSelect(); }catch(error){}
+    window.location.replace(window.location.origin + window.location.pathname + '?logout=' + Date.now());
+  }
+  function armLogout(){
+    const button=document.getElementById('logoutBtn');
+    if(!button)return;
+    button.type='button';
+    button.addEventListener('click',logoutNow,true);
+    button.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){logoutNow(e)}},true);
+  }
+  document.addEventListener('click',function(e){
+    const button=e.target.closest&&e.target.closest('#logoutBtn');
+    if(button) logoutNow(e);
+  },true);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',armLogout,{once:true});
+  else armLogout();
+  window.logoutNow=logoutNow;
+})();
+</script>
+
 </body></html>
