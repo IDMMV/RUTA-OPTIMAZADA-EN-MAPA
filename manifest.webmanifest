@@ -1,18 +1,37 @@
 {
-  "id": "/RUTA-OPTIMAZADA-EN-MAPA/",
-  "name": "Rutas de Inspección MT",
-  "short_name": "Rutas MT",
+  "id": "/rutas-inspeccion",
+  "name": "Rutas de Inspección · JH",
+  "short_name": "Rutas JH",
   "description": "Planificador, inspecciones y reportes de redes de media tensión.",
-  "start_url": "/RUTA-OPTIMAZADA-EN-MAPA/?source=pwa",
+  "start_url": "./",
   "scope": "/RUTA-OPTIMAZADA-EN-MAPA/",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#f4f7fb",
   "theme_color": "#0b63d8",
   "orientation": "portrait-primary",
   "icons": [
-    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
-    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
-    {"src":"icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
