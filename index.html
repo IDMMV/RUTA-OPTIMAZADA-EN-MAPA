@@ -278,7 +278,7 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
     <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.65</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.66</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
     <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
@@ -799,7 +799,7 @@ try{localStorage.removeItem('inspection-compact-map')}catch{}
       return;
     }
     try {
-      const registration = await navigator.serviceWorker.register(new URL('service-worker.js?v=13.55', document.baseURI).href, {scope: './', updateViaCache: 'none'});
+      const registration = await navigator.serviceWorker.register(new URL('service-worker.js?v=13.66', document.baseURI).href, {scope: './', updateViaCache: 'none'});
       await registration.update().catch(() => {});
       await navigator.serviceWorker.ready;
       swReady = true;
@@ -1632,6 +1632,155 @@ document.addEventListener('click', function(event){
  // Re-enable start button after every route render/restore.
  const oldRender=window.renderRoute;
  if(typeof oldRender==='function')window.renderRoute=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>{const b=$id('startNavBtn');if(b)b.disabled=!routeIsReady()},0);return r};
+})();
+</script>
+
+
+
+<style id="v1366-final-map-route-fix">
+/* V13.66: the Leaflet panes must keep their own transforms. Extra will-change caused grey/incomplete tiles on some browsers. */
+#generalMap .leaflet-map-pane,
+#generalMap .leaflet-tile-pane,
+#generalMap .leaflet-overlay-pane{will-change:auto!important}
+#generalMap{background:#dbeafe!important}
+#generalMap .leaflet-tile{visibility:visible!important;opacity:1!important}
+</style>
+<script id="v1366-final-map-route-fix-script">
+(function(){
+  const $=id=>document.getElementById(id);
+  const validPoint=p=>p&&Number.isFinite(+p.lat)&&Number.isFinite(+p.lon);
+  const meaningfulRows=()=>Array.isArray(state?.rows)?state.rows.filter(validPoint):[];
+
+  function savedPlanner(){
+    const keys=[];
+    try{keys.push(typeof plannerStorageKey==='function'?plannerStorageKey():'')}catch{}
+    keys.push('ri_route_draft');
+    for(const key of keys){
+      if(!key)continue;
+      try{const v=JSON.parse(localStorage.getItem(key)||'null');if(v)return v}catch{}
+    }
+    return null;
+  }
+  function ensureRouteState(){
+    if(state?.route&&Array.isArray(state.route.stops)&&state.route.stops.length)return true;
+    const saved=savedPlanner();
+    if(saved?.route&&Array.isArray(saved.route.stops)&&saved.route.stops.length){
+      state.route=saved.route;state.activeIndex=Number.isFinite(+saved.activeIndex)?+saved.activeIndex:0;
+      if(saved.start)state.start=saved.start;
+      return true;
+    }
+    const rows=meaningfulRows();
+    if(rows.length){
+      // A visible/selected route must still be startable even if a background sync temporarily cleared state.route.
+      const start=validPoint(state.start)?state.start:rows[0];
+      const stops=rows.slice();
+      const geometry=[start,...stops].map(p=>[+p.lat,+p.lon]);
+      state.route={stops,geometry,legs:[],distance:0,duration:0,recovered:true};
+      state.activeIndex=Math.max(0,Math.min(+state.activeIndex||0,stops.length-1));
+      try{saveRouteDraft()}catch{}
+      return true;
+    }
+    return false;
+  }
+  function refreshStartButton(){
+    const b=$('startNavBtn');if(!b)return;
+    const ok=ensureRouteState();
+    b.disabled=!ok;b.style.pointerEvents=ok?'auto':'none';b.style.opacity=ok?'1':'.55';
+    if(ok)b.textContent='▶ Iniciar recorrido';
+  }
+  async function startRecoveredRoute(){
+    if(!ensureRouteState()){
+      showToast('Ruta no disponible','No se encontraron puntos guardados. Pulsa Modificar / crear otra ruta para agregarlos.','error');return;
+    }
+    const b=$('startNavBtn');if(b){b.disabled=true;b.textContent='Iniciando…'}
+    try{
+      if(!state.gps){
+        try{await Promise.race([freshGps(false),new Promise((_,reject)=>setTimeout(()=>reject(new Error('gps-timeout')),6000))])}
+        catch{const p=validPoint(state.start)?state.start:state.route.stops[0];if(validPoint(p))state.gps={lat:+p.lat,lon:+p.lon,accuracy:0,bearing:0}}
+      }
+      state.navigating=true;state.arrivalHits=0;
+      state.activeIndex=Math.max(0,Math.min(+state.activeIndex||0,state.route.stops.length-1));
+      try{setRouteReadyFocus(false)}catch{}
+      $('navHud')?.classList.add('show');
+      try{saveRouteDraft()}catch{}
+      try{drawAll()}catch{}
+      try{updateNavigation()}catch(e){console.warn('updateNavigation',e)}
+      try{rerouteActive()}catch(e){console.warn('rerouteActive',e)}
+      showToast('Recorrido iniciado',`${state.route.stops.length} parada(s) disponibles.`,'success');
+    }finally{refreshStartButton()}
+  }
+  function bindStartFinal(){
+    const b=$('startNavBtn');if(!b||b.dataset.v1366==='1')return;
+    b.dataset.v1366='1';
+    b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();startRecoveredRoute()},true);
+    refreshStartButton();
+  }
+
+  let tileErrors=0;
+  function addStableTiles(map,force=false){
+    if(!map)return;
+    if(force&&window.__gmTile1366){try{map.removeLayer(window.__gmTile1366)}catch{}window.__gmTile1366=null}
+    // Remove duplicate base tile layers left by previous repairs; duplicates overload the browser and can leave grey panes.
+    map.eachLayer(layer=>{if(layer instanceof L.TileLayer&&layer!==window.__gmTile1366){try{map.removeLayer(layer)}catch{}}});
+    if(window.__gmTile1366&&map.hasLayer(window.__gmTile1366))return;
+    tileErrors=0;
+    const primary=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      subdomains:'abc',maxZoom:20,minZoom:4,detectRetina:false,updateWhenIdle:true,keepBuffer:2,
+      crossOrigin:true,attribution:'© OpenStreetMap'
+    });
+    window.__gmTile1366=primary;
+    primary.on('tileerror',()=>{
+      tileErrors++;
+      if(tileErrors===8){
+        try{map.removeLayer(primary)}catch{}
+        const fallback=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+          subdomains:'abcd',maxZoom:20,detectRetina:false,updateWhenIdle:true,keepBuffer:2,crossOrigin:true,
+          attribution:'© OpenStreetMap © CARTO'
+        });
+        window.__gmTile1366=fallback;fallback.addTo(map);
+        const info=$('generalMapInfo');if(info)info.textContent='Se activó el mapa base alternativo.';
+      }
+    });
+    primary.addTo(map);
+  }
+  function stableGeneralMap(forceTiles=false){
+    const host=$('generalMap');if(!host||typeof L==='undefined')return null;
+    if(!generalMap){
+      generalMap=L.map(host,{zoomControl:false,preferCanvas:true,zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false}).setView([-12.0464,-77.0428],11);
+      if(!generalMarkers)generalMarkers=L.layerGroup();generalMarkers.addTo(generalMap);
+      generalMap.on('moveend zoomend',()=>{clearTimeout(generalMap.__v1366Timer);generalMap.__v1366Timer=setTimeout(()=>window.renderGeneralMap?.(false),140)});
+    }
+    addStableTiles(generalMap,forceTiles);
+    const invalidate=()=>{try{generalMap.invalidateSize({pan:false,debounceMoveend:true})}catch{}};
+    requestAnimationFrame(invalidate);setTimeout(invalidate,120);setTimeout(invalidate,450);
+    return generalMap;
+  }
+  window.initGeneralMap=function(force=false){return stableGeneralMap(!!force)};
+  function reloadGeneralMap(forceTiles=false){
+    if(typeof activeViewId==='function'&&activeViewId()!=='generalmap')return;
+    const gm=stableGeneralMap(forceTiles);if(!gm)return;
+    setTimeout(()=>{
+      try{gm.invalidateSize({pan:false})}catch{}
+      try{window.renderGeneralMap?.(true)}catch(e){console.warn('renderGeneralMap',e)}
+      // redraw tiles after the container has its final size
+      try{window.__gmTile1366?.redraw()}catch{}
+    },180);
+  }
+  function bindGeneralFinal(){
+    const reload=$('gmReloadBtn');
+    if(reload&&reload.dataset.v1366!=='1'){
+      reload.dataset.v1366='1';
+      reload.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();reloadGeneralMap(true)},true);
+    }
+    document.addEventListener('click',e=>{
+      if(e.target.closest('.nav button[data-view="generalmap"]'))setTimeout(()=>reloadGeneralMap(false),180);
+    },true);
+  }
+  const originalRender=window.renderRoute;
+  if(typeof originalRender==='function')window.renderRoute=function(){const out=originalRender.apply(this,arguments);setTimeout(refreshStartButton,0);return out};
+  function repair(){bindStartFinal();bindGeneralFinal();refreshStartButton();if(typeof activeViewId==='function'&&activeViewId()==='generalmap')reloadGeneralMap(false)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(repair,450),{once:true});else setTimeout(repair,450);
+  window.addEventListener('pageshow',()=>setTimeout(repair,250));
 })();
 </script>
 
