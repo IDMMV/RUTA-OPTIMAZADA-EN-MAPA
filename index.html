@@ -278,7 +278,7 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
     <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.66</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.67</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
     <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
@@ -799,7 +799,7 @@ try{localStorage.removeItem('inspection-compact-map')}catch{}
       return;
     }
     try {
-      const registration = await navigator.serviceWorker.register(new URL('service-worker.js?v=13.66', document.baseURI).href, {scope: './', updateViaCache: 'none'});
+      const registration = await navigator.serviceWorker.register(new URL('service-worker.js?v=13.67', document.baseURI).href, {scope: './', updateViaCache: 'none'});
       await registration.update().catch(() => {});
       await navigator.serviceWorker.ready;
       swReady = true;
@@ -1638,7 +1638,7 @@ document.addEventListener('click', function(event){
 
 
 <style id="v1366-final-map-route-fix">
-/* V13.66: the Leaflet panes must keep their own transforms. Extra will-change caused grey/incomplete tiles on some browsers. */
+/* V13.67: the Leaflet panes must keep their own transforms. Extra will-change caused grey/incomplete tiles on some browsers. */
 #generalMap .leaflet-map-pane,
 #generalMap .leaflet-tile-pane,
 #generalMap .leaflet-overlay-pane{will-change:auto!important}
@@ -1947,5 +1947,131 @@ document.addEventListener('click', function(event){
  function repair(){bindStart();bindGeneralReload();fixStartButton();if(activeViewId()==='generalmap')refreshGeneral(true)}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(repair,300),{once:true});else setTimeout(repair,300);
  window.addEventListener('pageshow',()=>setTimeout(()=>{fixStartButton();if(activeViewId()==='generalmap')refreshGeneral(false)},180));
+})();
+</script>
+
+<style id="v1367-mobile-map-navigation-fix">
+@media (max-width: 760px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  .app{display:block!important;min-height:100dvh}
+  aside{position:fixed!important;left:0;top:0;bottom:0;width:250px!important;height:100dvh!important;z-index:6000;transform:translateX(-102%);transition:transform .22s ease;box-shadow:12px 0 30px rgba(15,23,42,.22)}
+  body.ri-menu-open aside{transform:translateX(0)}
+  main{width:100%!important;min-width:0!important;margin:0!important}
+  header{padding-left:54px!important;min-height:58px}
+  .header-actions{gap:4px!important;flex-wrap:wrap}.header-actions .btn{font-size:11px!important;padding:7px 8px!important}
+  #pageTitle{font-size:23px!important;line-height:1.05}
+  .view{padding:10px!important}.fullview{padding:0!important}
+  .general-map-toolbar{grid-template-columns:1fr 1fr!important;gap:7px!important}.general-map-toolbar #gmSearch{grid-column:1/-1}.general-map-toolbar .btn{min-height:42px}
+  .general-map-shell{height:calc(100dvh - 310px)!important;min-height:430px!important}
+  #generalMap{height:100%!important;min-height:430px!important}
+  .planner-grid{display:block!important}.planner-left{width:100%!important;max-width:none!important}.planner-map{height:calc(100dvh - 160px)!important;min-height:520px!important}
+  #mapWrap{height:calc(100dvh - 150px)!important;min-height:520px!important}
+  .map-tools,.general-map-controls{z-index:1200!important}
+}
+#riMobileMenuBtn{display:none;position:fixed;left:10px;top:10px;z-index:6500;width:42px;height:42px;border:0;border-radius:12px;background:#0f3d63;color:white;font-size:23px;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+#riMobileShade{display:none;position:fixed;inset:0;background:rgba(15,23,42,.38);z-index:5900}
+@media (max-width:760px){#riMobileMenuBtn{display:block}body.ri-menu-open #riMobileShade{display:block}}
+</style>
+<script id="v1367-mobile-map-navigation-fix-script">
+(function(){
+  const $id=id=>document.getElementById(id);
+  const safeJson=s=>{try{return JSON.parse(s)}catch{return null}};
+  function addMobileShell(){
+    if(!$id('riMobileMenuBtn')){const b=document.createElement('button');b.id='riMobileMenuBtn';b.type='button';b.textContent='☰';b.setAttribute('aria-label','Abrir menú');document.body.appendChild(b);b.onclick=()=>document.body.classList.toggle('ri-menu-open')}
+    if(!$id('riMobileShade')){const s=document.createElement('div');s.id='riMobileShade';document.body.appendChild(s);s.onclick=()=>document.body.classList.remove('ri-menu-open')}
+    document.querySelectorAll('aside .nav button').forEach(b=>b.addEventListener('click',()=>document.body.classList.remove('ri-menu-open')));
+  }
+  function restoreCatalogCache(){
+    if(Array.isArray(state?.catalog)&&state.catalog.length)return state.catalog;
+    const cached=safeJson(localStorage.getItem('ri_catalog_cache'));
+    if(Array.isArray(cached)&&cached.length){state.catalog=typeof normalizeRows==='function'?normalizeRows(cached):cached;return state.catalog}
+    return [];
+  }
+  let gmBase=null,gmLayer=null,gmMoveTimer=null;
+  function ensureGeneralMap(){
+    const host=$id('generalMap');if(!host||typeof L==='undefined')return null;
+    if(generalMap&&generalMap._container===host){setTimeout(()=>generalMap.invalidateSize(false),40);return generalMap}
+    try{generalMap?.remove()}catch{}
+    host.innerHTML='';
+    generalMap=L.map(host,{zoomControl:false,preferCanvas:true,zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false,tap:true}).setView([-12.0464,-77.0428],10);
+    gmBase=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{subdomains:'abc',maxZoom:19,minZoom:4,detectRetina:false,updateWhenIdle:true,keepBuffer:2,attribution:'© OpenStreetMap'}).addTo(generalMap);
+    gmBase.on('tileerror',()=>{const i=$id('generalMapInfo');if(i&&restoreCatalogCache().length)i.textContent=`Mapa base con conexión inestable. Los ${state.catalog.length.toLocaleString('es-PE')} puntos siguen disponibles.`});
+    gmLayer=L.layerGroup().addTo(generalMap);generalMarkers=gmLayer;
+    generalMap.on('moveend zoomend',()=>{clearTimeout(gmMoveTimer);gmMoveTimer=setTimeout(()=>drawGeneral(false),120)});
+    requestAnimationFrame(()=>generalMap.invalidateSize(false));setTimeout(()=>generalMap.invalidateSize(false),180);
+    return generalMap;
+  }
+  function currentFiltered(){try{return filteredGeneralMap()}catch{return restoreCatalogCache().filter(x=>Number.isFinite(+x.lat)&&Number.isFinite(+x.lon))}}
+  function popupHtml(x){
+    try{if(typeof unifiedPopup==='function')return unifiedPopup(x,'general')}catch{}
+    return `<div class="popup-card"><b>${esc(x.feeder)} · ${esc(x.substation)}</b><div>${esc(x.address||'')}</div><button class="btn" onclick="addCatalogArray([state.catalog.find(p=>p.feeder==='${String(x.feeder).replace(/'/g,"\\'")}'&&p.substation==='${String(x.substation).replace(/'/g,"\\'")}')])">Añadir a ruta</button></div>`;
+  }
+  function drawGeneral(fit=false){
+    if(typeof activeViewId==='function'&&activeViewId()!=='generalmap')return;
+    const gm=ensureGeneralMap();if(!gm)return;
+    restoreCatalogCache();
+    if(!gmLayer){gmLayer=L.layerGroup().addTo(gm);generalMarkers=gmLayer}
+    gmLayer.clearLayers();
+    const all=currentFiltered().filter(x=>Number.isFinite(+x.lat)&&Number.isFinite(+x.lon));
+    const q=($id('gmSearch')?.value||'').trim(),hasFilter=!!(q||$id('gmFeeder')?.value||$id('gmTech')?.value||$id('gmDate')?.value);
+    let candidates=all;
+    if(!hasFilter&&all.length>600){const bounds=gm.getBounds().pad(.35);const inside=all.filter(x=>bounds.contains([+x.lat,+x.lon]));candidates=inside.length?inside:all.slice(0,600)}
+    const shown=candidates.slice(0,hasFilter?1200:600);
+    const canvas=L.canvas({padding:.35});
+    shown.forEach(x=>{const m=L.circleMarker([+x.lat,+x.lon],{renderer:canvas,radius:6,weight:1.4,color:'#fff',fillColor:inRoute?.(x)?'#2563eb':'#94a3b8',fillOpacity:.95}).addTo(gmLayer);m.bindPopup(popupHtml(x));try{if(typeof bindUnifiedPopup==='function')bindUnifiedPopup(m,x,'general')}catch{}});
+    if($id('generalMapCount'))$id('generalMapCount').textContent=`${all.length.toLocaleString('es-PE')} resultado(s)`;
+    if($id('generalMapInfo'))$id('generalMapInfo').textContent=all.length?`${shown.length.toLocaleString('es-PE')} punto(s) visibles de ${all.length.toLocaleString('es-PE')}.`:(restoreCatalogCache().length?'No hay coincidencias para este filtro.':'No hay catálogo guardado en este dispositivo.');
+    if((fit||hasFilter)&&all.length){if(all.length===1)gm.setView([+all[0].lat,+all[0].lon],17);else gm.fitBounds(all.slice(0,1500).map(x=>[+x.lat,+x.lon]),{padding:[30,30],maxZoom:15})}
+    requestAnimationFrame(()=>gm.invalidateSize(false));
+  }
+  window.initGeneralMap=()=>ensureGeneralMap();
+  window.renderGeneralMap=(fit=false)=>drawGeneral(!!fit);
+  function bindGeneral(){
+    const reload=$id('gmReloadBtn');if(reload){reload.onclick=null;reload.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();ensureGeneralMap();gmBase?.redraw();drawGeneral(true)},true)}
+    const go=$id('gmGoResults');if(go){go.onclick=null;go.addEventListener('click',e=>{e.preventDefault();drawGeneral(true)},true)}
+    const search=$id('gmFilterBtn');if(search){search.onclick=null;search.addEventListener('click',e=>{e.preventDefault();drawGeneral(true)},true)}
+  }
+  function recoverRoute(){
+    if(state?.route?.stops?.length)return state.route;
+    const drafts=[safeJson(localStorage.getItem('ri_route_draft')),safeJson(localStorage.getItem(typeof plannerStorageKey==='function'?plannerStorageKey():''))].filter(Boolean);
+    for(const d of drafts){const p=d?.payload?safeJson(d.payload):d;if(p?.route?.stops?.length){state.route=p.route;state.rows=Array.isArray(p.rows)&&p.rows.length?p.rows:p.route.stops;return state.route}}
+    const rows=(state?.rows||[]).filter(x=>Number.isFinite(+x.lat)&&Number.isFinite(+x.lon));
+    if(rows.length){state.route={stops:rows.map(x=>({...x,lat:+x.lat,lon:+x.lon})),geometry:rows.map(x=>[+x.lat,+x.lon]),distanceKm:0,durationMin:0};return state.route}
+    return null;
+  }
+  async function startRecoveredRoute(){
+    const route=recoverRoute();if(!route?.stops?.length){showToast('Ruta no disponible','No se encontraron puntos guardados. Pulsa “Modificar / crear otra ruta” y optimiza nuevamente.','error');return}
+    state.navigating=true;state.activeIndex=Math.min(Math.max(+state.activeIndex||0,0),route.stops.length-1);state.arrivalHits=0;
+    try{if(!state.gps)await Promise.race([freshGps(false),new Promise(r=>setTimeout(r,3500))])}catch{}
+    if(!state.gps){const p=state.start||route.stops[0];state.gps={lat:+p.lat,lon:+p.lon,accuracy:0,bearing:0}}
+    try{saveRouteDraft()}catch{};try{setRouteReadyFocus(false)}catch{};$id('navHud')?.classList.add('show');
+    try{updateNavigation()}catch{};try{rerouteActive()}catch{};showToast('Recorrido iniciado',`${route.stops.length} parada(s) listas.`,'success');
+    pushAppState('planner','route');
+  }
+  function bindStart(){const b=$id('startNavBtn');if(!b)return;b.disabled=false;b.style.pointerEvents='auto';b.onclick=null;b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();startRecoveredRoute()},true)}
+  let handlingPop=false;
+  function activeId(){return document.querySelector('.view.active')?.id||'planner'}
+  function pushAppState(view=activeId(),mode='view'){try{history.pushState({riApp:true,view,mode},'',location.href)}catch{}}
+  function openView(view){const btn=document.querySelector(`.nav button[data-view="${view}"]`);if(typeof showView==='function')showView(view,btn)}
+  function installBackHandling(){
+    try{history.replaceState({riApp:true,view:activeId(),mode:'root'},'',location.href);pushAppState(activeId(),'view')}catch{}
+    document.querySelectorAll('.nav button[data-view]').forEach(btn=>btn.addEventListener('click',()=>setTimeout(()=>pushAppState(btn.dataset.view,'view'),0),true));
+    window.addEventListener('popstate',()=>{
+      if(handlingPop)return;handlingPop=true;
+      try{
+        document.body.classList.remove('ri-menu-open');
+        if(document.fullscreenElement){document.exitFullscreen().catch(()=>{});pushAppState(activeId(),'view');return}
+        const fw=$id('mapWrap');if(fw?.classList.contains('fullscreen-fallback')){fw.classList.remove('fullscreen-fallback');map?.invalidateSize?.(false);pushAppState(activeId(),'view');return}
+        const popup=document.querySelector('.leaflet-popup');if(popup){try{generalMap?.closePopup();map?.closePopup()}catch{};pushAppState(activeId(),'view');return}
+        if(state?.navigating){$id('navHud')?.classList.remove('show');state.navigating=false;try{setRouteReadyFocus(true)}catch{};pushAppState('planner','view');return}
+        if(activeId()!=='planner'){openView('planner');pushAppState('planner','view');return}
+      }finally{setTimeout(()=>handlingPop=false,30)}
+    },true);
+  }
+  const oldShow=window.showView;
+  if(typeof oldShow==='function')window.showView=function(id,btn){const r=oldShow.apply(this,arguments);setTimeout(()=>{if(id==='generalmap'){ensureGeneralMap();drawGeneral(false)}else map?.invalidateSize?.(false)},100);return r};
+  function repair(){addMobileShell();restoreCatalogCache();bindGeneral();bindStart();installBackHandling();if(activeId()==='generalmap'){ensureGeneralMap();drawGeneral(false)}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(repair,350),{once:true});else setTimeout(repair,350);
+  window.addEventListener('pageshow',()=>setTimeout(()=>{addMobileShell();bindGeneral();bindStart();if(activeId()==='generalmap'){ensureGeneralMap();drawGeneral(false)}},180));
 })();
 </script>
