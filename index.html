@@ -1,28 +1,27 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
-<meta content="#0f3d63" name="theme-color"/>
-<meta content="yes" name="mobile-web-app-capable"/>
-<meta content="yes" name="apple-mobile-web-app-capable"/>
-<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
-<meta content="Rutas SE" name="apple-mobile-web-app-title"/>
-<link href="manifest.webmanifest?v=13.46" rel="manifest"/>
-<meta content="yes" name="mobile-web-app-capable"/>
-<meta content="yes" name="apple-mobile-web-app-capable"/>
-<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
-<meta content="Rutas SE" name="apple-mobile-web-app-title"/>
-<link href="icon-192.png" rel="icon" sizes="192x192" type="image/png"/>
-<link href="apple-touch-icon.png" rel="apple-touch-icon"/>
-<title>Rutas de Inspección · JH</title>
-<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
-<script src="config.js"></script>
-<script crossorigin="" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-rotate@0.2.8/dist/leaflet-rotate.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f3d63">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Rutas SE">
+  <link rel="manifest" href="manifest.webmanifest?v=13.46">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Rutas SE">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <title>Rutas de Inspección · JH</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <script src="config.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet-rotate@0.2.8/dist/leaflet-rotate.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
     :root{--blue:#0b63d8;--blue2:#eaf3ff;--green:#138a55;--red:#d53a3a;--ink:#172033;--muted:#64748b;--line:#dbe4ef;--bg:#f4f7fb;--card:#fff}
     *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
     button,input,select{font:inherit} button{cursor:pointer} .app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
@@ -189,6 +188,7 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
 @media(max-width:520px){.enterprise-metric{min-height:94px;padding:12px!important}.enterprise-metric b{font-size:21px!important}.enterprise-metric i{width:38px!important;height:38px!important}.fullview{padding:12px;border-radius:13px}.top-actions .install-btn{padding:8px 9px;font-size:12px}}
 
 </style>
+
 <style>
 .voltage-chip{display:inline-flex;margin-top:5px;padding:4px 8px;border-radius:999px;background:#fff7d6;color:#8a5b00;font-size:11px;font-weight:800}
 .inspection-modal{position:fixed;inset:0;z-index:5000;background:#0f172acc;display:flex;align-items:center;justify-content:center;padding:10px}
@@ -207,119 +207,121 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
 @media(max-width:520px){.catalog-toolbar-v2{grid-template-columns:1fr!important}.dash-filters{grid-template-columns:1fr!important}.date-field{width:100%}}
 
 </style>
-<script async="" defer="" src="https://accounts.google.com/gsi/client"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 <style>
 .connection-help-btn{width:26px;height:26px;border-radius:50%;border:1px solid #cbd5e1;background:#fff;color:#0f4c81;font-weight:900;cursor:pointer;margin-left:6px}.connection-help-btn:hover{background:#eaf3fb}.connection-panel{position:fixed;right:18px;top:78px;z-index:99999;width:min(420px,calc(100vw - 36px));background:#fff;border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 18px 50px rgba(15,23,42,.22);padding:18px}.connection-panel h3{margin:0 0 10px;color:#0f2942}.connection-panel p{margin:7px 0;color:#475569;line-height:1.45}.connection-panel code{display:block;padding:10px;background:#f1f5f9;border-radius:10px;overflow:auto;font-size:12px}.connection-panel .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.registry-loading{padding:28px;text-align:center;color:#64748b}.sync.err{font-weight:800}.sync.ok{font-weight:800}
 </style>
 </head>
-<body><div aria-atomic="true" aria-live="polite" class="toast-stack" id="toastStack"></div>
-<div aria-label="Instalar aplicación" aria-live="polite" class="install-hint" id="installHint" role="dialog">
-<button aria-label="Cerrar" id="closeInstallHint" type="button">×</button>
-<b><img alt="" class="pwa-icon-preview" src="icon-192.png"/>Instalar Rutas de Inspección</b>
-<small id="installHintText">En Chrome, toca el menú ⋮ y elige “Instalar aplicación”. Si no aparece, selecciona “Añadir a pantalla principal”.</small>
+<body><div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+<div id="installHint" class="install-hint" role="dialog" aria-live="polite" aria-label="Instalar aplicación">
+  <button id="closeInstallHint" type="button" aria-label="Cerrar">×</button>
+  <b><img src="icon-192.png" alt="" class="pwa-icon-preview">Instalar Rutas de Inspección</b>
+  <small id="installHintText">En Chrome, toca el menú ⋮ y elige “Instalar aplicación”. Si no aparece, selecciona “Añadir a pantalla principal”.</small>
 </div>
-<div aria-labelledby="loginTitle" aria-modal="true" class="login" id="login" role="dialog">
-<div class="login-shell">
-<section aria-hidden="true" class="login-visual">
-<div class="login-copy">
-<div class="jh-logo">⚡ <span>JH</span></div>
-<h1>Rutas de<br/><span>Inspección</span></h1>
-<p>Gestión de inspecciones eléctricas</p>
-<div class="login-points">
-<div class="login-point"><i>⌘</i><div><b>Planifica rutas</b><small>Organiza y optimiza tus inspecciones en campo.</small></div></div>
-<div class="login-point"><i>⚡</i><div><b>Inspecciones seguras</b><small>Supervisa subestaciones y activos eléctricos.</small></div></div>
-<div class="login-point"><i>▥</i><div><b>Decisiones informadas</b><small>Accede a información confiable para una mejor gestión.</small></div></div>
-</div>
-</div>
-</section>
-<section class="login-panel">
-<div class="loginbox">
-<div class="login-brand"><div class="brand-icon">⚡</div><h2 id="loginTitle">Rutas de Inspección</h2><p>Gestión de inspecciones eléctricas</p></div>
-<div class="login-tabs"><button class="login-tab active" id="loginTabBtn" type="button">Iniciar sesión</button><button class="login-tab" id="recoverTabBtn" type="button">Recuperar contraseña</button></div>
-<form class="login-pane active" id="loginForm" novalidate="">
-<div class="google-auth-box">
-<div class="google-auth-title">Acceso seguro recomendado</div>
-<div id="googleSignInBtn"></div>
-<div class="google-login-fallback" id="googleFallback">Para activar esta opción, configura <b>GOOGLE_CLIENT_ID</b> en <b>config.js</b> y registra el correo del usuario en el panel Usuarios.</div>
-<div class="google-code-step" id="googleCodeStep">
-<label class="label" for="googleCodeInput">CÓDIGO DE SEGURIDAD</label><input class="input" id="googleCodeInput" inputmode="numeric" maxlength="6" placeholder="Ingresa los 6 dígitos enviados a tu correo"/>
-<button class="btn login-submit" id="confirmGoogleCodeBtn" type="button">Verificar código</button>
-</div>
-<div aria-live="polite" class="feedback" id="googleLoginFeedback"></div>
-<div class="google-auth-note">Google valida tu cuenta y el sistema envía un código de 6 dígitos al correo autorizado antes de abrir la sesión.</div>
-</div>
-<div class="google-auth-separator"><span>o ingresa con usuario temporal</span></div>
-<label class="label" for="loginName">USUARIO</label><input autocomplete="username" class="input" id="loginName" placeholder="Ingresa tu usuario" required=""/>
-<label class="label" for="loginPin">CONTRASEÑA</label><div class="password-wrap"><input autocomplete="current-password" class="input" id="loginPin" maxlength="24" placeholder="Ingresa tu contraseña" required="" type="password"/><button aria-label="Mostrar contraseña" class="password-eye" id="toggleLoginPin" type="button">◉</button></div>
-<button class="btn login-submit" id="loginBtn" type="submit">⚡ Entrar</button><div aria-live="polite" class="feedback" id="loginFeedback"></div>
-<div class="login-help">Las cuentas son creadas por el Administrador.<br/>Si no tienes acceso, contacta con el administrador del sistema.</div>
-</form>
-<div class="login-pane" id="recoverPane">
-<div class="recovery-grid" id="recoverRequestStep">
-<label class="label" for="recoverUsername">USUARIO</label><input autocomplete="username" class="input" id="recoverUsername" placeholder="Ingresa tu usuario"/>
-<button class="btn login-submit" id="requestRecoveryBtn" type="button">✉ Enviar código</button>
-</div>
-<div class="recovery-grid" id="recoverConfirmStep" style="display:none">
-<label class="label" for="recoverCode">CÓDIGO RECIBIDO</label><input class="input" id="recoverCode" inputmode="numeric" maxlength="6" placeholder="6 dígitos"/>
-<label class="label" for="recoverNewPin">NUEVA CONTRASEÑA</label><div class="password-wrap"><input class="input" id="recoverNewPin" maxlength="24" placeholder="Nueva contraseña" type="password"/><button aria-label="Mostrar contraseña" class="password-eye" id="toggleRecoverPin" type="button">◉</button></div>
-<button class="btn login-submit" id="confirmRecoveryBtn" type="button">Cambiar contraseña</button>
-</div>
-<div aria-live="polite" class="feedback" id="recoveryFeedback"></div>
-<div class="login-help">El código se enviará al correo registrado. Si tu cuenta no tiene correo, solicita al Administrador que restablezca tu contraseña.</div>
-</div>
-<div class="login-footer">Sistema de Gestión de Inspecciones Eléctricas · Creado por JH</div>
-</div>
-</section>
-</div>
+<div id="login" class="login" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <div class="login-shell">
+    <section class="login-visual" aria-hidden="true">
+      <div class="login-copy">
+        <div class="jh-logo">⚡ <span>JH</span></div>
+        <h1>Rutas de<br><span>Inspección</span></h1>
+        <p>Gestión de inspecciones eléctricas</p>
+        <div class="login-points">
+          <div class="login-point"><i>⌘</i><div><b>Planifica rutas</b><small>Organiza y optimiza tus inspecciones en campo.</small></div></div>
+          <div class="login-point"><i>⚡</i><div><b>Inspecciones seguras</b><small>Supervisa subestaciones y activos eléctricos.</small></div></div>
+          <div class="login-point"><i>▥</i><div><b>Decisiones informadas</b><small>Accede a información confiable para una mejor gestión.</small></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="login-panel">
+      <div class="loginbox">
+        <div class="login-brand"><div class="brand-icon">⚡</div><h2 id="loginTitle">Rutas de Inspección</h2><p>Gestión de inspecciones eléctricas</p></div>
+        <div class="login-tabs"><button id="loginTabBtn" class="login-tab active" type="button">Iniciar sesión</button><button id="recoverTabBtn" class="login-tab" type="button">Recuperar contraseña</button></div>
+        <form id="loginForm" class="login-pane active" novalidate>
+          <div class="google-auth-box">
+            <div class="google-auth-title">Acceso seguro recomendado</div>
+            <div id="googleSignInBtn"></div>
+            <div id="googleFallback" class="google-login-fallback">Para activar esta opción, configura <b>GOOGLE_CLIENT_ID</b> en <b>config.js</b> y registra el correo del usuario en el panel Usuarios.</div>
+            <div id="googleCodeStep" class="google-code-step">
+              <label class="label" for="googleCodeInput">CÓDIGO DE SEGURIDAD</label><input id="googleCodeInput" class="input" inputmode="numeric" maxlength="6" placeholder="Ingresa los 6 dígitos enviados a tu correo">
+              <button id="confirmGoogleCodeBtn" class="btn login-submit" type="button">Verificar código</button>
+            </div>
+            <div id="googleLoginFeedback" class="feedback" aria-live="polite"></div>
+            <div class="google-auth-note">Google valida tu cuenta y el sistema envía un código de 6 dígitos al correo autorizado antes de abrir la sesión.</div>
+          </div>
+          <div class="google-auth-separator"><span>o ingresa con usuario temporal</span></div>
+          <label class="label" for="loginName">USUARIO</label><input id="loginName" class="input" placeholder="Ingresa tu usuario" autocomplete="username" required>
+          <label class="label" for="loginPin">CONTRASEÑA</label><div class="password-wrap"><input id="loginPin" class="input" type="password" maxlength="24" placeholder="Ingresa tu contraseña" autocomplete="current-password" required><button id="toggleLoginPin" class="password-eye" type="button" aria-label="Mostrar contraseña">◉</button></div>
+          <button id="loginBtn" type="submit" class="btn login-submit">⚡ Entrar</button><div id="loginFeedback" class="feedback" aria-live="polite"></div>
+          <div class="login-help">Las cuentas son creadas por el Administrador.<br>Si no tienes acceso, contacta con el administrador del sistema.</div>
+        </form>
+        <div id="recoverPane" class="login-pane">
+          <div id="recoverRequestStep" class="recovery-grid">
+            <label class="label" for="recoverUsername">USUARIO</label><input id="recoverUsername" class="input" placeholder="Ingresa tu usuario" autocomplete="username">
+            <button id="requestRecoveryBtn" class="btn login-submit" type="button">✉ Enviar código</button>
+          </div>
+          <div id="recoverConfirmStep" class="recovery-grid" style="display:none">
+            <label class="label" for="recoverCode">CÓDIGO RECIBIDO</label><input id="recoverCode" class="input" inputmode="numeric" maxlength="6" placeholder="6 dígitos">
+            <label class="label" for="recoverNewPin">NUEVA CONTRASEÑA</label><div class="password-wrap"><input id="recoverNewPin" class="input" type="password" maxlength="24" placeholder="Nueva contraseña"><button id="toggleRecoverPin" class="password-eye" type="button" aria-label="Mostrar contraseña">◉</button></div>
+            <button id="confirmRecoveryBtn" class="btn login-submit" type="button">Cambiar contraseña</button>
+          </div>
+          <div id="recoveryFeedback" class="feedback" aria-live="polite"></div>
+          <div class="login-help">El código se enviará al correo registrado. Si tu cuenta no tiene correo, solicita al Administrador que restablezca tu contraseña.</div>
+        </div>
+        <div class="login-footer">Sistema de Gestión de Inspecciones Eléctricas · Creado por JH</div>
+      </div>
+    </section>
+  </div>
 </div>
 <div class="app">
-<aside><div class="brand"><b>⌖</b><span>Rutas de Inspección</span></div><div class="nav">
-<button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button class="admin-only" data-view="programming">▣ Programación</button><button data-view="history">↻ Historial</button><button class="admin-only" data-view="modifications">◷ Modificaciones</button><button class="admin-only" data-view="users">👥 Usuarios</button><button class="admin-only" data-view="settings">⚙ Configuración</button><button class="nav-order-btn" id="orderTabsBtn" title="Ordenar pestañas" type="button">↕ Ordenar</button>
-</div></aside>
-<main>
-<div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button class="install-btn share-app-btn" id="shareAppBtn" type="button">🔗 Compartir app</button><button class="install-btn admin-only" id="quickUsersBtn" type="button">👥 Usuarios</button><button aria-label="Instalar Rutas de Inspección" class="install-btn show" id="installPwaBtn" type="button">⬇ Instalar app</button><button class="install-btn" id="logoutBtn" style="display:none" type="button">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v14.0-alpha</small><span class="sync" id="syncState">Comprobando conexión…</span><button class="connection-help-btn" id="connectionHelpBtn" title="Diagnóstico de conexión" type="button">?</button></span></div></div>
-<section class="view" id="planner"><div class="assignment-banner" id="assignmentBanner"><b id="assignmentTitle">Programación disponible</b><div class="feedback" id="assignmentDetail"></div><div class="btns"><button class="btn primary" id="loadAssignmentBtn">Cargar en mi planificador</button><button class="btn" id="dismissAssignmentBtn">Ocultar</button></div></div>
-<div class="layout">
-<div class="left">
-<div class="card" id="locationsCard"><div class="card-head"><h2>Ubicaciones a visitar</h2><button aria-expanded="true" class="collapse-btn" id="collapseLocationsBtn" title="Contraer ubicaciones" type="button">−</button></div><div class="collapsible-body" id="locationsBody"><label class="label">Punto de partida</label><div class="btns"><button class="btn" id="useGpsBtn">◎ Usar mi ubicación</button><span class="feedback" id="gpsText">GPS pendiente</span></div><div id="locationRows"></div><button class="btn" id="addRowBtn" style="width:100%;margin-top:8px">＋ Agregar ubicación</button>
-<div class="import-panel"><div class="import-title"><b>Carga masiva desde Excel</b><div class="btns" style="margin-top:0"><button class="btn" id="templateBtn">⬇ Plantilla Excel</button><label class="btn file-label" for="excelImportInput">⬆ Importar Excel</label><input accept=".xlsx,.xls,.csv" hidden="" id="excelImportInput" type="file"/></div></div><p class="import-help">Columnas obligatorias: Alimentador, Subestación y Dirección / URL. Latitud y Longitud son opcionales.</p><div class="import-preview" id="importPreview"><div class="import-summary" id="importSummary"></div><div class="preview-table"><table><thead><tr><th>#</th><th>Alimentador</th><th>Subestación</th><th>Dirección / URL</th><th>Latitud</th><th>Longitud</th><th>Estado</th></tr></thead><tbody id="importPreviewBody"></tbody></table></div><div class="btns"><button class="btn" id="cancelImportBtn">Cerrar resumen</button></div></div></div>
-<div class="btns"><button class="btn green" id="saveLocationsBtn">Guardar ubicaciones</button><button class="btn primary" id="optimizeBtn">Optimizar ruta</button><button class="btn danger" id="clearBtn">Limpiar ubicaciones</button></div><div class="draft-note">Las ubicaciones permanecen guardadas al salir o usar la flecha Atrás. Solo se borran con “Limpiar ubicaciones”.</div><div class="save-progress" id="saveProgress"></div><div class="feedback" id="routeFeedback"></div></div></div>
-<div class="card" id="routeCard"><div class="card-head"><h2>Orden optimizado</h2><button aria-expanded="true" class="collapse-btn" id="collapseRouteBtn" title="Contraer orden optimizado" type="button">−</button></div><div class="collapsible-body" id="routeBody"><div class="route-list" id="routeList"><div class="feedback">Agrega puntos y optimiza.</div></div><div class="metrics"><div class="metric"><b id="totalTime">0 min</b><span>Tiempo</span></div><div class="metric"><b id="totalDistance">0 km</b><span>Distancia</span></div><div class="metric"><b id="totalStops">0</b><span>Paradas</span></div></div><div class="btns"><button class="btn green" disabled="" id="startNavBtn">▶ Iniciar recorrido</button><button class="btn" id="editRouteBtn" type="button">✏️ Modificar / crear otra ruta</button><button class="btn" disabled="" id="prevBtn">← Anterior</button><button class="btn" disabled="" id="nextBtn">Siguiente →</button></div></div></div>
-</div>
-<div id="mapWrap"><div id="map"></div><div class="compass"><span id="northArrow">N▲</span></div><div class="map-tools"><button id="fullscreenBtn" title="Pantalla completa">⛶</button><button id="locateBtn" title="Mi ubicación">◎</button><button id="zoomInBtn">＋</button><button id="zoomOutBtn">−</button></div><div class="navhud" id="navHud"><div class="title" id="hudTitle"></div><div class="sub" id="hudSub"></div><div class="hudrow"><span class="pill" id="hudDistance">— km</span><span class="pill" id="hudTime">— min</span><span class="pill" id="hudGps">GPS —</span></div><div class="hudrow"><button class="btn primary" disabled="" id="formBtn">🔒 Formulario al llegar</button><button class="btn inspect" disabled="" id="inspectBtn">Registrar resultado</button><button class="btn green" id="hudNextBtn" style="display:none">Siguiente punto →</button><button class="btn" id="manualFormBtn" style="display:none">Habilitar manualmente</button><button class="btn danger" id="stopNavBtn">Finalizar</button></div></div></div>
-</div>
-</section>
-<section class="view active" id="dashboard">
-<div class="enterprise-home">
-<div class="welcome-strip">
-<div><span class="eyebrow">RUTAS DE INSPECCIÓN · JH</span><h2 id="welcomeName">Bienvenido</h2><p>Resumen general de inspecciones, rutas y actividad operativa.</p></div>
-<div class="home-actions"><button class="btn primary" data-go="planner">＋ Crear ruta</button><button class="btn" data-go="generalmap">◉ Abrir mapa</button><span class="domain-pill">rutas.mizona.pe</span></div>
-</div>
-<div class="enterprise-metrics" id="enterpriseMetrics"></div>
-<div class="enterprise-grid">
-<div class="enterprise-panel map-preview-panel"><div class="panel-title"><div><h3>Mapa general</h3><small>Subestaciones, derivaciones y clientes registrados</small></div><button class="btn" data-go="generalmap">Ver mapa completo</button></div><div class="dashboard-map-preview" id="dashboardMapPreview"><div class="map-placeholder"><span>◉</span><b>Mapa conectado a tu catálogo</b><small>Los puntos se cargan por bloques para evitar que la aplicación se congele.</small></div></div><div class="dashboard-legend" id="dashboardLegend"></div></div>
-<div class="enterprise-panel"><div class="panel-title"><div><h3>Actividad reciente</h3><small>Últimos movimientos del sistema</small></div><button class="btn admin-only" data-go="modifications">Ver todo</button></div><div class="activity-list" id="recentActivity"></div></div>
-</div>
-<div class="enterprise-grid lower-grid">
-<div class="enterprise-panel"><div class="panel-title"><div><h3>Avance por alimentador</h3><small>Progreso de inspecciones</small></div></div><div id="feederProgress"></div></div>
-<div class="enterprise-panel"><div class="panel-title"><div><h3>Distribución por estado</h3><small>Situación actual de los puntos</small></div></div><div class="status-legend" id="statusDistribution"></div></div>
-</div>
-<div class="dashboard-hidden-compat"><input id="dashFrom" type="date"/><input id="dashTo" type="date"/><select id="dashTech"><option value="">Todos</option></select><button id="dashApplyBtn"></button><div id="dashboardMetrics"></div><div id="techPerformance"></div><div id="dashboardAlerts"></div></div>
-</div>
-</section>
-<section class="view" id="programming"><div class="fullview"><div class="topbar"><h2>Programación de rutas</h2><button class="btn" id="refreshAssignmentsBtn">Actualizar</button></div><div class="admin-grid"><div class="card"><h3>Nueva asignación</h3><div class="form-grid"><label>Fecha<input class="input" id="assignDate" type="date"/></label><label>Técnico<select class="input" id="assignUser"></select></label><label>Alimentador<input class="input" id="assignFeeder" placeholder="Ej. CH01"/></label><label>Prioridad<select class="input" id="assignPriority"><option>Normal</option><option>Alta</option><option>Crítica</option></select></label><label class="span2">Subestaciones (separadas por coma o una por línea)<textarea class="input" id="assignSubs" placeholder="20898A, 20765A" rows="5"></textarea></label><label class="span2">Observación<textarea class="input" id="assignNotes" rows="3"></textarea></label></div><button class="btn primary" id="saveAssignmentBtn" style="width:100%;margin-top:10px">Guardar programación</button><div class="feedback" id="assignmentFeedback"></div></div><div><div class="data-list" id="assignmentList"></div></div></div></div></section>
-<section class="view" id="users"><div class="fullview"><div class="topbar"><div><h2>Gestión de usuarios</h2><small>El Administrador principal conserva acceso total y la información histórica nunca se elimina.</small></div><button class="btn" id="refreshUsersBtn">Actualizar</button></div><div class="primary-note" id="primaryAdminNotice">La cuenta marcada como <b>Administrador principal</b> está protegida: no puede ser bloqueada, eliminada ni degradada por otro usuario.</div><div class="section-tabs"><button class="btn active" id="showCreateUserBtn" type="button">Crear usuario</button><button class="btn" id="showRegistryBtn" type="button">Usuarios registrados</button></div><div class="admin-grid" id="userCreatePanel"><div class="card"><h3>Crear usuario</h3><div class="form-grid"><label>Usuario<input class="input" id="newUsername" placeholder="jhugo"/></label><label>Nombre completo<input class="input" id="newFullName" placeholder="José Hugo"/></label><label>Correo de recuperación<input class="input" id="newEmail" placeholder="usuario@correo.com" type="email"/></label><label>PIN temporal<input class="input" id="newPin" inputmode="numeric" maxlength="12" placeholder="4 a 12 dígitos" type="password"/></label><label>Rol<select class="input" id="newRole"><option>Inspector</option><option>Supervisor</option><option>Programador</option><option>Consulta</option><option>Administrador secundario</option></select></label><label class="span2">Técnico / identificador<input class="input" id="newTechnician" placeholder="José"/></label></div><button class="btn primary" id="createUserBtn" style="width:100%;margin-top:10px">Crear usuario</button><div class="feedback" id="userFeedback"></div></div><div class="card"><h3>Reglas de acceso</h3><p>El enlace no crea cuentas ni concede permisos. Primero crea el usuario y después comparte la aplicación.</p><p>Las cuentas inactivas conservan inspecciones, reportes, fotos, rutas e historial visibles para el Administrador.</p></div></div><div id="userRegistryPanel" style="display:none"><div class="user-registry-toolbar"><input class="input" id="userSearch" placeholder="Buscar por nombre o usuario"/><select class="input" id="userRoleFilter"><option value="">Todos los roles</option><option>Administrador principal</option><option>Administrador secundario</option><option>Supervisor</option><option>Programador</option><option>Inspector</option><option>Consulta</option></select><select class="input" id="userStatusFilter"><option value="">Todos los estados</option><option value="active">Activos</option><option value="blocked">Bloqueados</option><option value="inactive">Inactivos</option><option value="deleted">Eliminados lógicamente</option></select><button class="btn" id="clearUserFiltersBtn">Limpiar</button></div><div class="data-list" id="userList"></div></div></div></section>
-<section class="view" id="catalog"><div class="fullview"><h2>Catálogo de alimentadores y subestaciones</h2><div class="catalog-toolbar catalog-toolbar-v2"><input class="input" id="catalogSearch" placeholder="Buscar por subestación, dirección o alimentador"/><label class="date-field">Fecha de registro<input class="input" id="catDate" type="date"/></label><select class="input" id="catFeeder"><option value="">Todos los alimentadores</option></select><input class="input" id="catTech" placeholder="Técnico"/></div><div class="catalog-actions"><button class="btn primary" id="catalogSearchBtn">Aplicar filtros</button><button class="btn" id="catalogClearBtn">Limpiar filtros</button><button class="btn green" id="addSelectedBtn">Añadir seleccionadas</button><button class="btn" id="addAllFilteredBtn">Añadir todos los resultados</button><button class="btn" id="revalidateBtn">Revalidar coordenadas</button><span class="catalog-summary" id="catalogSummary"></span><span class="revalidate-state" id="revalidateState"></span></div><div class="results" id="catalogResults" style="max-height:62vh"></div></div></section>
-<section class="view" id="generalmap"><div class="fullview general-map-layout"><div><div class="topbar"><h2>Mapa general de subestaciones</h2><span class="sync" id="generalMapCount"></span></div><div class="general-map-toolbar"><input class="input" id="gmSearch" placeholder="Buscar alimentador, subestación, dirección o técnico"/><select class="input" id="gmFeeder"><option value="">Todos los alimentadores</option></select><input class="input" id="gmTech" placeholder="Técnico"/><input class="input" id="gmDate" type="date"/><button class="btn primary" id="gmFilterBtn">Buscar</button><button class="btn green" id="gmAddAllBtn">Añadir resultados</button><button class="btn" id="gmReloadBtn">Recargar mapa</button></div><div class="gm-result-summary" id="gmResultSummary" style="display:none"><strong id="gmResultCount">0 puntos encontrados</strong><button class="btn primary" id="gmGoResults" type="button">Ir</button></div></div><div class="general-map-shell"><div class="general-map" id="generalMap"></div><div aria-label="Controles del mapa" class="general-map-controls"><button id="gmZoomIn" title="Acercar" type="button">+</button><button id="gmZoomOut" title="Alejar" type="button">−</button><button id="gmFitAll" title="Ver todos los puntos" type="button">◎</button></div><div class="general-map-info" id="generalMapInfo">Cargando subestaciones…</div></div></div></section>
-<section class="view" id="history"><div class="fullview"><div class="topbar"><h2>Historial de recorridos</h2><div class="btns"><button class="btn green" id="excelBtn">Descargar Excel</button><button class="btn" id="csvBtn">CSV</button></div></div><div class="filters"><input class="input" id="fDate" type="date"/><input class="input" id="fFeeder" placeholder="Alimentador"/><input class="input" id="fSub" placeholder="Subestación"/><select class="input" id="fStatus"><option value="">Todos los estados</option><option>Pendiente</option><option>En ruta</option><option>Inspeccionada</option><option>No inspeccionada</option><option>Reprogramada</option><option>Observada</option></select></div><div class="tablewrap"><table><thead><tr><th>Fecha</th><th>Usuario</th><th>Alimentador</th><th>Subestación</th><th>Dirección</th><th>Orden</th><th>Distancia</th><th>Tiempo</th><th>Estado</th><th>Motivo / observación</th><th>Reprogramada para</th><th>Latitud</th><th>Longitud</th></tr></thead><tbody id="historyBody"></tbody></table></div></div></section>
-<section class="view" id="modifications"><div class="fullview audit-view">
-<div class="audit-header"><div><span class="eyebrow">AUDITORÍA ADMINISTRATIVA</span><h2>Registro de modificaciones</h2><p>Consulta quién creó, actualizó o cambió información dentro del sistema.</p></div><div class="btns"><button class="btn green" id="auditExportBtn">⬇ Exportar CSV</button><button class="btn primary" id="auditRefreshBtn">↻ Actualizar</button></div></div>
-<div class="audit-filters"><label>Fecha desde<input class="input" id="auditFrom" type="date"/></label><label>Fecha hasta<input class="input" id="auditTo" type="date"/></label><label>Módulo<select class="input" id="auditModule"><option value="">Todos los módulos</option><option>Inspecciones</option><option>Rutas</option><option>Subestaciones</option><option>Usuarios</option><option>Programación</option></select></label><label>Acción<select class="input" id="auditAction"><option value="">Todas las acciones</option><option>Creación</option><option>Actualización</option><option>Eliminación</option></select></label><label>Usuario<input class="input" id="auditUser" placeholder="Nombre o usuario"/></label><button class="btn primary" id="auditSearchBtn">Buscar</button></div>
-<div class="audit-metrics" id="auditMetrics"></div>
-<div class="audit-table-wrap"><table class="audit-table"><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Módulo</th><th>Acción</th><th>Elemento</th><th>Descripción del cambio</th><th>Origen</th></tr></thead><tbody id="auditBody"></tbody></table></div>
-</div></section>
-<section class="view" id="settings"><div class="fullview"><h2>Configuración</h2><label class="label">URL del Apps Script</label><input class="input" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec"/><div class="btns"><button class="btn primary" id="saveConfigBtn">Guardar y sincronizar</button><button class="btn" id="syncBtn">Sincronizar ahora</button></div><p class="feedback">La URL central está preconfigurada en <b>config.js</b>. Todos los dispositivos usarán automáticamente la misma base.</p></div></section>
-</main>
+  <aside><div class="brand"><b>⌖</b><span>Rutas de Inspección</span></div><div class="nav">
+    <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
+  </div></aside>
+  <main>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v14.0-alpha2</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
+    <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
+      <div class="layout">
+        <div class="left">
+          <div id="locationsCard" class="card"><div class="card-head"><h2>Ubicaciones a visitar</h2><button id="collapseLocationsBtn" class="collapse-btn" type="button" aria-expanded="true" title="Contraer ubicaciones">−</button></div><div id="locationsBody" class="collapsible-body"><label class="label">Punto de partida</label><div class="btns"><button id="useGpsBtn" class="btn">◎ Usar mi ubicación</button><span id="gpsText" class="feedback">GPS pendiente</span></div><div id="locationRows"></div><button id="addRowBtn" class="btn" style="width:100%;margin-top:8px">＋ Agregar ubicación</button>
+          <div class="import-panel"><div class="import-title"><b>Carga masiva desde Excel</b><div class="btns" style="margin-top:0"><button id="templateBtn" class="btn">⬇ Plantilla Excel</button><label class="btn file-label" for="excelImportInput">⬆ Importar Excel</label><input id="excelImportInput" type="file" accept=".xlsx,.xls,.csv" hidden></div></div><p class="import-help">Columnas obligatorias: Alimentador, Subestación y Dirección / URL. Latitud y Longitud son opcionales.</p><div id="importPreview" class="import-preview"><div id="importSummary" class="import-summary"></div><div class="preview-table"><table><thead><tr><th>#</th><th>Alimentador</th><th>Subestación</th><th>Dirección / URL</th><th>Latitud</th><th>Longitud</th><th>Estado</th></tr></thead><tbody id="importPreviewBody"></tbody></table></div><div class="btns"><button id="cancelImportBtn" class="btn">Cerrar resumen</button></div></div></div>
+          <div class="btns"><button id="saveLocationsBtn" class="btn green">Guardar ubicaciones</button><button id="optimizeBtn" class="btn primary">Optimizar ruta</button><button id="clearBtn" class="btn danger">Limpiar ubicaciones</button></div><div class="draft-note">Las ubicaciones permanecen guardadas al salir o usar la flecha Atrás. Solo se borran con “Limpiar ubicaciones”.</div><div id="saveProgress" class="save-progress"></div><div id="routeFeedback" class="feedback"></div></div></div>
+          <div id="routeCard" class="card"><div class="card-head"><h2>Orden optimizado</h2><button id="collapseRouteBtn" class="collapse-btn" type="button" aria-expanded="true" title="Contraer orden optimizado">−</button></div><div id="routeBody" class="collapsible-body"><div id="routeList" class="route-list"><div class="feedback">Agrega puntos y optimiza.</div></div><div class="metrics"><div class="metric"><b id="totalTime">0 min</b><span>Tiempo</span></div><div class="metric"><b id="totalDistance">0 km</b><span>Distancia</span></div><div class="metric"><b id="totalStops">0</b><span>Paradas</span></div></div><div class="btns"><button id="startNavBtn" class="btn green" disabled>▶ Iniciar recorrido</button><button id="editRouteBtn" class="btn" type="button">✏️ Modificar / crear otra ruta</button><button id="prevBtn" class="btn" disabled>← Anterior</button><button id="nextBtn" class="btn" disabled>Siguiente →</button></div></div></div>
+
+        </div>
+        <div id="mapWrap"><div id="map"></div><div class="compass"><span id="northArrow">N▲</span></div><div class="map-tools"><button id="fullscreenBtn" title="Pantalla completa">⛶</button><button id="locateBtn" title="Mi ubicación">◎</button><button id="zoomInBtn">＋</button><button id="zoomOutBtn">−</button></div><div id="navHud" class="navhud"><div id="hudTitle" class="title"></div><div id="hudSub" class="sub"></div><div class="hudrow"><span id="hudDistance" class="pill">— km</span><span id="hudTime" class="pill">— min</span><span id="hudGps" class="pill">GPS —</span></div><div class="hudrow"><button id="formBtn" class="btn primary" disabled>🔒 Formulario al llegar</button><button id="inspectBtn" class="btn inspect" disabled>Registrar resultado</button><button id="hudNextBtn" class="btn green" style="display:none">Siguiente punto →</button><button id="manualFormBtn" class="btn" style="display:none">Habilitar manualmente</button><button id="stopNavBtn" class="btn danger">Finalizar</button></div></div></div>
+      </div>
+    </section>
+    <section id="dashboard" class="view active">
+      <div class="enterprise-home">
+        <div class="welcome-strip">
+          <div><span class="eyebrow">RUTAS DE INSPECCIÓN · JH</span><h2 id="welcomeName">Bienvenido</h2><p>Resumen general de inspecciones, rutas y actividad operativa.</p></div>
+          <div class="home-actions"><button class="btn primary" data-go="planner">＋ Crear ruta</button><button class="btn" data-go="generalmap">◉ Abrir mapa</button><span class="domain-pill">rutas.mizona.pe</span></div>
+        </div>
+        <div id="enterpriseMetrics" class="enterprise-metrics"></div>
+        <div class="enterprise-grid">
+          <div class="enterprise-panel map-preview-panel"><div class="panel-title"><div><h3>Mapa general</h3><small>Subestaciones, derivaciones y clientes registrados</small></div><button class="btn" data-go="generalmap">Ver mapa completo</button></div><div id="dashboardMapPreview" class="dashboard-map-preview"><div class="map-placeholder"><span>◉</span><b>Mapa conectado a tu catálogo</b><small>Los puntos se cargan por bloques para evitar que la aplicación se congele.</small></div></div><div id="dashboardLegend" class="dashboard-legend"></div></div>
+          <div class="enterprise-panel"><div class="panel-title"><div><h3>Actividad reciente</h3><small>Últimos movimientos del sistema</small></div><button class="btn admin-only" data-go="modifications">Ver todo</button></div><div id="recentActivity" class="activity-list"></div></div>
+        </div>
+        <div class="enterprise-grid lower-grid">
+          <div class="enterprise-panel"><div class="panel-title"><div><h3>Avance por alimentador</h3><small>Progreso de inspecciones</small></div></div><div id="feederProgress"></div></div>
+          <div class="enterprise-panel"><div class="panel-title"><div><h3>Distribución por estado</h3><small>Situación actual de los puntos</small></div></div><div id="statusDistribution" class="status-legend"></div></div>
+        </div>
+        <div class="dashboard-hidden-compat"><input id="dashFrom" type="date"><input id="dashTo" type="date"><select id="dashTech"><option value="">Todos</option></select><button id="dashApplyBtn"></button><div id="dashboardMetrics"></div><div id="techPerformance"></div><div id="dashboardAlerts"></div></div>
+      </div>
+    </section>
+    <section id="programming" class="view"><div class="fullview"><div class="topbar"><h2>Programación de rutas</h2><button id="refreshAssignmentsBtn" class="btn">Actualizar</button></div><div class="admin-grid"><div class="card"><h3>Nueva asignación</h3><div class="form-grid"><label>Fecha<input id="assignDate" type="date" class="input"></label><label>Técnico<select id="assignUser" class="input"></select></label><label>Alimentador<input id="assignFeeder" class="input" placeholder="Ej. CH01"></label><label>Prioridad<select id="assignPriority" class="input"><option>Normal</option><option>Alta</option><option>Crítica</option></select></label><label class="span2">Subestaciones (separadas por coma o una por línea)<textarea id="assignSubs" class="input" rows="5" placeholder="20898A, 20765A"></textarea></label><label class="span2">Observación<textarea id="assignNotes" class="input" rows="3"></textarea></label></div><button id="saveAssignmentBtn" class="btn primary" style="width:100%;margin-top:10px">Guardar programación</button><div id="assignmentFeedback" class="feedback"></div></div><div><div id="assignmentList" class="data-list"></div></div></div></div></section>
+    <section id="users" class="view"><div class="fullview"><div class="topbar"><div><h2>Gestión de usuarios</h2><small>El Administrador principal conserva acceso total y la información histórica nunca se elimina.</small></div><button id="refreshUsersBtn" class="btn">Actualizar</button></div><div id="primaryAdminNotice" class="primary-note">La cuenta marcada como <b>Administrador principal</b> está protegida: no puede ser bloqueada, eliminada ni degradada por otro usuario.</div><div class="section-tabs"><button id="showCreateUserBtn" class="btn active" type="button">Crear usuario</button><button id="showRegistryBtn" class="btn" type="button">Usuarios registrados</button></div><div id="userCreatePanel" class="admin-grid"><div class="card"><h3>Crear usuario</h3><div class="form-grid"><label>Usuario<input id="newUsername" class="input" placeholder="jhugo"></label><label>Nombre completo<input id="newFullName" class="input" placeholder="José Hugo"></label><label>Correo de recuperación<input id="newEmail" class="input" type="email" placeholder="usuario@correo.com"></label><label>PIN temporal<input id="newPin" class="input" type="password" inputmode="numeric" maxlength="12" placeholder="4 a 12 dígitos"></label><label>Rol<select id="newRole" class="input"><option>Inspector</option><option>Supervisor</option><option>Programador</option><option>Consulta</option><option>Administrador secundario</option></select></label><label class="span2">Técnico / identificador<input id="newTechnician" class="input" placeholder="José"></label></div><button id="createUserBtn" class="btn primary" style="width:100%;margin-top:10px">Crear usuario</button><div id="userFeedback" class="feedback"></div></div><div class="card"><h3>Reglas de acceso</h3><p>El enlace no crea cuentas ni concede permisos. Primero crea el usuario y después comparte la aplicación.</p><p>Las cuentas inactivas conservan inspecciones, reportes, fotos, rutas e historial visibles para el Administrador.</p></div></div><div id="userRegistryPanel" style="display:none"><div class="user-registry-toolbar"><input id="userSearch" class="input" placeholder="Buscar por nombre o usuario"><select id="userRoleFilter" class="input"><option value="">Todos los roles</option><option>Administrador principal</option><option>Administrador secundario</option><option>Supervisor</option><option>Programador</option><option>Inspector</option><option>Consulta</option></select><select id="userStatusFilter" class="input"><option value="">Todos los estados</option><option value="active">Activos</option><option value="blocked">Bloqueados</option><option value="inactive">Inactivos</option><option value="deleted">Eliminados lógicamente</option></select><button id="clearUserFiltersBtn" class="btn">Limpiar</button></div><div id="userList" class="data-list"></div></div></div></section>
+    <section id="catalog" class="view"><div class="fullview"><h2>Catálogo de alimentadores y subestaciones</h2><div class="catalog-toolbar catalog-toolbar-v2"><input id="catalogSearch" class="input" placeholder="Buscar por subestación, dirección o alimentador"><label class="date-field">Fecha de registro<input id="catDate" type="date" class="input"></label><select id="catFeeder" class="input"><option value="">Todos los alimentadores</option></select><input id="catTech" class="input" placeholder="Técnico"></div><div class="catalog-actions"><button id="catalogSearchBtn" class="btn primary">Aplicar filtros</button><button id="catalogClearBtn" class="btn">Limpiar filtros</button><button id="addSelectedBtn" class="btn green">Añadir seleccionadas</button><button id="addAllFilteredBtn" class="btn">Añadir todos los resultados</button><button id="revalidateBtn" class="btn">Revalidar coordenadas</button><span id="catalogSummary" class="catalog-summary"></span><span id="revalidateState" class="revalidate-state"></span></div><div id="catalogResults" class="results" style="max-height:62vh"></div></div></section>
+    <section id="generalmap" class="view"><div class="fullview general-map-layout"><div><div class="topbar"><h2>Mapa general de subestaciones</h2><span id="generalMapCount" class="sync"></span></div><div class="general-map-toolbar"><input id="gmSearch" class="input" placeholder="Buscar alimentador, subestación, dirección o técnico"><select id="gmFeeder" class="input"><option value="">Todos los alimentadores</option></select><input id="gmTech" class="input" placeholder="Técnico"><input id="gmDate" type="date" class="input"><button id="gmFilterBtn" class="btn primary">Buscar</button><button id="gmAddAllBtn" class="btn green">Añadir resultados</button><button id="gmReloadBtn" class="btn">Recargar mapa</button></div><div id="gmResultSummary" class="gm-result-summary" style="display:none"><strong id="gmResultCount">0 puntos encontrados</strong><button id="gmGoResults" type="button" class="btn primary">Ir</button></div></div><div class="general-map-shell"><div id="generalMap" class="general-map"></div><div class="general-map-controls" aria-label="Controles del mapa"><button id="gmZoomIn" type="button" title="Acercar">+</button><button id="gmZoomOut" type="button" title="Alejar">−</button><button id="gmFitAll" type="button" title="Ver todos los puntos">◎</button></div><div id="generalMapInfo" class="general-map-info">Cargando subestaciones…</div></div></div></section>
+    <section id="history" class="view"><div class="fullview"><div class="topbar"><h2>Historial de recorridos</h2><div class="btns"><button id="excelBtn" class="btn green">Descargar Excel</button><button id="csvBtn" class="btn">CSV</button></div></div><div class="filters"><input id="fDate" type="date" class="input"><input id="fFeeder" class="input" placeholder="Alimentador"><input id="fSub" class="input" placeholder="Subestación"><select id="fStatus" class="input"><option value="">Todos los estados</option><option>Pendiente</option><option>En ruta</option><option>Inspeccionada</option><option>No inspeccionada</option><option>Reprogramada</option><option>Observada</option></select></div><div class="tablewrap"><table><thead><tr><th>Fecha</th><th>Usuario</th><th>Alimentador</th><th>Subestación</th><th>Dirección</th><th>Orden</th><th>Distancia</th><th>Tiempo</th><th>Estado</th><th>Motivo / observación</th><th>Reprogramada para</th><th>Latitud</th><th>Longitud</th></tr></thead><tbody id="historyBody"></tbody></table></div></div></section>
+    <section id="modifications" class="view"><div class="fullview audit-view">
+      <div class="audit-header"><div><span class="eyebrow">AUDITORÍA ADMINISTRATIVA</span><h2>Registro de modificaciones</h2><p>Consulta quién creó, actualizó o cambió información dentro del sistema.</p></div><div class="btns"><button id="auditExportBtn" class="btn green">⬇ Exportar CSV</button><button id="auditRefreshBtn" class="btn primary">↻ Actualizar</button></div></div>
+      <div class="audit-filters"><label>Fecha desde<input id="auditFrom" type="date" class="input"></label><label>Fecha hasta<input id="auditTo" type="date" class="input"></label><label>Módulo<select id="auditModule" class="input"><option value="">Todos los módulos</option><option>Inspecciones</option><option>Rutas</option><option>Subestaciones</option><option>Usuarios</option><option>Programación</option></select></label><label>Acción<select id="auditAction" class="input"><option value="">Todas las acciones</option><option>Creación</option><option>Actualización</option><option>Eliminación</option></select></label><label>Usuario<input id="auditUser" class="input" placeholder="Nombre o usuario"></label><button id="auditSearchBtn" class="btn primary">Buscar</button></div>
+      <div id="auditMetrics" class="audit-metrics"></div>
+      <div class="audit-table-wrap"><table class="audit-table"><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Módulo</th><th>Acción</th><th>Elemento</th><th>Descripción del cambio</th><th>Origen</th></tr></thead><tbody id="auditBody"></tbody></table></div>
+    </div></section>
+    <section id="settings" class="view"><div class="fullview"><h2>Configuración</h2><label class="label">URL del Apps Script</label><input id="scriptUrlInput" class="input" placeholder="https://script.google.com/macros/s/.../exec"><div class="btns"><button id="saveConfigBtn" class="btn primary">Guardar y sincronizar</button><button id="syncBtn" class="btn">Sincronizar ahora</button></div><p class="feedback">La URL central está preconfigurada en <b>config.js</b>. Todos los dispositivos usarán automáticamente la misma base.</p></div></section>
+  </main>
 </div>
 <script>
 'use strict';
@@ -757,6 +759,7 @@ window.addEventListener('online',()=>{setSync('Conexión recuperada · sincroniz
 
 try{localStorage.removeItem('inspection-compact-map')}catch{}
 </script>
+
 <script>
 (() => {
   let deferredInstallPrompt = null;
@@ -873,6 +876,7 @@ try{localStorage.removeItem('inspection-compact-map')}catch{}
   registerPwa();
 })();
 </script>
+
 <script>
 (()=>{
 const PHOTO_CATEGORIES=[
@@ -936,6 +940,7 @@ function reportCard(r,i){const a=typeof r.answers==='string'?JSON.parse(r.answer
 const originalRenderRoute=window.renderRoute;if(typeof originalRenderRoute==='function')window.renderRoute=function(){originalRenderRoute();document.querySelectorAll('.route-item').forEach((el,i)=>{const x=state.route?.stops?.[i];if(x&&!el.querySelector('.voltage-chip')){const main=el.querySelector('.route-main');main?.insertAdjacentHTML('beforeend',`<span class="voltage-chip">⚡ ${esc(x.voltageLevel||x.voltage||'Tensión no definida')}</span>`)}})};
 })();
 </script>
+
 <script>
 /* V13.41 · Estabilidad para catálogos masivos y despliegue comercial Google */
 (() => {
@@ -1152,6 +1157,8 @@ const originalRenderRoute=window.renderRoute;if(typeof originalRenderRoute==='fu
   else stableInit();
 })();
 </script>
+
+
 <script>
 // V13.48: diagnóstico de conexión y acceso robusto al registro de usuarios.
 (function(){
@@ -1182,6 +1189,7 @@ const originalRenderRoute=window.renderRoute;if(typeof originalRenderRoute==='fu
   window.addEventListener('load',()=>{const url=(window.APP_CONFIG?.SCRIPT_URL||localStorage.getItem('ri_script')||'').trim();if(!url){const s=byId('syncState');if(s){s.textContent='Falta URL de Apps Script';s.classList.add('err')}}});
 })();
 </script>
+
 <script>
 // V13.45: respaldo de navegación. Evita que un fallo aislado desactive toda la interfaz.
 document.addEventListener('click', function(event){
@@ -1215,6 +1223,7 @@ document.addEventListener('click', function(event){
 @media(max-width:900px){.enterprise-hero{padding:22px}.home-actions{width:100%;justify-content:flex-start}.enterprise-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.enterprise-metrics{grid-template-columns:1fr}.enterprise-hero h2{font-size:28px}.topbar h1{font-size:22px}}
 </style>
+
 <script>
 // V13.50: cierre de sesión independiente y resistente a errores de inicialización.
 (function(){
@@ -1254,6 +1263,8 @@ document.addEventListener('click', function(event){
   window.logoutNow=logoutNow;
 })();
 </script>
+
+
 <script>
 // V13.50: sincronización resiliente. El mapa no depende de usuarios, historial o programación.
 (function(){
@@ -1319,6 +1330,8 @@ document.addEventListener('click', function(event){
   window.addEventListener('load',()=>{if(state.user?.token)setTimeout(()=>window.autoSync(true),600);});
 })();
 </script>
+
+
 <style id="v1355-mobile-fix">
 /* V13.65: interfaz móvil tipo app, sin escritorio comprimido */
 .mobile-menu-btn{display:none;border:0;background:#0b63d8;color:#fff;border-radius:10px;width:42px;height:42px;font-size:22px;align-items:center;justify-content:center;box-shadow:0 5px 15px #0b63d833}
@@ -1393,6 +1406,7 @@ document.addEventListener('click', function(event){
  window.addEventListener('online',()=>window.autoSync(true));
 })();
 </script>
+
 <style id="v1356-functional-fix">
 /* V13.65: catálogo integrado al mapa general */
 .nav button[data-view="catalog"],#catalog{display:none!important}
@@ -1449,6 +1463,8 @@ document.addEventListener('click', function(event){
  document.addEventListener('DOMContentLoaded',()=>{document.querySelector('.nav button[data-view="catalog"]')?.remove();bindSearch();bindHistoryRefresh();const cached=localCatalog();if(cached.length&&!state.catalog?.length)applyCatalog(cached,'datos guardados');try{const h=JSON.parse(localStorage.getItem('ri_history_cache')||'[]');if(Array.isArray(h)&&h.length&&!state.history.length){state.history=h;renderHistory()}}catch{}setTimeout(()=>window.autoSync?.(false),700)});
 })();
 </script>
+
+
 <script id="v1361-critical-repair">
 /* V13.65: reparación independiente de controles, usuarios, formularios y optimización */
 (function(){
@@ -1539,6 +1555,8 @@ document.addEventListener('click', function(event){
   window.addEventListener('resize',()=>{activePlannerMap()?.invalidateSize(false);activeGeneralMap()?.invalidateSize(false)});
 })();
 </script>
+
+
 <style id="v1362-style">
 .gm-result-summary{margin:10px 12px 0;padding:10px 12px;border:1px solid #b9d5f5;background:#eef7ff;border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#124f87}
 .gm-result-summary .btn{min-width:82px}
@@ -1618,33 +1636,254 @@ document.addEventListener('click', function(event){
  if(typeof oldRender==='function')window.renderRoute=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>{const b=$id('startNavBtn');if(b)b.disabled=!routeIsReady()},0);return r};
 })();
 </script>
+
+
+
 <style id="v1366-final-map-route-fix">
-/* V14.0-alpha: the Leaflet panes must keep their own transforms. Extra will-change caused grey/incomplete tiles on some browsers. */
+/* V14.0-alpha2: the Leaflet panes must keep their own transforms. Extra will-change caused grey/incomplete tiles on some browsers. */
 #generalMap .leaflet-map-pane,
 #generalMap .leaflet-tile-pane,
 #generalMap .leaflet-overlay-pane{will-change:auto!important}
 #generalMap{background:#dbeafe!important}
 #generalMap .leaflet-tile{visibility:visible!important;opacity:1!important}
 </style>
+<script id="v1366-final-map-route-fix-script">
+(function(){
+  const $=id=>document.getElementById(id);
+  const validPoint=p=>p&&Number.isFinite(+p.lat)&&Number.isFinite(+p.lon);
+  const meaningfulRows=()=>Array.isArray(state?.rows)?state.rows.filter(validPoint):[];
 
-<style id="v1369-definitive-fix-style">
-@media (max-width:760px){
-  .app{grid-template-columns:1fr!important}.sidebar{position:fixed!important;left:-82vw!important;top:0!important;bottom:0!important;width:min(82vw,290px)!important;z-index:10020!important;transition:left .22s ease!important}.ri-menu-open .sidebar{left:0!important}.main{margin-left:0!important;width:100%!important;min-width:0!important}.top{padding-left:58px!important}.general-map-toolbar{grid-template-columns:1fr 1fr!important}.general-map-toolbar #gmSearch{grid-column:1/-1}.general-map-toolbar #gmReloadBtn{grid-column:1/-1}.general-map-shell{height:calc(100dvh - 330px)!important;min-height:390px!important}.planner-grid{grid-template-columns:1fr!important}#mapWrap{min-height:58dvh!important}.top-actions{overflow-x:auto!important;white-space:nowrap!important}.top-actions .btn{flex:0 0 auto!important}}
-#generalMap{background:#e5e7eb!important}.ri-map-loading{position:absolute;left:12px;bottom:12px;z-index:900;background:#0f2942;color:white;padding:9px 12px;border-radius:10px;font-size:13px}.ri-exit-map{display:none;position:absolute;left:12px;top:12px;z-index:1200;border:0;border-radius:10px;background:#fff;padding:10px 12px;font-weight:800;box-shadow:0 4px 18px #0002}@media(max-width:760px){.ri-exit-map{display:block}}
-</style>
+  function savedPlanner(){
+    const keys=[];
+    try{keys.push(typeof plannerStorageKey==='function'?plannerStorageKey():'')}catch{}
+    keys.push('ri_route_draft');
+    for(const key of keys){
+      if(!key)continue;
+      try{const v=JSON.parse(localStorage.getItem(key)||'null');if(v)return v}catch{}
+    }
+    return null;
+  }
+  function ensureRouteState(){
+    if(state?.route&&Array.isArray(state.route.stops)&&state.route.stops.length)return true;
+    const saved=savedPlanner();
+    if(saved?.route&&Array.isArray(saved.route.stops)&&saved.route.stops.length){
+      state.route=saved.route;state.activeIndex=Number.isFinite(+saved.activeIndex)?+saved.activeIndex:0;
+      if(saved.start)state.start=saved.start;
+      return true;
+    }
+    const rows=meaningfulRows();
+    if(rows.length){
+      // A visible/selected route must still be startable even if a background sync temporarily cleared state.route.
+      const start=validPoint(state.start)?state.start:rows[0];
+      const stops=rows.slice();
+      const geometry=[start,...stops].map(p=>[+p.lat,+p.lon]);
+      state.route={stops,geometry,legs:[],distance:0,duration:0,recovered:true};
+      state.activeIndex=Math.max(0,Math.min(+state.activeIndex||0,stops.length-1));
+      try{saveRouteDraft()}catch{}
+      return true;
+    }
+    return false;
+  }
+  function refreshStartButton(){
+    const b=$('startNavBtn');if(!b)return;
+    const ok=ensureRouteState();
+    b.disabled=!ok;b.style.pointerEvents=ok?'auto':'none';b.style.opacity=ok?'1':'.55';
+    if(ok)b.textContent='▶ Iniciar recorrido';
+  }
+  async function startRecoveredRoute(){
+    if(!ensureRouteState()){
+      showToast('Ruta no disponible','No se encontraron puntos guardados. Pulsa Modificar / crear otra ruta para agregarlos.','error');return;
+    }
+    const b=$('startNavBtn');if(b){b.disabled=true;b.textContent='Iniciando…'}
+    try{
+      if(!state.gps){
+        try{await Promise.race([freshGps(false),new Promise((_,reject)=>setTimeout(()=>reject(new Error('gps-timeout')),6000))])}
+        catch{const p=validPoint(state.start)?state.start:state.route.stops[0];if(validPoint(p))state.gps={lat:+p.lat,lon:+p.lon,accuracy:0,bearing:0}}
+      }
+      state.navigating=true;state.arrivalHits=0;
+      state.activeIndex=Math.max(0,Math.min(+state.activeIndex||0,state.route.stops.length-1));
+      try{setRouteReadyFocus(false)}catch{}
+      $('navHud')?.classList.add('show');
+      try{saveRouteDraft()}catch{}
+      try{drawAll()}catch{}
+      try{updateNavigation()}catch(e){console.warn('updateNavigation',e)}
+      try{rerouteActive()}catch(e){console.warn('rerouteActive',e)}
+      showToast('Recorrido iniciado',`${state.route.stops.length} parada(s) disponibles.`,'success');
+    }finally{refreshStartButton()}
+  }
+  function bindStartFinal(){
+    const b=$('startNavBtn');if(!b||b.dataset.v1366==='1')return;
+    b.dataset.v1366='1';
+    b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();startRecoveredRoute()},true);
+    refreshStartButton();
+  }
 
-<script defer="defer" src="v14-core.js"></script></body></html>
+  let tileErrors=0;
+  function addStableTiles(map,force=false){
+    if(!map)return;
+    if(force&&window.__gmTile1366){try{map.removeLayer(window.__gmTile1366)}catch{}window.__gmTile1366=null}
+    // Remove duplicate base tile layers left by previous repairs; duplicates overload the browser and can leave grey panes.
+    map.eachLayer(layer=>{if(layer instanceof L.TileLayer&&layer!==window.__gmTile1366){try{map.removeLayer(layer)}catch{}}});
+    if(window.__gmTile1366&&map.hasLayer(window.__gmTile1366))return;
+    tileErrors=0;
+    const primary=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      subdomains:'abc',maxZoom:20,minZoom:4,detectRetina:false,updateWhenIdle:true,keepBuffer:2,
+      attribution:'© OpenStreetMap'
+    });
+    window.__gmTile1366=primary;
+    primary.on('tileerror',()=>{
+      tileErrors++;
+      if(tileErrors===8){
+        try{map.removeLayer(primary)}catch{}
+        const fallback=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+          subdomains:'abcd',maxZoom:20,detectRetina:false,updateWhenIdle:true,keepBuffer:2,attribution:'© OpenStreetMap © CARTO'
+        });
+        window.__gmTile1366=fallback;fallback.addTo(map);
+        const info=$('generalMapInfo');if(info)info.textContent='Se activó el mapa base alternativo.';
+      }
+    });
+    primary.addTo(map);
+  }
+  function stableGeneralMap(forceTiles=false){
+    const host=$('generalMap');if(!host||typeof L==='undefined')return null;
+    if(!generalMap){
+      generalMap=L.map(host,{zoomControl:false,preferCanvas:true,zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false}).setView([-12.0464,-77.0428],11);
+      if(!generalMarkers)generalMarkers=L.layerGroup();generalMarkers.addTo(generalMap);
+      generalMap.on('moveend zoomend',()=>{clearTimeout(generalMap.__v1366Timer);generalMap.__v1366Timer=setTimeout(()=>window.renderGeneralMap?.(false),140)});
+    }
+    addStableTiles(generalMap,forceTiles);
+    const invalidate=()=>{try{generalMap.invalidateSize({pan:false,debounceMoveend:true})}catch{}};
+    requestAnimationFrame(invalidate);setTimeout(invalidate,120);setTimeout(invalidate,450);
+    return generalMap;
+  }
+  window.initGeneralMap=function(force=false){return stableGeneralMap(!!force)};
+  function reloadGeneralMap(forceTiles=false){
+    if(typeof activeViewId==='function'&&activeViewId()!=='generalmap')return;
+    const gm=stableGeneralMap(forceTiles);if(!gm)return;
+    setTimeout(()=>{
+      try{gm.invalidateSize({pan:false})}catch{}
+      try{window.renderGeneralMap?.(true)}catch(e){console.warn('renderGeneralMap',e)}
+      // redraw tiles after the container has its final size
+      try{window.__gmTile1366?.redraw()}catch{}
+    },180);
+  }
+  function bindGeneralFinal(){
+    const reload=$('gmReloadBtn');
+    if(reload&&reload.dataset.v1366!=='1'){
+      reload.dataset.v1366='1';
+      reload.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();reloadGeneralMap(true)},true);
+    }
+    document.addEventListener('click',e=>{
+      if(e.target.closest('.nav button[data-view="generalmap"]'))setTimeout(()=>reloadGeneralMap(false),180);
+    },true);
+  }
+  const originalRender=window.renderRoute;
+  if(typeof originalRender==='function')window.renderRoute=function(){const out=originalRender.apply(this,arguments);setTimeout(refreshStartButton,0);return out};
+  function repair(){bindStartFinal();bindGeneralFinal();refreshStartButton();if(typeof activeViewId==='function'&&activeViewId()==='generalmap')reloadGeneralMap(false)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(repair,450),{once:true});else setTimeout(repair,450);
+  window.addEventListener('pageshow',()=>setTimeout(repair,250));
+})();
+</script>
+
+
+
+
+
+
+<script defer src="v14-performance.js?v=14.0-alpha2"></script>
+</body></html>
 <style id="v1363-unified-map-style">
 .popup-card.unified-popup{min-width:280px;max-width:330px}.popup-card.unified-popup .asset-title{font-size:17px;font-weight:800;margin-bottom:4px}.popup-card.unified-popup .asset-meta{font-size:12px;color:#64748b;margin-bottom:8px}.popup-card.unified-popup .asset-summary{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:9px 0}.popup-card.unified-popup .summary-item{padding:7px 8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px}.popup-card.unified-popup .summary-item small{display:block;color:#64748b;font-size:10px}.popup-card.unified-popup .summary-item b{font-size:12px}.popup-card.unified-popup .map-popup-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.popup-card.unified-popup .map-popup-actions .btn,.popup-card.unified-popup .map-popup-actions .maps-link{margin:0;min-height:42px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:10px;text-decoration:none}.popup-card.unified-popup .map-popup-actions .wide{grid-column:1/-1}.popup-card.unified-popup .context-note{display:block;margin-top:8px;color:#64748b;font-size:11px}.route-busy-overlay{position:absolute;inset:0;background:rgba(255,255,255,.78);z-index:900;display:flex;align-items:center;justify-content:center;font-weight:800;color:#075aa8;backdrop-filter:blur(2px)}
 @media(max-width:700px){.popup-card.unified-popup{min-width:245px}.popup-card.unified-popup .map-popup-actions{grid-template-columns:1fr 1fr}}
 </style>
+<script id="v1363-unified-map-engine">
+(function(){
+  const byId=id=>document.getElementById(id);
+  const norm=v=>String(v??'').trim();
+  function formActionLabel(x){const s=normalizeStatus(x?.status);if(s==='Inspeccionada'&&!x?.reportCompleted)return '🟠 Completar informe';if(x?.reportCompleted)return '📄 Ver informe';if(x?.formCompleted)return '🔵 Editar formulario';return '📄 Nueva inspección'}
+  function lastInspection(x){return x?.inspectedAt?new Date(x.inspectedAt).toLocaleDateString('es-PE'):'Sin inspección'}
+  function reportsCount(x){return Number(x?.reportsCount||x?.reportCount||0)||0}
+  function unifiedPopup(x,context){
+    const route=inRoute(x), general=context==='general';
+    const routeAction=general?(route?'➖ Quitar de ruta':'➕ Añadir a ruta'):'➖ Quitar de ruta';
+    return `<div class="popup-card unified-popup" data-context="${context}">
+      <div class="asset-title">${esc(x.feeder)} · ${esc(x.substation)}</div>
+      <div class="asset-meta">${esc(locationLabel(x))}</div>
+      <div>${statusBadge(x)} <span class="voltage-chip">⚡ ${esc(x.voltageLevel||x.voltage||'Tensión no definida')}</span></div>
+      <div class="asset-summary"><div class="summary-item"><small>Última inspección</small><b>${esc(lastInspection(x))}</b></div><div class="summary-item"><small>Reportes</small><b>${reportsCount(x)}</b></div></div>
+      <div class="map-popup-actions">
+        <button class="btn u-form" type="button">${formActionLabel(x)}</button>
+        <button class="btn u-inspection" type="button">📷 Inspección MT</button>
+        <button class="btn u-reports" type="button">📑 Reportes / historial</button>
+        <a class="maps-link u-maps" href="${mapsUrl(x)}" target="_blank" rel="noopener">🧭 Abrir en Maps</a>
+        <button class="btn u-share" type="button">📤 Compartir</button>
+        <button class="btn u-route" type="button">${routeAction}</button>
+        <button class="btn u-status wide" type="button">✎ Cambiar estado</button>
+      </div>
+      <small class="context-note">${general?'Consulta y preparación de ruta.':'Trabajo de campo sobre la ruta activa.'}</small>
+    </div>`;
+  }
+  function bindUnifiedPopup(marker,x,context){marker.on('popupopen',e=>{const root=e.popup.getElement();if(!root)return;
+    root.querySelector('.u-form')?.addEventListener('click',()=>{rememberPopupForOverlay(marker,x);openFormFor(x)});
+    root.querySelector('.u-inspection')?.addEventListener('click',()=>{rememberPopupForOverlay(marker,x);openInspectionModule(x)});
+    root.querySelector('.u-reports')?.addEventListener('click',()=>{rememberPopupForOverlay(marker,x);openInspectionReports(x)});
+    root.querySelector('.u-share')?.addEventListener('click',()=>shareLocation(x));
+    root.querySelector('.u-status')?.addEventListener('click',()=>{rememberPopupForOverlay(marker,x);openManualStatusDialog(x)});
+    root.querySelector('.u-route')?.addEventListener('click',()=>{
+      if(inRoute(x)) removeFromRoute(x); else addCatalogArray([x]);
+      marker.closePopup(); if(context==='general')renderGeneralMap(); else {renderRows();renderRoute();drawAll()}
+    });
+  })}
+  function sameAsset(a,b){return norm(a?.feeder).toUpperCase()===norm(b?.feeder).toUpperCase()&&norm(a?.substation).toUpperCase()===norm(b?.substation).toUpperCase()}
+  window.removeFromRoute=function(x){
+    const before=state.rows.length;state.rows=(state.rows||[]).filter(r=>!sameAsset(r,x));
+    if(state.route){state.route.stops=(state.route.stops||[]).filter(r=>!sameAsset(r,x));if(!state.route.stops.length)state.route=null}
+    saveRouteDraft();renderRows();renderRoute();drawAll();setRouteReadyFocus(!!state.route);
+    showToast(before!==state.rows.length?'Punto retirado':'Punto no encontrado',`${x.feeder} · ${x.substation}`,'success');
+  };
+  window.addStopMarker=function(s,i){const icon=L.divIcon({className:'',html:`<div class="stopIcon ${statusKey(s.status)}">${i+1}</div>`,iconSize:[30,30],iconAnchor:[15,15]});const m=L.marker([+s.lat,+s.lon],{icon,draggable:false}).addTo(markers);m.bindPopup(unifiedPopup(s,'route'));bindUnifiedPopup(m,s,'route');return m};
+  window.renderGeneralMap=function(forceFit=false){
+    if(!byId('generalMap')||activeViewId()!=='generalmap')return;
+    const gm=initGeneralMap();if(!gm)return;
+    if(!window.__gmCanvas)window.__gmCanvas=L.canvas({padding:.25});
+    try{generalMarkers.clearLayers()}catch{return}
+    const all=filteredGeneralMap().filter(x=>Number.isFinite(+x.lat)&&Number.isFinite(+x.lon));
+    const total=all.length;
+    const search=(byId('gmSearch')?.value||'').trim();
+    const hasFilters=!!(search||(byId('gmFeeder')?.value||'')||(byId('gmTech')?.value||'')||(byId('gmDate')?.value||''));
+    let candidates=all;
+    if(!hasFilters&&gm.getZoom()>=9){
+      const view=gm.getBounds().pad(.18);
+      candidates=all.filter(x=>view.contains([+x.lat,+x.lon]));
+    }
+    const LIMIT=900;
+    const displayed=candidates.slice(0,LIMIT);
+    const colors={pending:'#94a3b8',inroute:'#2563eb',inspected:'#16a34a',notinspected:'#dc2626',rescheduled:'#f59e0b',observed:'#7c3aed'};
+    displayed.forEach(x=>{
+      const actual=statusKey(x.status),st=(actual==='pending'&&inRoute(x))?'inroute':actual;
+      const m=L.circleMarker([+x.lat,+x.lon],{renderer:window.__gmCanvas,radius:6,weight:1.5,color:'#fff',fillColor:colors[st]||colors.pending,fillOpacity:.92}).addTo(generalMarkers);
+      m.bindPopup(unifiedPopup(x,'general'));
+      bindUnifiedPopup(m,x,'general');
+    });
+    byId('generalMapCount').textContent=`${total.toLocaleString('es-PE')} resultado(s)`;
+    byId('generalMapInfo').textContent=total>displayed.length?`Mostrando ${displayed.length.toLocaleString('es-PE')} de ${total.toLocaleString('es-PE')}. Usa el buscador o acércate para reducir los puntos.`:`${displayed.length.toLocaleString('es-PE')} puntos visibles.`;
+    if((forceFit||hasFilters)&&all.length){
+      if(all.length===1)gm.setView([+all[0].lat,+all[0].lon],17);
+      else gm.fitBounds(all.slice(0,3000).map(x=>[+x.lat,+x.lon]),{padding:[35,35],maxZoom:16});
+    }
+    requestAnimationFrame(()=>gm.invalidateSize(false));
+  };
+  function hardClear(){if(!confirm('¿Eliminar completamente la ruta actual y sus puntos seleccionados?'))return;state.rows=[];state.route=null;state.activeIndex=0;state.navigating=false;try{localStorage.removeItem(plannerStorageKey());localStorage.removeItem('ri_route_draft')}catch{}try{markers.clearLayers();routeGroup.clearLayers();liveGroup.clearLayers()}catch{}renderRows();renderRoute();drawAll();setRouteReadyFocus(false);setFb('routeFeedback','Ruta limpiada. Puedes crear una nueva.','ok');showToast('Ruta eliminada','Se limpiaron los puntos y el recorrido guardado.','success');try{cloudWrite('planner',{userKey:userKey(),userName:state.user?.name||'',role:state.user?.role||'',payload:JSON.stringify({version:3,rows:[],route:null,activeIndex:0,start:state.start,updatedAt:new Date().toISOString()}),updatedAt:new Date().toISOString()})}catch{}
+  }
+  function bindHardClear(){const b=byId('clearBtn');if(!b)return;b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();hardClear()},true)}
+  function bindBusyOptimize(){const b=byId('optimizeBtn'),wrap=byId('mapWrap');if(!b||!wrap)return;b.addEventListener('click',()=>{if(b.dataset.running==='1'){const o=document.createElement('div');o.className='route-busy-overlay';o.textContent='Calculando ruta…';wrap.appendChild(o);const timer=setInterval(()=>{if(b.dataset.running!=='1'){clearInterval(timer);o.remove()}},250);setTimeout(()=>{clearInterval(timer);o.remove()},15000)}},false)}
+  function repair(){bindHardClear();bindBusyOptimize();try{renderGeneralMap()}catch{} }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',repair,{once:true});else repair();
+})();
+</script>
 
-<style id="v1365-map-route-fix">
-#generalMap .leaflet-tile-pane{opacity:1!important}
-#generalMap .leaflet-tile{visibility:visible!important;opacity:1!important}
-#generalMap .leaflet-map-pane,#generalMap .leaflet-tile-pane,#generalMap .leaflet-overlay-pane{will-change:transform}
-#startNavBtn:not(:disabled){cursor:pointer;opacity:1!important}
-</style>
+
+
 
 <style id="v1367-mobile-map-navigation-fix">
 @media (max-width: 760px){
