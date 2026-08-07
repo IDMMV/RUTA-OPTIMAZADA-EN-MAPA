@@ -1,13 +1,6 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-PB4CK9HR');</script>
-  <!-- End Google Tag Manager -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0f3d63">
@@ -220,12 +213,7 @@ main>.topbar h1{font-size:25px;letter-spacing:-.35px;color:#10243b}.top-actions{
 .connection-help-btn{width:26px;height:26px;border-radius:50%;border:1px solid #cbd5e1;background:#fff;color:#0f4c81;font-weight:900;cursor:pointer;margin-left:6px}.connection-help-btn:hover{background:#eaf3fb}.connection-panel{position:fixed;right:18px;top:78px;z-index:99999;width:min(420px,calc(100vw - 36px));background:#fff;border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 18px 50px rgba(15,23,42,.22);padding:18px}.connection-panel h3{margin:0 0 10px;color:#0f2942}.connection-panel p{margin:7px 0;color:#475569;line-height:1.45}.connection-panel code{display:block;padding:10px;background:#f1f5f9;border-radius:10px;overflow:auto;font-size:12px}.connection-panel .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.registry-loading{padding:28px;text-align:center;color:#64748b}.sync.err{font-weight:800}.sync.ok{font-weight:800}
 </style>
 </head>
-<body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PB4CK9HR"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-<div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+<body><div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
 <div id="installHint" class="install-hint" role="dialog" aria-live="polite" aria-label="Instalar aplicación">
   <button id="closeInstallHint" type="button" aria-label="Cerrar">×</button>
   <b><img src="icon-192.png" alt="" class="pwa-icon-preview">Instalar Rutas de Inspección</b>
@@ -290,7 +278,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="active" data-view="dashboard">⌂ Inicio</button><button data-view="planner">⌖ Mi ruta</button><button data-view="generalmap">◉ Mapa general</button><button data-view="programming" class="admin-only">▣ Programación</button><button data-view="history">↻ Historial</button><button data-view="modifications" class="admin-only">◷ Modificaciones</button><button data-view="users" class="admin-only">👥 Usuarios</button><button data-view="settings" class="admin-only">⚙ Configuración</button><button id="orderTabsBtn" class="nav-order-btn" type="button" title="Ordenar pestañas">↕ Ordenar</button>
   </div></aside>
   <main>
-    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.67</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
+    <div class="topbar"><h1 id="pageTitle">Panel principal</h1><div class="top-actions"><button id="shareAppBtn" class="install-btn share-app-btn" type="button">🔗 Compartir app</button><button id="quickUsersBtn" class="install-btn admin-only" type="button">👥 Usuarios</button><button id="installPwaBtn" class="install-btn show" type="button" aria-label="Instalar Rutas de Inspección">⬇ Instalar app</button><button id="logoutBtn" class="install-btn" type="button" style="display:none">↪ Cerrar sesión</button><span><span id="userBadge"></span> · <small style="color:#64748b;font-weight:700">v13.69</small><span id="syncState" class="sync">Comprobando conexión…</span><button id="connectionHelpBtn" class="connection-help-btn" type="button" title="Diagnóstico de conexión">?</button></span></div></div>
     <section id="planner" class="view"><div id="assignmentBanner" class="assignment-banner"><b id="assignmentTitle">Programación disponible</b><div id="assignmentDetail" class="feedback"></div><div class="btns"><button id="loadAssignmentBtn" class="btn primary">Cargar en mi planificador</button><button id="dismissAssignmentBtn" class="btn">Ocultar</button></div></div>
       <div class="layout">
         <div class="left">
@@ -406,6 +394,7 @@ function showToast(title,detail='',type='success'){const stack=$('toastStack');i
 function loadRouteDraft(){restoreRouteDraftIfNeeded()}
 function tabOrderKey(){return 'ri_tab_order_'+(state.user?.username||'guest').toLowerCase()}
 function userPreferences(){try{return typeof state.user?.preferences==='string'?JSON.parse(state.user.preferences||'{}'):(state.user?.preferences||{})}catch{return {}}}
+function visibleNavButtons(){return [...document.querySelectorAll('.nav button[data-view]')]}
 function applySavedTabOrder(){let order=userPreferences().tabOrder||[];if(!order.length){try{order=JSON.parse(localStorage.getItem(tabOrderKey())||'[]')}catch{}}const nav=document.querySelector('.nav');if(!nav||!Array.isArray(order))return;const mapBtn=new Map(visibleNavButtons().map(b=>[b.dataset.view,b]));order.forEach(v=>{const b=mapBtn.get(v);if(b)nav.insertBefore(b,$('orderTabsBtn'))});visibleNavButtons().filter(b=>!order.includes(b.dataset.view)).forEach(b=>nav.insertBefore(b,$('orderTabsBtn')))}
 function saveTabOrder(order){localStorage.setItem(tabOrderKey(),JSON.stringify(order));const prefs={...userPreferences(),tabOrder:order};if(state.user){state.user.preferences=prefs;localStorage.setItem('ri_user',JSON.stringify(state.user));cloudWrite('preferences',{preferences:prefs})}applySavedTabOrder()}
 function openTabOrderModal(){document.querySelector('.tab-order-modal')?.remove();const buttons=visibleNavButtons().filter(b=>getComputedStyle(b).display!=='none');const modal=document.createElement('div');modal.className='tab-order-modal';modal.innerHTML=`<div class="tab-order-box"><div class="tab-order-head"><h3>Ordenar pestañas</h3><button data-close>×</button></div><div class="tab-order-list"></div><div class="tab-order-actions"><button class="btn" data-reset>Restablecer</button><button class="btn primary" data-save>Guardar orden</button></div></div>`;const list=modal.querySelector('.tab-order-list');buttons.forEach(b=>{const row=document.createElement('div');row.className='tab-order-row';row.dataset.view=b.dataset.view;row.innerHTML=`<span>${b.textContent.trim()}</span><button data-up aria-label="Subir">↑</button><button data-down aria-label="Bajar">↓</button>`;row.querySelector('[data-up]').onclick=()=>{const prev=row.previousElementSibling;if(prev)list.insertBefore(row,prev)};row.querySelector('[data-down]').onclick=()=>{const next=row.nextElementSibling;if(next)list.insertBefore(next,row)};list.appendChild(row)});modal.querySelector('[data-close]').onclick=()=>modal.remove();modal.querySelector('[data-reset]').onclick=()=>{localStorage.removeItem(tabOrderKey());const prefs={...userPreferences(),tabOrder:[]};if(state.user){state.user.preferences=prefs;localStorage.setItem('ri_user',JSON.stringify(state.user));cloudWrite('preferences',{preferences:prefs})}location.reload()};modal.querySelector('[data-save]').onclick=()=>{saveTabOrder([...list.children].map(x=>x.dataset.view));modal.remove();showToast('Orden guardado','Se conservará en todos tus dispositivos.','success')};modal.onclick=e=>{if(e.target===modal)modal.remove()};document.body.appendChild(modal)}
@@ -811,7 +800,7 @@ try{localStorage.removeItem('inspection-compact-map')}catch{}
       return;
     }
     try {
-      const registration = await navigator.serviceWorker.register(new URL('service-worker.js?v=13.67', document.baseURI).href, {scope: './', updateViaCache: 'none'});
+      const registration = await navigator.serviceWorker.register(new URL('service-worker.js?v=13.68', document.baseURI).href, {scope: './', updateViaCache: 'none'});
       await registration.update().catch(() => {});
       await navigator.serviceWorker.ready;
       swReady = true;
@@ -967,6 +956,7 @@ const originalRenderRoute=window.renderRoute;if(typeof originalRenderRoute==='fu
   }
 
   function activeViewId(){ return document.querySelector('.view.active')?.id || 'planner'; }
+  window.activeViewId = activeViewId;
 
   async function loadPlacesPaged(token){
     if (loadingCatalog || !state.scriptUrl || !token) return;
@@ -1650,7 +1640,7 @@ document.addEventListener('click', function(event){
 
 
 <style id="v1366-final-map-route-fix">
-/* V13.67: the Leaflet panes must keep their own transforms. Extra will-change caused grey/incomplete tiles on some browsers. */
+/* V13.69: the Leaflet panes must keep their own transforms. Extra will-change caused grey/incomplete tiles on some browsers. */
 #generalMap .leaflet-map-pane,
 #generalMap .leaflet-tile-pane,
 #generalMap .leaflet-overlay-pane{will-change:auto!important}
@@ -1793,6 +1783,117 @@ document.addEventListener('click', function(event){
   function repair(){bindStartFinal();bindGeneralFinal();refreshStartButton();if(typeof activeViewId==='function'&&activeViewId()==='generalmap')reloadGeneralMap(false)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(repair,450),{once:true});else setTimeout(repair,450);
   window.addEventListener('pageshow',()=>setTimeout(repair,250));
+})();
+</script>
+
+
+<style id="v1369-definitive-fix-style">
+@media (max-width:760px){
+  .app{grid-template-columns:1fr!important}.sidebar{position:fixed!important;left:-82vw!important;top:0!important;bottom:0!important;width:min(82vw,290px)!important;z-index:10020!important;transition:left .22s ease!important}.ri-menu-open .sidebar{left:0!important}.main{margin-left:0!important;width:100%!important;min-width:0!important}.top{padding-left:58px!important}.general-map-toolbar{grid-template-columns:1fr 1fr!important}.general-map-toolbar #gmSearch{grid-column:1/-1}.general-map-toolbar #gmReloadBtn{grid-column:1/-1}.general-map-shell{height:calc(100dvh - 330px)!important;min-height:390px!important}.planner-grid{grid-template-columns:1fr!important}#mapWrap{min-height:58dvh!important}.top-actions{overflow-x:auto!important;white-space:nowrap!important}.top-actions .btn{flex:0 0 auto!important}}
+#generalMap{background:#e5e7eb!important}.ri-map-loading{position:absolute;left:12px;bottom:12px;z-index:900;background:#0f2942;color:white;padding:9px 12px;border-radius:10px;font-size:13px}.ri-exit-map{display:none;position:absolute;left:12px;top:12px;z-index:1200;border:0;border-radius:10px;background:#fff;padding:10px 12px;font-weight:800;box-shadow:0 4px 18px #0002}@media(max-width:760px){.ri-exit-map{display:block}}
+</style>
+<script id="v1369-definitive-fix-script">
+(()=>{
+'use strict';
+const el=id=>document.getElementById(id), wait=ms=>new Promise(r=>setTimeout(r,ms));
+const validPoint=x=>x&&Number.isFinite(+x.lat)&&Number.isFinite(+x.lon);
+function safeParse(v){try{return JSON.parse(v)}catch{return null}}
+async function restoreCatalog1368(){
+  if(Array.isArray(state?.catalog)&&state.catalog.length)return state.catalog;
+  let rows=safeParse(localStorage.getItem('ri_catalog_cache'));
+  if(!Array.isArray(rows)||!rows.length){try{if(typeof cacheGet==='function')rows=await cacheGet()}catch{}}
+  if(Array.isArray(rows)&&rows.length){state.catalog=typeof normalizeRows==='function'?normalizeRows(rows):rows;try{updateFeederOptions?.()}catch{};return state.catalog}
+  return [];
+}
+let gm1368=null, layer1368=null, base1368=null, fallback1368=null, drawTimer1368=0, tileErrors1368=0;
+function mapHost(){return el('generalMap')}
+function tileLayer1368(url,opts={}){return L.tileLayer(url,{maxZoom:19,minZoom:3,detectRetina:false,updateWhenIdle:true,keepBuffer:2,crossOrigin:true,...opts})}
+function activateFallback1368(){
+ if(!gm1368||fallback1368)return;
+ try{if(base1368)gm1368.removeLayer(base1368)}catch{}
+ fallback1368=tileLayer1368('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',attribution:'© OpenStreetMap © CARTO'}).addTo(gm1368);
+ const i=el('generalMapInfo');if(i)i.textContent='Mapa alternativo activado. Los puntos guardados continúan disponibles.';
+}
+function ensureMap1368(){
+ const host=mapHost();if(!host||typeof L==='undefined')return null;
+ if(gm1368&&gm1368._container===host){setTimeout(()=>gm1368.invalidateSize(false),30);return gm1368}
+ try{generalMap?.off();generalMap?.remove()}catch{}
+ host.innerHTML='';host.style.position='relative';
+ gm1368=L.map(host,{zoomControl:false,preferCanvas:true,zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false,tap:true,worldCopyJump:false}).setView([-12.0464,-77.0428],10);
+ generalMap=gm1368;
+ base1368=tileLayer1368('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{subdomains:'abc',attribution:'© OpenStreetMap'});
+ base1368.on('tileerror',()=>{tileErrors1368++;if(tileErrors1368>=6)activateFallback1368()});
+ base1368.on('load',()=>{tileErrors1368=0});base1368.addTo(gm1368);
+ layer1368=L.layerGroup().addTo(gm1368);generalMarkers=layer1368;
+ gm1368.on('moveend zoomend',()=>{clearTimeout(drawTimer1368);drawTimer1368=setTimeout(()=>drawMap1368(false),130)});
+ const exit=document.createElement('button');exit.className='ri-exit-map';exit.type='button';exit.textContent='← Salir del mapa';exit.onclick=()=>{try{gm1368.closePopup()}catch{};showView?.('planner',document.querySelector('.nav button[data-view="planner"]'))};host.appendChild(exit);
+ requestAnimationFrame(()=>gm1368.invalidateSize(false));setTimeout(()=>gm1368.invalidateSize(false),180);setTimeout(()=>gm1368.invalidateSize(false),700);
+ return gm1368;
+}
+function filtered1368(){try{return filteredGeneralMap().filter(validPoint)}catch{return (state.catalog||[]).filter(validPoint)}}
+function color1368(x){try{if(typeof inRoute==='function'&&inRoute(x))return '#2563eb'}catch{};const s=String(x.status||'').toLowerCase();if(s.includes('inspeccion'))return '#16a34a';if(s.includes('observ'))return '#7c3aed';return '#94a3b8'}
+function popup1368(x){try{return unifiedPopup(x,'general')}catch{return `<div><b>${esc?.(x.feeder)||x.feeder||''} · ${esc?.(x.substation)||x.substation||''}</b></div>`}}
+async function drawMap1368(fit=false){
+ if(typeof activeViewId==='function'&&activeViewId()!=='generalmap')return;
+ const gm=ensureMap1368();if(!gm)return;
+ await restoreCatalog1368();
+ if(!layer1368){layer1368=L.layerGroup().addTo(gm);generalMarkers=layer1368}layer1368.clearLayers();
+ const all=filtered1368();
+ const hasFilter=!!((el('gmSearch')?.value||'').trim()||el('gmFeeder')?.value||el('gmTech')?.value||el('gmDate')?.value);
+ let shown=all;
+ if(!hasFilter){const b=gm.getBounds().pad(.3), inside=all.filter(x=>b.contains([+x.lat,+x.lon]));shown=(inside.length?inside:all).slice(0,450)}else shown=all.slice(0,900);
+ const canvas=L.canvas({padding:.25});
+ for(const x of shown){const m=L.circleMarker([+x.lat,+x.lon],{renderer:canvas,radius:6,weight:1.4,color:'#fff',fillColor:color1368(x),fillOpacity:.95}).addTo(layer1368);m.bindPopup(popup1368(x));try{bindUnifiedPopup?.(m,x,'general')}catch{}}
+ if(el('generalMapCount'))el('generalMapCount').textContent=`${all.length.toLocaleString('es-PE')} resultado(s)`;
+ if(el('generalMapInfo'))el('generalMapInfo').textContent=all.length?`${shown.length.toLocaleString('es-PE')} punto(s) visibles de ${all.length.toLocaleString('es-PE')}.`:'No hay coincidencias o catálogo guardado.';
+ if((fit||hasFilter)&&all.length){if(all.length===1)gm.setView([+all[0].lat,+all[0].lon],17);else gm.fitBounds(all.slice(0,1200).map(x=>[+x.lat,+x.lon]),{padding:[30,30],maxZoom:15})}
+ requestAnimationFrame(()=>gm.invalidateSize(false));
+}
+window.initGeneralMap=()=>ensureMap1368();window.renderGeneralMap=(fit=false)=>drawMap1368(!!fit);
+function bindMap1368(){
+ const once=(id,fn)=>{const b=el(id);if(!b)return;const c=b.cloneNode(true);b.replaceWith(c);c.addEventListener('click',fn,true)};
+ once('gmReloadBtn',async e=>{e.preventDefault();const i=el('generalMapInfo');if(i)i.textContent='Recuperando mapa y puntos guardados…';await restoreCatalog1368();ensureMap1368();base1368?.redraw();fallback1368?.redraw();await drawMap1368(true)});
+ once('gmFilterBtn',e=>{e.preventDefault();drawMap1368(true)});once('gmGoResults',e=>{e.preventDefault();drawMap1368(true)});
+ once('gmZoomIn',e=>{e.preventDefault();ensureMap1368()?.zoomIn()});once('gmZoomOut',e=>{e.preventDefault();ensureMap1368()?.zoomOut()});once('gmFitAll',e=>{e.preventDefault();drawMap1368(true)});
+}
+function recoverRoute1368(){
+ if(state?.route?.stops?.length)return state.route;
+ const keys=[];try{keys.push(plannerStorageKey())}catch{}keys.push('ri_route_draft');
+ for(const k of keys){if(!k)continue;const d=safeParse(localStorage.getItem(k));const p=d?.payload?safeParse(d.payload):d;if(p?.route?.stops?.length){state.route=p.route;if(Array.isArray(p.rows)&&p.rows.length)state.rows=p.rows;return state.route}}
+ const rows=(state?.rows||[]).filter(validPoint);if(rows.length){state.route={stops:rows,geometry:rows.map(x=>[+x.lat,+x.lon]),distanceKm:0,durationMin:0};return state.route}return null;
+}
+async function begin1368(){
+ const route=recoverRoute1368();if(!route?.stops?.length){showToast('Ruta no disponible','No hay puntos guardados. Pulsa “Modificar / crear otra ruta”, agrega puntos y optimiza.','error');return}
+ const b=el('startNavBtn');if(b){b.disabled=true;b.textContent='Iniciando…'}
+ try{
+  if(!state.gps){try{await Promise.race([freshGps(false),wait(4000)])}catch{}}
+  if(!state.gps){const p=validPoint(state.start)?state.start:route.stops[0];state.gps={lat:+p.lat,lon:+p.lon,accuracy:0,bearing:0}}
+  state.navigating=true;state.activeIndex=Math.max(0,Math.min(+state.activeIndex||0,route.stops.length-1));state.arrivalHits=0;
+  try{setRouteReadyFocus(false)}catch{};el('navHud')?.classList.add('show');try{saveRouteDraft()}catch{};
+  try{updateNavigation()}catch(err){console.warn(err)};try{rerouteActive()}catch(err){console.warn(err)};
+  try{map?.invalidateSize(false);const p=route.stops[state.activeIndex];if(validPoint(p))map?.setView([+p.lat,+p.lon],Math.max(map.getZoom(),15))}catch{}
+  showToast('Recorrido iniciado',`${route.stops.length} parada(s) listas.`,'success');
+  try{history.pushState({ri1368:true,mode:'route'},'',location.href)}catch{}
+ }finally{if(b){b.disabled=false;b.textContent='▶ Iniciar recorrido'}}
+}
+function bindStart1368(){const old=el('startNavBtn');if(!old)return;const b=old.cloneNode(true);old.replaceWith(b);b.disabled=false;b.style.pointerEvents='auto';b.addEventListener('click',e=>{e.preventDefault();begin1368()},true)}
+let backLock=false;
+function installBack1368(){
+ try{history.replaceState({ri1368:true,mode:'base'},'',location.href);history.pushState({ri1368:true,mode:'view'},'',location.href)}catch{}
+ window.addEventListener('popstate',()=>{if(backLock)return;backLock=true;try{
+  document.body.classList.remove('ri-menu-open');
+  if(document.fullscreenElement){document.exitFullscreen().catch(()=>{});history.pushState({ri1368:true,mode:'view'},'',location.href);return}
+  const fw=el('mapWrap');if(fw?.classList.contains('fullscreen-fallback')){fw.classList.remove('fullscreen-fallback');map?.invalidateSize(false);history.pushState({ri1368:true,mode:'view'},'',location.href);return}
+  if(document.querySelector('.leaflet-popup')){try{map?.closePopup();gm1368?.closePopup()}catch{};history.pushState({ri1368:true,mode:'view'},'',location.href);return}
+  if(state?.navigating){state.navigating=false;el('navHud')?.classList.remove('show');try{setRouteReadyFocus(true)}catch{};history.pushState({ri1368:true,mode:'view'},'',location.href);return}
+  const active=document.querySelector('.view.active')?.id;if(active&&active!=='planner'){showView?.('planner',document.querySelector('.nav button[data-view="planner"]'));history.pushState({ri1368:true,mode:'view'},'',location.href);return}
+  history.pushState({ri1368:true,mode:'view'},'',location.href);
+ }finally{setTimeout(()=>backLock=false,50)}},true)
+}
+const priorShow=window.showView;if(typeof priorShow==='function')window.showView=function(id,btn){const r=priorShow.apply(this,arguments);setTimeout(()=>{if(id==='generalmap'){ensureMap1368();drawMap1368(false)}else map?.invalidateSize?.(false)},120);return r};
+async function boot1368(){bindMap1368();bindStart1368();installBack1368();await restoreCatalog1368();if(document.querySelector('.view.active')?.id==='generalmap'){ensureMap1368();drawMap1368(false)}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot1368,450),{once:true});else setTimeout(boot1368,450);
+window.addEventListener('pageshow',()=>setTimeout(()=>{bindMap1368();bindStart1368();if(document.querySelector('.view.active')?.id==='generalmap'){ensureMap1368();drawMap1368(false)}},250));
 })();
 </script>
 
